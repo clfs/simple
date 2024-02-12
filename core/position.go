@@ -46,7 +46,7 @@ func (b *Board) Get(s Square) (Piece, bool) {
 type Position struct {
 	Board      Board
 	SideToMove Color
-	EnPassant  Square // The zero value (A1) indicates no en passant square.
+	EnPassant  Square // The zero value indicates no en passant square.
 
 	WhiteOO, WhiteOOO bool
 	BlackOO, BlackOOO bool

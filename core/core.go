@@ -292,3 +292,10 @@ func (s Square) File() File {
 func (s Square) Rank() Rank {
 	return Rank(s / 8)
 }
+
+// A Move represents a chess move.
+// For castling moves, From and To are the king's squares.
+type Move struct {
+	From, To  Square
+	Promotion PieceType // The zero value indicates no promotion.
+}
