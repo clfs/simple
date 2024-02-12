@@ -12,7 +12,7 @@ func TestBoard(t *testing.T) {
 
 	p, ok := b.Get(A2)
 	if !ok {
-		t.Error("A2 not set")
+		t.Error("A2 not gotten")
 	}
 	if p != WhitePawn {
 		t.Errorf("A2 should be %s, but got %s", WhitePawn, p)
