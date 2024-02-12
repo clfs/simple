@@ -23,6 +23,11 @@ func (c Color) String() string {
 	}
 }
 
+// Other returns the other color.
+func (c Color) Other() Color {
+	return 1 - c
+}
+
 // A PieceType is a type of piece.
 type PieceType int
 
@@ -293,6 +298,16 @@ func (s Square) Rank() Rank {
 	return Rank(s / 8)
 }
 
+// Above returns the square above s.
+func (s Square) Above() Square {
+	return s + 8
+}
+
+// Below returns the square below s.
+func (s Square) Below() Square {
+	return s - 8
+}
+
 // A Move represents a chess move.
 // For castling moves, From and To are the king's squares.
 type Move struct {
@@ -305,30 +320,16 @@ type Board struct {
 	pieces [12]Bitboard
 }
 
-// IsSet returns true if the given square is occupied.
-func (b *Board) IsSet(s Square) bool {
-	for _, bb := range b.pieces {
-		if bb.Get(s) {
-			return true
-		}
-	}
-	return false
-}
-
-// IsEmpty returns true if the given square is empty.
-func (b *Board) IsEmpty(s Square) bool {
-	return !b.IsSet(s)
-}
-
-// Clear clears a square, removing any piece that may be there.
-func (b *Board) Clear(s Square) {
+// Set places a piece on a square, overwriting any existing piece.
+func (b *Board) Set(p Piece, s Square) {
 	for i := range b.pieces {
 		b.pieces[i].Clear(s)
 	}
+	b.pieces[p].Set(s)
 }
 
-// Set sets a piece down on the board.
-func (b *Board) Set(p Piece, s Square) {
+// SetOnEmpty places a piece on an empty square.
+func (b *Board) SetOnEmpty(p Piece, s Square) {
 	b.pieces[p].Set(s)
 }
 
@@ -340,4 +341,30 @@ func (b *Board) Get(s Square) (Piece, bool) {
 		}
 	}
 	return 0, false
+}
+
+// MovePiece moves a piece to a square, overwriting any existing piece.
+func (b *Board) MovePiece(p Piece, from, to Square) {
+	b.pieces[p].Clear(from)
+	for i := range b.pieces {
+		b.pieces[i].Clear(to)
+	}
+	b.pieces[p].Set(to)
+}
+
+// MovePieceToEmpty moves a piece to an empty square.
+func (b *Board) MovePieceToEmpty(p Piece, from, to Square) {
+	b.pieces[p].Clear(from)
+	b.pieces[p].Set(to)
+}
+
+// Promote moves a pawn to a square, promoting it.
+func (b *Board) Promote(from, to Square, p PieceType) {
+	if to.Rank() == Rank8 { // White
+		b.pieces[WhitePawn].Clear(from)
+		b.pieces[NewPiece(White, p)].Set(to)
+	} else { // Black
+		b.pieces[BlackPawn].Clear(from)
+		b.pieces[NewPiece(Black, p)].Set(to)
+	}
 }

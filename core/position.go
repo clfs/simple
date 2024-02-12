@@ -17,31 +17,31 @@ type Position struct {
 func NewPosition() *Position {
 	var p Position
 
-	p.Board.Set(WhiteRook, A1)
-	p.Board.Set(WhiteKnight, B1)
-	p.Board.Set(WhiteBishop, C1)
-	p.Board.Set(WhiteQueen, D1)
-	p.Board.Set(WhiteKing, E1)
-	p.Board.Set(WhiteBishop, F1)
-	p.Board.Set(WhiteKnight, G1)
-	p.Board.Set(WhiteRook, H1)
+	p.Board.SetOnEmpty(WhiteRook, A1)
+	p.Board.SetOnEmpty(WhiteKnight, B1)
+	p.Board.SetOnEmpty(WhiteBishop, C1)
+	p.Board.SetOnEmpty(WhiteQueen, D1)
+	p.Board.SetOnEmpty(WhiteKing, E1)
+	p.Board.SetOnEmpty(WhiteBishop, F1)
+	p.Board.SetOnEmpty(WhiteKnight, G1)
+	p.Board.SetOnEmpty(WhiteRook, H1)
 
 	for sq := A2; sq <= H2; sq++ {
-		p.Board.Set(WhitePawn, sq)
+		p.Board.SetOnEmpty(WhitePawn, sq)
 	}
 
 	for sq := A7; sq <= H7; sq++ {
-		p.Board.Set(BlackPawn, sq)
+		p.Board.SetOnEmpty(BlackPawn, sq)
 	}
 
-	p.Board.Set(BlackRook, A8)
-	p.Board.Set(BlackKnight, B8)
-	p.Board.Set(BlackBishop, C8)
-	p.Board.Set(BlackQueen, D8)
-	p.Board.Set(BlackKing, E8)
-	p.Board.Set(BlackBishop, F8)
-	p.Board.Set(BlackKnight, G8)
-	p.Board.Set(BlackRook, H8)
+	p.Board.SetOnEmpty(BlackRook, A8)
+	p.Board.SetOnEmpty(BlackKnight, B8)
+	p.Board.SetOnEmpty(BlackBishop, C8)
+	p.Board.SetOnEmpty(BlackQueen, D8)
+	p.Board.SetOnEmpty(BlackKing, E8)
+	p.Board.SetOnEmpty(BlackBishop, F8)
+	p.Board.SetOnEmpty(BlackKnight, G8)
+	p.Board.SetOnEmpty(BlackRook, H8)
 
 	p.WhiteOO = true
 	p.WhiteOOO = true
@@ -51,4 +51,72 @@ func NewPosition() *Position {
 	p.FullMoveCounter = 1
 
 	return &p
+}
+
+// Make makes a move.
+// It does not check for invalid moves.
+func (p *Position) Make(m Move) {
+	heldPiece, _ := p.Board.Get(m.From)
+	_, isCapture := p.Board.Get(m.To)
+
+	// Update castling rights.
+	switch {
+	case heldPiece.Type() == King && p.SideToMove == White:
+		p.WhiteOO, p.WhiteOOO = false, false
+	case heldPiece.Type() == King && p.SideToMove == Black:
+		p.BlackOO, p.BlackOOO = false, false
+	case heldPiece.Type() == Rook && m.From == A1:
+		p.WhiteOOO = false
+	case heldPiece.Type() == Rook && m.From == H1:
+		p.WhiteOO = false
+	case heldPiece.Type() == Rook && m.From == A8:
+		p.BlackOOO = false
+	case heldPiece.Type() == Rook && m.From == H8:
+		p.BlackOO = false
+	}
+
+	// Update the en passant square.
+	switch {
+	case heldPiece.Type() == Pawn && m.From.Rank() == Rank2 && m.To.Rank() == Rank4:
+		p.EnPassant = m.From.Above()
+	case heldPiece.Type() == Pawn && m.From.Rank() == Rank7 && m.To.Rank() == Rank5:
+		p.EnPassant = m.From.Below()
+	default:
+		p.EnPassant = 0
+	}
+
+	// Adjust rook positions if castling.
+	switch {
+	case heldPiece.Type() == King && m.From == E1 && m.To == G1: // WhiteOO
+		p.Board.MovePieceToEmpty(WhiteRook, H1, F1)
+	case heldPiece.Type() == King && m.From == E1 && m.To == C1: // WhiteOOO
+		p.Board.MovePieceToEmpty(WhiteRook, A1, D1)
+	case heldPiece.Type() == King && m.From == E8 && m.To == G8: // BlackOO
+		p.Board.MovePieceToEmpty(BlackRook, H8, F8)
+	case heldPiece.Type() == King && m.From == E8 && m.To == C8: // BlackOOO
+		p.Board.MovePieceToEmpty(BlackRook, A8, D8)
+	}
+
+	// Move the piece.
+	if m.Promotion == 0 {
+		p.Board.MovePiece(heldPiece, m.From, m.To)
+	} else {
+		p.Board.Promote(m.From, m.To, m.Promotion)
+	}
+
+	// Update the half move clock.
+	switch {
+	case heldPiece.Type() == Pawn, isCapture:
+		p.HalfMoveClock = 0
+	default:
+		p.HalfMoveClock++
+	}
+
+	// Update the full move counter.
+	if p.SideToMove == Black {
+		p.FullMoveCounter++
+	}
+
+	// Switch sides.
+	p.SideToMove = p.SideToMove.Other()
 }

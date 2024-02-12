@@ -20,6 +20,22 @@ func TestColor_String(t *testing.T) {
 	}
 }
 
+func TestColor_Other(t *testing.T) {
+	cases := []struct {
+		color Color
+		want  Color
+	}{
+		{White, Black},
+		{Black, White},
+	}
+	for _, c := range cases {
+		got := c.color.Other()
+		if got != c.want {
+			t.Errorf("%s.Other() = %s, want %s", c.color, got, c.want)
+		}
+	}
+}
+
 func TestPieceType_String(t *testing.T) {
 	cases := []struct {
 		pt   PieceType
@@ -261,10 +277,7 @@ func TestSquare_Rank(t *testing.T) {
 func TestBoard(t *testing.T) {
 	var b Board
 
-	b.Set(WhitePawn, A2)
-	if !b.IsSet(A2) {
-		t.Error("A2 not set")
-	}
+	b.SetOnEmpty(WhitePawn, A2)
 
 	p, ok := b.Get(A2)
 	if !ok {
@@ -277,10 +290,5 @@ func TestBoard(t *testing.T) {
 	p, ok = b.Get(A3)
 	if ok {
 		t.Error("A3 not empty")
-	}
-
-	b.Clear(A2)
-	if !b.IsEmpty(A2) {
-		t.Error("A2 not empty")
 	}
 }
