@@ -14,7 +14,7 @@ type Position struct {
 }
 
 // NewPosition returns the starting position.
-func NewPosition() *Position {
+func NewPosition() Position {
 	var p Position
 
 	p.Board.SetOnEmpty(WhiteRook, A1)
@@ -50,7 +50,7 @@ func NewPosition() *Position {
 
 	p.FullMoveCounter = 1
 
-	return &p
+	return p
 }
 
 // Make makes a move.
