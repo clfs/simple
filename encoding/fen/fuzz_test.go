@@ -4,6 +4,10 @@ import "testing"
 
 func FuzzRoundTrip(f *testing.F) {
 	f.Add(Starting)
+	for _, fen := range readFENs(f, "testdata/valid.fen") {
+		f.Add(fen)
+	}
+
 	f.Fuzz(func(t *testing.T, s string) {
 		p, err := Decode(s)
 		if err != nil {

@@ -1,6 +1,8 @@
 package fen
 
 import (
+	"bufio"
+	"os"
 	"testing"
 
 	"github.com/clfs/simple/core"
@@ -59,6 +61,36 @@ func TestDecode(t *testing.T) {
 		}
 		if diff := cmp.Diff(want, got); diff != "" {
 			t.Errorf("#%d: Decode() mismatch (-want +got):\n%s", i, diff)
+		}
+	}
+}
+
+func readFENs(tb testing.TB, name string) []string {
+	tb.Helper()
+
+	f, err := os.Open(name)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	defer f.Close()
+
+	var lines []string
+
+	s := bufio.NewScanner(f)
+	for s.Scan() {
+		lines = append(lines, s.Text())
+	}
+	if err := s.Err(); err != nil {
+		tb.Fatal(err)
+	}
+
+	return lines
+}
+
+func TestDecode_Valid(t *testing.T) {
+	for _, fen := range readFENs(t, "testdata/valid.fen") {
+		if _, err := Decode(fen); err != nil {
+			t.Errorf("Decode(%q) error: %v", fen, err)
 		}
 	}
 }
