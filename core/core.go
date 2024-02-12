@@ -317,25 +317,25 @@ type Move struct {
 
 // Board contains piece placements.
 type Board struct {
-	pieces [12]Bitboard
+	Pieces [12]Bitboard // Exported for debugging only.
 }
 
 // Set places a piece on a square, overwriting any existing piece.
 func (b *Board) Set(p Piece, s Square) {
-	for i := range b.pieces {
-		b.pieces[i].Clear(s)
+	for i := range b.Pieces {
+		b.Pieces[i].Clear(s)
 	}
-	b.pieces[p].Set(s)
+	b.Pieces[p].Set(s)
 }
 
 // SetOnEmpty places a piece on an empty square.
 func (b *Board) SetOnEmpty(p Piece, s Square) {
-	b.pieces[p].Set(s)
+	b.Pieces[p].Set(s)
 }
 
 // Get returns the piece on the given square, if any.
 func (b *Board) Get(s Square) (Piece, bool) {
-	for i, bb := range b.pieces {
+	for i, bb := range b.Pieces {
 		if bb.Get(s) {
 			return Piece(i), true
 		}
@@ -345,26 +345,26 @@ func (b *Board) Get(s Square) (Piece, bool) {
 
 // MovePiece moves a piece to a square, overwriting any existing piece.
 func (b *Board) MovePiece(p Piece, from, to Square) {
-	b.pieces[p].Clear(from)
-	for i := range b.pieces {
-		b.pieces[i].Clear(to)
+	b.Pieces[p].Clear(from)
+	for i := range b.Pieces {
+		b.Pieces[i].Clear(to)
 	}
-	b.pieces[p].Set(to)
+	b.Pieces[p].Set(to)
 }
 
 // MovePieceToEmpty moves a piece to an empty square.
 func (b *Board) MovePieceToEmpty(p Piece, from, to Square) {
-	b.pieces[p].Clear(from)
-	b.pieces[p].Set(to)
+	b.Pieces[p].Clear(from)
+	b.Pieces[p].Set(to)
 }
 
 // Promote moves a pawn to a square, promoting it.
 func (b *Board) Promote(from, to Square, p PieceType) {
 	if to.Rank() == Rank8 { // White
-		b.pieces[WhitePawn].Clear(from)
-		b.pieces[NewPiece(White, p)].Set(to)
+		b.Pieces[WhitePawn].Clear(from)
+		b.Pieces[NewPiece(White, p)].Set(to)
 	} else { // Black
-		b.pieces[BlackPawn].Clear(from)
-		b.pieces[NewPiece(Black, p)].Set(to)
+		b.Pieces[BlackPawn].Clear(from)
+		b.Pieces[NewPiece(Black, p)].Set(to)
 	}
 }

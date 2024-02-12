@@ -9,8 +9,8 @@ type Position struct {
 	WhiteOO, WhiteOOO bool
 	BlackOO, BlackOOO bool
 
-	HalfMoveClock   int
-	FullMoveCounter int // Starts at 1.
+	HalfMoveClock  int
+	FullMoveNumber int // Starts at 1.
 }
 
 // NewPosition returns the starting position.
@@ -48,7 +48,7 @@ func NewPosition() Position {
 	p.BlackOO = true
 	p.BlackOOO = true
 
-	p.FullMoveCounter = 1
+	p.FullMoveNumber = 1
 
 	return p
 }
@@ -113,7 +113,7 @@ func (p *Position) Make(m Move) {
 
 	// Update the full move counter.
 	if p.SideToMove == Black {
-		p.FullMoveCounter++
+		p.FullMoveNumber++
 	}
 
 	// Switch sides.

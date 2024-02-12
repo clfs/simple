@@ -111,7 +111,7 @@ func Encode(p core.Position) string {
 	fmt.Fprintf(&b, " ")
 
 	// Full move counter.
-	fmt.Fprintf(&b, "%d", p.FullMoveCounter)
+	fmt.Fprintf(&b, "%d", p.FullMoveNumber)
 
 	return b.String()
 }
