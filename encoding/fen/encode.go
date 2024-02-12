@@ -16,6 +16,7 @@ func encodeSquare(s core.Square) string {
 func Encode(p core.Position) string {
 	var b strings.Builder
 
+	// Board.
 	for r := core.Rank8; r >= core.Rank1; r-- {
 		skip := 0
 		for f := core.FileA; f <= core.FileH; f++ {
@@ -66,6 +67,7 @@ func Encode(p core.Position) string {
 
 	fmt.Fprintf(&b, " ")
 
+	// Side to move.
 	if p.SideToMove == core.White {
 		fmt.Fprintf(&b, "w")
 	} else {
@@ -74,6 +76,7 @@ func Encode(p core.Position) string {
 
 	fmt.Fprintf(&b, " ")
 
+	// Castling rights.
 	if !p.WhiteOO && !p.WhiteOOO && !p.BlackOO && !p.BlackOOO {
 		fmt.Fprintf(&b, "-")
 	} else {
@@ -93,6 +96,7 @@ func Encode(p core.Position) string {
 
 	fmt.Fprintf(&b, " ")
 
+	// En passant square.
 	if p.EnPassant == 0 {
 		fmt.Fprintf(&b, "-")
 	} else {
@@ -101,10 +105,12 @@ func Encode(p core.Position) string {
 
 	fmt.Fprintf(&b, " ")
 
+	// Half move clock.
 	fmt.Fprintf(&b, "%d", p.HalfMoveClock)
 
 	fmt.Fprintf(&b, " ")
 
+	// Full move counter.
 	fmt.Fprintf(&b, "%d", p.FullMoveCounter)
 
 	return b.String()
