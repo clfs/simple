@@ -105,10 +105,9 @@ func (p *Position) Make(m Move) {
 	}
 
 	// Update the half move clock.
-	switch {
-	case heldPiece.Type() == Pawn, isCapture:
+	if heldPiece.Type() == Pawn || isCapture {
 		p.HalfMoveClock = 0
-	default:
+	} else {
 		p.HalfMoveClock++
 	}
 
