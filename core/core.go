@@ -3,20 +3,24 @@ package core
 
 import "fmt"
 
-// A Color is either white or black.
-type Color bool
+// A Color is white or black.
+type Color int
 
 // Color constants.
 const (
-	White Color = false
-	Black Color = true
+	White Color = iota
+	Black
 )
 
 func (c Color) String() string {
-	if c == White {
+	switch c {
+	case White:
 		return "White"
+	case Black:
+		return "Black"
+	default:
+		return fmt.Sprintf("Color(%d)", c)
 	}
-	return "Black"
 }
 
 // A PieceType is a type of piece.
@@ -52,9 +56,68 @@ func (p PieceType) String() string {
 }
 
 // A Piece represents a chess piece.
-type Piece struct {
-	Color Color
-	Type  PieceType
+type Piece int
+
+// White piece constants.
+const (
+	WhitePawn Piece = iota
+	WhiteKnight
+	WhiteBishop
+	WhiteRook
+	WhiteQueen
+	WhiteKing
+	BlackPawn
+	BlackKnight
+	BlackBishop
+	BlackRook
+	BlackQueen
+	BlackKing
+)
+
+// NewPiece returns a new piece.
+func NewPiece(c Color, pt PieceType) Piece {
+	return Piece(c)*6 + Piece(pt)
+}
+
+func (p Piece) String() string {
+	switch p {
+	case WhitePawn:
+		return "WhitePawn"
+	case WhiteKnight:
+		return "WhiteKnight"
+	case WhiteBishop:
+		return "WhiteBishop"
+	case WhiteRook:
+		return "WhiteRook"
+	case WhiteQueen:
+		return "WhiteQueen"
+	case WhiteKing:
+		return "WhiteKing"
+	case BlackPawn:
+		return "BlackPawn"
+	case BlackKnight:
+		return "BlackKnight"
+	case BlackBishop:
+		return "BlackBishop"
+	case BlackRook:
+		return "BlackRook"
+	case BlackQueen:
+		return "BlackQueen"
+	case BlackKing:
+		return "BlackKing"
+	default:
+		return fmt.Sprintf("Piece(%d)", p)
+	}
+}
+
+// Type returns a piece's type.
+func (p Piece) Type() PieceType {
+	return PieceType(p % 6)
+}
+
+// Color returns a piece's color.
+func (p Piece) Color() Color {
+	return Color(p / 6)
 }
 
 // A File is a column on the chess board.
