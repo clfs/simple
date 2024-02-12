@@ -52,20 +52,30 @@ func Decode(s string) (core.Position, error) {
 
 	// Board.
 	offset := int(core.A8)
-	for _, r := range fields[0] {
-		switch r {
-		case '1', '2', '3', '4', '5', '6', '7', '8':
-			offset += int(r - '0') // advance rightwards
-		case '/':
-			offset -= 16 // move to the leftmost square in the rank below
-		default:
-			piece, ok := decodePiece[r]
-			if !ok {
-				return core.Position{}, fmt.Errorf("invalid board piece: %c", r)
+	rows := strings.Split(fields[0], "/")
+	if len(rows) != 8 {
+		return core.Position{}, fmt.Errorf("invalid number of board rows: %d", len(rows))
+	}
+	for i, row := range rows {
+		for _, r := range row {
+			switch r {
+			case '1', '2', '3', '4', '5', '6', '7', '8':
+				offset += int(r - '0') // advance rightwards
+			default:
+				piece, ok := decodePiece[r]
+				if !ok {
+					return core.Position{}, fmt.Errorf("invalid board piece: %c", r)
+				}
+				p.Board.SetOnEmpty(piece, core.Square(offset))
+				offset++
 			}
-			p.Board.SetOnEmpty(piece, core.Square(offset))
-			offset++
 		}
+
+		if offset != 8*(8-i) {
+			return core.Position{}, fmt.Errorf("invalid board row length: %s", row)
+		}
+
+		offset -= 16 // move to the leftmost square in the rank below
 	}
 
 	// Side to move.
