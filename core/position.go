@@ -88,18 +88,18 @@ func (p *Position) Make(m Move) {
 	// Adjust rook positions if castling.
 	switch {
 	case heldPiece.Type() == King && m.From == E1 && m.To == G1: // WhiteOO
-		p.Board.MovePieceToEmpty(WhiteRook, H1, F1)
+		p.Board.MoveToEmpty(WhiteRook, H1, F1)
 	case heldPiece.Type() == King && m.From == E1 && m.To == C1: // WhiteOOO
-		p.Board.MovePieceToEmpty(WhiteRook, A1, D1)
+		p.Board.MoveToEmpty(WhiteRook, A1, D1)
 	case heldPiece.Type() == King && m.From == E8 && m.To == G8: // BlackOO
-		p.Board.MovePieceToEmpty(BlackRook, H8, F8)
+		p.Board.MoveToEmpty(BlackRook, H8, F8)
 	case heldPiece.Type() == King && m.From == E8 && m.To == C8: // BlackOOO
-		p.Board.MovePieceToEmpty(BlackRook, A8, D8)
+		p.Board.MoveToEmpty(BlackRook, A8, D8)
 	}
 
 	// Move the piece.
 	if m.Promotion == 0 {
-		p.Board.MovePiece(heldPiece, m.From, m.To)
+		p.Board.Move(heldPiece, m.From, m.To)
 	} else {
 		p.Board.Promote(m.From, m.To, m.Promotion)
 	}

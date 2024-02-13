@@ -322,6 +322,7 @@ type Board struct {
 
 // Set places a piece on a square.
 // If there is already a piece on the square, that piece is removed.
+// If the square is known to be empty, SetOnEmpty is faster.
 func (b *Board) Set(p Piece, s Square) {
 	for i := range b.Pieces {
 		b.Pieces[i].Clear(s)
@@ -344,9 +345,10 @@ func (b *Board) Get(s Square) (Piece, bool) {
 	return 0, false
 }
 
-// MovePiece moves a piece to a square.
-// If there is already a piece on the destination square, that piece is removed.
-func (b *Board) MovePiece(p Piece, from, to Square) {
+// Move moves a piece to a square.
+// If there is already a piece at the destination, that piece is removed.
+// If the destination is known to be empty, MoveToEmpty is faster.
+func (b *Board) Move(p Piece, from, to Square) {
 	b.Pieces[p].Clear(from)
 	for i := range b.Pieces {
 		b.Pieces[i].Clear(to)
@@ -354,8 +356,8 @@ func (b *Board) MovePiece(p Piece, from, to Square) {
 	b.Pieces[p].Set(to)
 }
 
-// MovePieceToEmpty moves a piece to an empty square.
-func (b *Board) MovePieceToEmpty(p Piece, from, to Square) {
+// MoveToEmpty moves a piece to an empty square.
+func (b *Board) MoveToEmpty(p Piece, from, to Square) {
 	b.Pieces[p].Clear(from)
 	b.Pieces[p].Set(to)
 }
