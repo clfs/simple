@@ -316,28 +316,26 @@ type Move struct {
 }
 
 // Board contains piece placements.
-type Board struct {
-	Pieces [12]Bitboard // Exported for debugging only.
-}
+type Board [12]Bitboard
 
 // Set places a piece on a square.
 // If there is already a piece on the square, that piece is removed.
 // If the square is known to be empty, SetOnEmpty is faster.
 func (b *Board) Set(p Piece, s Square) {
-	for i := range b.Pieces {
-		b.Pieces[i].Clear(s)
+	for i := range b {
+		b[i].Clear(s)
 	}
-	b.Pieces[p].Set(s)
+	b[p].Set(s)
 }
 
 // SetOnEmpty places a piece on an empty square.
 func (b *Board) SetOnEmpty(p Piece, s Square) {
-	b.Pieces[p].Set(s)
+	b[p].Set(s)
 }
 
 // Get returns the piece on the given square, if any.
 func (b *Board) Get(s Square) (Piece, bool) {
-	for i, bb := range b.Pieces {
+	for i, bb := range b {
 		if bb.Get(s) {
 			return Piece(i), true
 		}
@@ -349,26 +347,26 @@ func (b *Board) Get(s Square) (Piece, bool) {
 // If there is already a piece at the destination, that piece is removed.
 // If the destination is known to be empty, MoveToEmpty is faster.
 func (b *Board) Move(p Piece, from, to Square) {
-	b.Pieces[p].Clear(from)
-	for i := range b.Pieces {
-		b.Pieces[i].Clear(to)
+	b[p].Clear(from)
+	for i := range b {
+		b[i].Clear(to)
 	}
-	b.Pieces[p].Set(to)
+	b[p].Set(to)
 }
 
 // MoveToEmpty moves a piece to an empty square.
 func (b *Board) MoveToEmpty(p Piece, from, to Square) {
-	b.Pieces[p].Clear(from)
-	b.Pieces[p].Set(to)
+	b[p].Clear(from)
+	b[p].Set(to)
 }
 
 // Promote moves a pawn to a square, promoting it.
 func (b *Board) Promote(from, to Square, p PieceType) {
 	if to.Rank() == Rank8 { // White
-		b.Pieces[WhitePawn].Clear(from)
-		b.Pieces[NewPiece(White, p)].Set(to)
+		b[WhitePawn].Clear(from)
+		b[NewPiece(White, p)].Set(to)
 	} else { // Black
-		b.Pieces[BlackPawn].Clear(from)
-		b.Pieces[NewPiece(Black, p)].Set(to)
+		b[BlackPawn].Clear(from)
+		b[NewPiece(Black, p)].Set(to)
 	}
 }
