@@ -320,7 +320,8 @@ type Board struct {
 	Pieces [12]Bitboard // Exported for debugging only.
 }
 
-// Set places a piece on a square, overwriting any existing piece.
+// Set places a piece on a square.
+// If there is already a piece on the square, that piece is removed.
 func (b *Board) Set(p Piece, s Square) {
 	for i := range b.Pieces {
 		b.Pieces[i].Clear(s)
@@ -343,7 +344,8 @@ func (b *Board) Get(s Square) (Piece, bool) {
 	return 0, false
 }
 
-// MovePiece moves a piece to a square, overwriting any existing piece.
+// MovePiece moves a piece to a square.
+// If there is already a piece on the destination square, that piece is removed.
 func (b *Board) MovePiece(p Piece, from, to Square) {
 	b.Pieces[p].Clear(from)
 	for i := range b.Pieces {
