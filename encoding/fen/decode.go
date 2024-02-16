@@ -2,11 +2,15 @@ package fen
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/clfs/simple/core"
 )
+
+// numRegexp matches any non-negative integer.
+var numRegexp = regexp.MustCompile(`^(0|[1-9]\d*)$`)
 
 var decodePiece = map[rune]core.Piece{
 	'P': core.WhitePawn,
@@ -57,10 +61,15 @@ func Decode(s string) (core.Position, error) {
 		return core.Position{}, fmt.Errorf("invalid number of board rows: %d", len(rows))
 	}
 	for i, row := range rows {
+		var numPrev bool
 		for _, r := range row {
 			switch r {
 			case '1', '2', '3', '4', '5', '6', '7', '8':
+				if numPrev {
+					return core.Position{}, fmt.Errorf("two consecutive numbers in board row: %s", row)
+				}
 				offset += int(r - '0') // advance rightwards by n
+				numPrev = true
 			default:
 				piece, ok := decodePiece[r]
 				if !ok {
@@ -68,6 +77,7 @@ func Decode(s string) (core.Position, error) {
 				}
 				p.Board.SetOnEmpty(piece, core.Square(offset))
 				offset++ // advance rightwards by 1
+				numPrev = false
 			}
 		}
 
@@ -150,6 +160,9 @@ func Decode(s string) (core.Position, error) {
 	}
 
 	// Half move clock.
+	if !numRegexp.MatchString(fields[4]) {
+		return core.Position{}, fmt.Errorf("invalid half move clock: %s", fields[4])
+	}
 	hmc, err := strconv.Atoi(fields[4])
 	if err != nil || hmc < 0 {
 		return core.Position{}, fmt.Errorf("invalid half move clock: %s", fields[4])
@@ -157,6 +170,9 @@ func Decode(s string) (core.Position, error) {
 	p.HalfMoveClock = hmc
 
 	// Full move number.
+	if !numRegexp.MatchString(fields[5]) {
+		return core.Position{}, fmt.Errorf("invalid full move number: %s", fields[5])
+	}
 	fmn, err := strconv.Atoi(fields[5])
 	if err != nil || fmn <= 0 {
 		return core.Position{}, fmt.Errorf("invalid full move number: %s", fields[5])
