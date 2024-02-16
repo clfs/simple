@@ -9,7 +9,7 @@ import (
 
 // encodeSquare encodes a square in lower case.
 func encodeSquare(s core.Square) string {
-	return fmt.Sprintf("%s", strings.ToLower(s.String()))
+	return strings.ToLower(s.String())
 }
 
 // Encode encodes a position as a FEN string.
