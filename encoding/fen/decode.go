@@ -50,6 +50,9 @@ func Decode(s string) (core.Position, error) {
 		return core.Position{}, fmt.Errorf("invalid number of fields: %d", n)
 	}
 
+	// TODO(cfiguereosupran): See if there's a way to iterate over the board
+	// squares in order, rather than jump around according to the FEN input.
+
 	// Board.
 	offset := int(core.A8) // top left corner
 	rows := strings.Split(fields[0], "/")
