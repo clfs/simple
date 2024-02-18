@@ -36,19 +36,25 @@ func Encode(p core.Position) string {
 		gap := 0
 		for f := core.FileA; f <= core.FileH; f++ {
 			piece, ok := p.Board.Get(core.NewSquare(f, r))
-			if !ok { // empty square
+			// Empty square, so increment the gap and move to the next square.
+			if !ok {
 				gap++
-				if f == core.FileH {
-					fmt.Fprintf(&b, "%d", gap)
-				}
-			} else { // occupied square
-				if gap > 0 {
-					fmt.Fprintf(&b, "%d", gap)
-					gap = 0
-				}
-				b.WriteRune(encodePiece[piece])
+				continue
 			}
+
+			// Occupied square, so handle the gap (if any) then the piece.
+			if gap > 0 {
+				fmt.Fprintf(&b, "%d", gap)
+				gap = 0
+			}
+			b.WriteRune(encodePiece[piece])
 		}
+
+		// Handle any gaps at the end of the rank.
+		if gap > 0 {
+			fmt.Fprintf(&b, "%d", gap)
+		}
+
 		if r != core.Rank1 {
 			b.WriteRune('/')
 		}
