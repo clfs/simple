@@ -36,13 +36,14 @@ func Encode(p core.Position) string {
 		skip := 0
 		for f := core.FileA; f <= core.FileH; f++ {
 			piece, ok := p.Board.Get(core.NewSquare(f, r))
-			if !ok {
+			switch {
+			case !ok:
 				skip++
-			} else {
-				if skip > 0 {
-					fmt.Fprintf(&b, "%d", skip)
-					skip = 0
-				}
+			case skip > 0:
+				fmt.Fprintf(&b, "%d", skip)
+				skip = 0
+				fallthrough
+			default:
 				b.WriteRune(encodePiece[piece])
 			}
 		}
