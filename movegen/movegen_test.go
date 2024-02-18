@@ -43,8 +43,7 @@ func TestMoves(t *testing.T) {
 		},
 	}
 	for _, tc := range cases {
-		p := fen.MustDecode(tc.in)
-		got := Moves(p)
+		got := Moves(fen.MustDecode(tc.in))
 		if diff := cmp.Diff(tc.want, got); diff != "" {
 			t.Errorf("Moves(%q) mismatch (-want +got):\n%s", tc.in, diff)
 		}
