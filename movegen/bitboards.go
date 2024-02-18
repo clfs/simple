@@ -37,11 +37,11 @@ func init() {
 		if r != core.Rank1 && r != core.Rank8 {
 			whitePawnPushes[s].Set(s.Above())
 			blackPawnPushes[s].Set(s.Below())
-			if f >= core.FileB {
+			if f != core.FileA {
 				whitePawnAttacks[s].Set(s.Above().Left())
 				blackPawnAttacks[s].Set(s.Below().Left())
 			}
-			if f <= core.FileG {
+			if f != core.FileH {
 				whitePawnAttacks[s].Set(s.Above().Right())
 				blackPawnAttacks[s].Set(s.Below().Right())
 			}
