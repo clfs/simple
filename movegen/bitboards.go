@@ -17,36 +17,6 @@ var (
 )
 
 func init() {
-	// White pawn pushes.
-	for s := core.A2; s <= core.H7; s++ {
-		whitePawnPushes[s].Set(s.Above())
-		if s.Rank() == core.Rank2 {
-			whitePawnPushes[s].Set(s.Above().Above())
-		}
-	}
-
-	// Black pawn pushes.
-	blackPawnPushes = whitePawnPushes
-	for i := range blackPawnPushes {
-		blackPawnPushes[i].FlipV()
-	}
-
-	// White pawn attacks.
-	for s := core.A2; s <= core.H7; s++ {
-		f := s.File()
-		if f >= core.FileB {
-			whitePawnAttacks[s].Set(s.Above().Left())
-		}
-		if f <= core.FileG {
-			whitePawnAttacks[s].Set(s.Above().Right())
-		}
-	}
-
-	// Black pawn attacks.
-	blackPawnAttacks = whitePawnAttacks
-	for i := range blackPawnAttacks {
-		blackPawnAttacks[i].FlipV()
-	}
 
 	// Knight attacks.
 	knightDeltas := []struct {
@@ -80,6 +50,25 @@ func init() {
 	}
 
 	for s := core.A1; s <= core.H8; s++ {
+		if s.Rank() != core.Rank1 && s.Rank() != core.Rank8 {
+			whitePawnPushes[s].Set(s.Above())
+			blackPawnPushes[s].Set(s.Below())
+			if s.File() >= core.FileB {
+				whitePawnAttacks[s].Set(s.Above().Left())
+				blackPawnAttacks[s].Set(s.Below().Left())
+			}
+			if s.File() <= core.FileG {
+				whitePawnAttacks[s].Set(s.Above().Right())
+				blackPawnAttacks[s].Set(s.Below().Right())
+			}
+			if s.Rank() == core.Rank2 {
+				whitePawnPushes[s].Set(s.Above().Above())
+			}
+			if s.Rank() == core.Rank7 {
+				blackPawnPushes[s].Set(s.Below().Below())
+			}
+		}
+
 		for _, d := range knightDeltas {
 			f := s.File() + d.f
 			r := s.Rank() + d.r
