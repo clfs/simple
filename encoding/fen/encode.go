@@ -35,8 +35,7 @@ func Encode(p core.Position) string {
 	for r := core.Rank8; r >= core.Rank1; r-- {
 		skip := 0
 		for f := core.FileA; f <= core.FileH; f++ {
-			sq := core.NewSquare(f, r)
-			piece, ok := p.Board.Get(sq)
+			piece, ok := p.Board.Get(core.NewSquare(f, r))
 			if !ok {
 				skip++
 				continue
