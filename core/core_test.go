@@ -287,7 +287,7 @@ func TestBoard(t *testing.T) {
 		t.Errorf("A2 should be %s, but got %s", WhitePawn, p)
 	}
 
-	p, ok = b.Get(A3)
+	_, ok = b.Get(A3)
 	if ok {
 		t.Error("A3 not empty")
 	}
