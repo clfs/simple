@@ -67,79 +67,60 @@ func init() {
 	}
 
 	// Bishop attacks.
-	for s := range core.H8 {
-		valid := func(f core.File, r core.Rank) bool {
-			return f >= core.FileA && f <= core.FileH &&
-				r >= core.Rank1 && r <= core.Rank8
-		}
+	for s := core.A1; s <= core.H8; s++ {
 		f, r := s.File(), s.Rank()
-		for f, r := f, r; valid(f, r); f, r = f-1, r-1 {
+		for f, r := f-1, r-1; f.Valid() && r.Valid(); f, r = f-1, r-1 {
 			bishopAttacks[s].Set(core.NewSquare(f, r))
 		}
-		for f, r := f, r; valid(f, r); f, r = f+1, r-1 {
+		for f, r := f+1, r-1; f.Valid() && r.Valid(); f, r = f+1, r-1 {
 			bishopAttacks[s].Set(core.NewSquare(f, r))
 		}
-		for f, r := f, r; valid(f, r); f, r = f-1, r+1 {
+		for f, r := f-1, r+1; f.Valid() && r.Valid(); f, r = f-1, r+1 {
 			bishopAttacks[s].Set(core.NewSquare(f, r))
 		}
-		for f, r := f, r; valid(f, r); f, r = f+1, r+1 {
+		for f, r := f+1, r+1; f.Valid() && r.Valid(); f, r = f+1, r+1 {
 			bishopAttacks[s].Set(core.NewSquare(f, r))
 		}
 	}
 
 	// Rook attacks.
-	for s := range core.H8 {
-		valid := func(f core.File, r core.Rank) bool {
-			return f >= core.FileA && f <= core.FileH &&
-				r >= core.Rank1 && r <= core.Rank8
-		}
+	for s := core.A1; s <= core.H8; s++ {
 		f, r := s.File(), s.Rank()
-		for f, r := f, r; valid(f, r); r-- {
+		for f := f - 1; f.Valid(); f-- {
 			rookAttacks[s].Set(core.NewSquare(f, r))
 		}
-		for f, r := f, r; valid(f, r); f++ {
+		for f := f + 1; f.Valid(); f++ {
 			rookAttacks[s].Set(core.NewSquare(f, r))
 		}
-		for f, r := f, r; valid(f, r); r-- {
+		for r := r - 1; r.Valid(); r-- {
 			rookAttacks[s].Set(core.NewSquare(f, r))
 		}
-		for f, r := f, r; valid(f, r); f-- {
+		for r := r + 1; r.Valid(); r++ {
 			rookAttacks[s].Set(core.NewSquare(f, r))
 		}
 	}
 
 	// Queen attacks.
 	queenAttacks = bishopAttacks
-	for s := range core.H8 {
+	for s := core.A1; s <= core.H8; s++ {
 		queenAttacks[s].With(rookAttacks[s])
 	}
 
 	// King attacks.
-	for s := range core.H8 {
+	kingDeltas := []struct {
+		f core.File
+		r core.Rank
+	}{
+		{1, 0}, {1, 1}, {0, 1}, {-1, 1},
+		{-1, 0}, {-1, -1}, {0, -1}, {1, -1},
+	}
+	for s := core.A1; s <= core.H8; s++ {
 		f, r := s.File(), s.Rank()
-		if r <= core.Rank7 {
-			kingAttacks[s].Set(s.Above())
-		}
-		if r >= core.Rank2 {
-			kingAttacks[s].Set(s.Below())
-		}
-		if f >= core.FileB {
-			kingAttacks[s].Set(s.Left())
-		}
-		if f <= core.FileG {
-			kingAttacks[s].Set(s.Right())
-		}
-		if f >= core.FileB && r <= core.Rank7 {
-			kingAttacks[s].Set(s.Above().Left())
-		}
-		if f <= core.FileG && r <= core.Rank7 {
-			kingAttacks[s].Set(s.Above().Right())
-		}
-		if f >= core.FileB && r >= core.Rank2 {
-			kingAttacks[s].Set(s.Below().Left())
-		}
-		if f <= core.FileG && r >= core.Rank2 {
-			kingAttacks[s].Set(s.Below().Right())
+		for _, delta := range kingDeltas {
+			ff, rr := f+delta.f, r+delta.r
+			if ff.Valid() && rr.Valid() {
+				kingAttacks[s].Set(core.NewSquare(ff, rr))
+			}
 		}
 	}
 }
