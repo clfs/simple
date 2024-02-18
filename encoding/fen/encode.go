@@ -50,7 +50,7 @@ func Encode(p core.Position) string {
 			b.WriteRune(encodePiece[piece])
 		}
 
-		// Handle any gaps at the end of the rank.
+		// Handle any gaps at the end of the row.
 		if gap > 0 {
 			fmt.Fprintf(&b, "%d", gap)
 		}
