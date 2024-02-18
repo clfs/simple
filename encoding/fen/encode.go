@@ -12,6 +12,21 @@ func encodeSquare(s core.Square) string {
 	return strings.ToLower(s.String())
 }
 
+var encodePiece = map[core.Piece]rune{
+	core.WhitePawn:   'P',
+	core.WhiteKnight: 'N',
+	core.WhiteBishop: 'B',
+	core.WhiteRook:   'R',
+	core.WhiteQueen:  'Q',
+	core.WhiteKing:   'K',
+	core.BlackPawn:   'p',
+	core.BlackKnight: 'n',
+	core.BlackBishop: 'b',
+	core.BlackRook:   'r',
+	core.BlackQueen:  'q',
+	core.BlackKing:   'k',
+}
+
 // Encode encodes a position as a FEN string.
 func Encode(p core.Position) string {
 	var b strings.Builder
@@ -30,32 +45,7 @@ func Encode(p core.Position) string {
 				fmt.Fprintf(&b, "%d", skip)
 				skip = 0
 			}
-			switch piece {
-			case core.WhitePawn:
-				b.WriteRune('P')
-			case core.WhiteKnight:
-				b.WriteRune('N')
-			case core.WhiteBishop:
-				b.WriteRune('B')
-			case core.WhiteRook:
-				b.WriteRune('R')
-			case core.WhiteQueen:
-				b.WriteRune('Q')
-			case core.WhiteKing:
-				b.WriteRune('K')
-			case core.BlackPawn:
-				b.WriteRune('p')
-			case core.BlackKnight:
-				b.WriteRune('n')
-			case core.BlackBishop:
-				b.WriteRune('b')
-			case core.BlackRook:
-				b.WriteRune('r')
-			case core.BlackQueen:
-				b.WriteRune('q')
-			case core.BlackKing:
-				b.WriteRune('k')
-			}
+			b.WriteRune(encodePiece[piece])
 		}
 		if skip > 0 {
 			fmt.Fprintf(&b, "%d", skip)
