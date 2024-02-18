@@ -32,83 +32,83 @@ func Encode(p core.Position) string {
 			}
 			switch piece {
 			case core.WhitePawn:
-				fmt.Fprintf(&b, "P")
+				b.WriteRune('P')
 			case core.WhiteKnight:
-				fmt.Fprintf(&b, "N")
+				b.WriteRune('N')
 			case core.WhiteBishop:
-				fmt.Fprintf(&b, "B")
+				b.WriteRune('B')
 			case core.WhiteRook:
-				fmt.Fprintf(&b, "R")
+				b.WriteRune('R')
 			case core.WhiteQueen:
-				fmt.Fprintf(&b, "Q")
+				b.WriteRune('Q')
 			case core.WhiteKing:
-				fmt.Fprintf(&b, "K")
+				b.WriteRune('K')
 			case core.BlackPawn:
-				fmt.Fprintf(&b, "p")
+				b.WriteRune('p')
 			case core.BlackKnight:
-				fmt.Fprintf(&b, "n")
+				b.WriteRune('n')
 			case core.BlackBishop:
-				fmt.Fprintf(&b, "b")
+				b.WriteRune('b')
 			case core.BlackRook:
-				fmt.Fprintf(&b, "r")
+				b.WriteRune('r')
 			case core.BlackQueen:
-				fmt.Fprintf(&b, "q")
+				b.WriteRune('q')
 			case core.BlackKing:
-				fmt.Fprintf(&b, "k")
+				b.WriteRune('k')
 			}
 		}
 		if skip > 0 {
 			fmt.Fprintf(&b, "%d", skip)
 		}
 		if r != core.Rank1 {
-			fmt.Fprintf(&b, "/")
+			b.WriteRune('/')
 		}
 	}
 
-	fmt.Fprintf(&b, " ")
+	b.WriteRune(' ')
 
 	// Side to move.
 	if p.SideToMove == core.White {
-		fmt.Fprintf(&b, "w")
+		b.WriteRune('w')
 	} else {
-		fmt.Fprintf(&b, "b")
+		b.WriteRune('b')
 	}
 
-	fmt.Fprintf(&b, " ")
+	b.WriteRune(' ')
 
 	// Castling rights.
 	if !p.WhiteOO && !p.WhiteOOO && !p.BlackOO && !p.BlackOOO {
-		fmt.Fprintf(&b, "-")
+		b.WriteRune('-')
 	} else {
 		if p.WhiteOO {
-			fmt.Fprintf(&b, "K")
+			b.WriteRune('K')
 		}
 		if p.WhiteOOO {
-			fmt.Fprintf(&b, "Q")
+			b.WriteRune('Q')
 		}
 		if p.BlackOO {
-			fmt.Fprintf(&b, "k")
+			b.WriteRune('k')
 		}
 		if p.BlackOOO {
-			fmt.Fprintf(&b, "q")
+			b.WriteRune('q')
 		}
 	}
 
-	fmt.Fprintf(&b, " ")
+	b.WriteRune(' ')
 
 	// En passant square.
 	if p.EnPassant == 0 {
-		fmt.Fprintf(&b, "-")
+		b.WriteRune('-')
 	} else {
 		fmt.Fprintf(&b, "%s", encodeSquare(p.EnPassant))
 	}
 
-	fmt.Fprintf(&b, " ")
+	b.WriteRune(' ')
 
 	// Half move clock.
 	fmt.Fprintf(&b, "%d", p.HalfMoveClock)
 
-	fmt.Fprintf(&b, " ")
+	b.WriteRune(' ')
 
 	// Full move counter.
 	fmt.Fprintf(&b, "%d", p.FullMoveNumber)
