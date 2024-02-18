@@ -33,15 +33,11 @@ func decodeSquare(s string) (core.Square, bool) {
 	}
 
 	f := core.File(s[0] - 'a')
-	if f < core.FileA || f > core.FileH {
-		return 0, false
-	}
-
 	r := core.Rank(s[1] - '1')
-	if r < core.Rank1 || r > core.Rank7 {
+
+	if f < core.FileA || f > core.FileH || r < core.Rank1 || r > core.Rank8 {
 		return 0, false
 	}
-
 	return core.NewSquare(f, r), true
 }
 
