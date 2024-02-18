@@ -38,13 +38,13 @@ func Encode(p core.Position) string {
 			piece, ok := p.Board.Get(core.NewSquare(f, r))
 			if !ok {
 				skip++
-				continue
+			} else {
+				if skip > 0 {
+					fmt.Fprintf(&b, "%d", skip)
+					skip = 0
+				}
+				b.WriteRune(encodePiece[piece])
 			}
-			if skip > 0 {
-				fmt.Fprintf(&b, "%d", skip)
-				skip = 0
-			}
-			b.WriteRune(encodePiece[piece])
 		}
 		if skip > 0 {
 			fmt.Fprintf(&b, "%d", skip)
