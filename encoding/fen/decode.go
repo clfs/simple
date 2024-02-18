@@ -41,6 +41,15 @@ func decodeSquare(s string) (core.Square, bool) {
 	return core.NewSquare(f, r), true
 }
 
+// MustDecode is like Decode but panics if the FEN is invalid.
+func MustDecode(s string) core.Position {
+	p, err := Decode(s)
+	if err != nil {
+		panic(err)
+	}
+	return p
+}
+
 // Decode decodes a FEN string and returns the position it represents.
 func Decode(s string) (core.Position, error) {
 	var p core.Position
