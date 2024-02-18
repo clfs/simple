@@ -49,7 +49,6 @@ func init() {
 	}
 
 	// Knight attacks.
-
 	for s := range core.H8 {
 		f, r := s.File(), s.Rank()
 		if f >= core.FileC && r <= core.Rank6 {
