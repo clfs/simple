@@ -34,6 +34,7 @@ func Encode(p core.Position) string {
 	// Board.
 	for r := core.Rank8; r >= core.Rank1; r-- {
 		skip := 0
+
 		for f := core.FileA; f <= core.FileH; f++ {
 			piece, ok := p.Board.Get(core.NewSquare(f, r))
 			switch {
@@ -47,9 +48,11 @@ func Encode(p core.Position) string {
 				b.WriteRune(encodePiece[piece])
 			}
 		}
+
 		if skip > 0 {
 			fmt.Fprintf(&b, "%d", skip)
 		}
+
 		if r != core.Rank1 {
 			b.WriteRune('/')
 		}
