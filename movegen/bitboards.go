@@ -49,31 +49,20 @@ func init() {
 	}
 
 	// Knight attacks.
-	for s := range core.H8 {
+	knightDeltas := []struct {
+		f core.File
+		r core.Rank
+	}{
+		{2, 1}, {1, 2}, {-2, 1}, {-1, 2},
+		{2, -1}, {1, -2}, {-2, -1}, {-1, -2},
+	}
+	for s := core.A1; s <= core.H8; s++ {
 		f, r := s.File(), s.Rank()
-		if f >= core.FileC && r <= core.Rank6 {
-			knightAttacks[s].Set(s.Above().Above().Left())
-		}
-		if f <= core.FileG && r <= core.Rank6 {
-			knightAttacks[s].Set(s.Above().Above().Right())
-		}
-		if f >= core.FileB && r <= core.Rank7 {
-			knightAttacks[s].Set(s.Above().Left().Left())
-		}
-		if f <= core.FileG && r <= core.Rank7 {
-			knightAttacks[s].Set(s.Above().Right().Right())
-		}
-		if f >= core.FileB && r >= core.Rank2 {
-			knightAttacks[s].Set(s.Above().Left().Left())
-		}
-		if f <= core.FileG && r >= core.Rank2 {
-			knightAttacks[s].Set(s.Below().Right().Right())
-		}
-		if f >= core.FileC && r >= core.Rank3 {
-			knightAttacks[s].Set(s.Below().Below().Left())
-		}
-		if f <= core.FileG && r >= core.Rank3 {
-			knightAttacks[s].Set(s.Below().Below().Right())
+		for _, delta := range knightDeltas {
+			ff, rr := f+delta.f, r+delta.r
+			if ff.Valid() && rr.Valid() {
+				knightAttacks[s].Set(core.NewSquare(ff, rr))
+			}
 		}
 	}
 

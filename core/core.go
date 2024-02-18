@@ -163,6 +163,10 @@ func (f File) String() string {
 	}
 }
 
+func (f File) Valid() bool {
+	return f >= FileA && f <= FileH
+}
+
 // A Rank is a row on the chess board.
 type Rank int
 
@@ -199,6 +203,10 @@ func (r Rank) String() string {
 	default:
 		return fmt.Sprintf("Rank(%d)", r)
 	}
+}
+
+func (r Rank) Valid() bool {
+	return r >= Rank1 && r <= Rank8
 }
 
 // A Square is a location on the chess board.
