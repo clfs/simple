@@ -303,9 +303,19 @@ func (s Square) Above() Square {
 	return s + 8
 }
 
+// IsAbove returns true if s is above other.
+func (s Square) IsAbove(other Square) bool {
+	return s.Rank() > other.Rank()
+}
+
 // Below returns the square below s.
 func (s Square) Below() Square {
 	return s - 8
+}
+
+// IsBelow returns true if s is below other.
+func (s Square) IsBelow(other Square) bool {
+	return s.Rank() < other.Rank()
 }
 
 // Left returns the square to the left of s.
@@ -313,9 +323,19 @@ func (s Square) Left() Square {
 	return s - 1
 }
 
+// IsLeftOf returns true if s is to the left of other.
+func (s Square) IsLeftOf(other Square) bool {
+	return s.File() < other.File()
+}
+
 // Right returns the square to the right of s.
 func (s Square) Right() Square {
 	return s + 1
+}
+
+// IsRightOf returns true if s is to the right of other.
+func (s Square) IsRightOf(other Square) bool {
+	return s.File() > other.File()
 }
 
 // A Move represents a chess move.
