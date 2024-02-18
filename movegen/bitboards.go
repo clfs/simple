@@ -57,46 +57,50 @@ func init() {
 		{2, -1}, {1, -2}, {-2, -1}, {-1, -2},
 	}
 	for s := core.A1; s <= core.H8; s++ {
-		f, r := s.File(), s.Rank()
-		for _, delta := range knightDeltas {
-			ff, rr := f+delta.f, r+delta.r
-			if ff.Valid() && rr.Valid() {
-				knightAttacks[s].Set(core.NewSquare(ff, rr))
+		for _, d := range knightDeltas {
+			f := s.File() + d.f
+			r := s.Rank() + d.r
+			if f.Valid() && r.Valid() {
+				knightAttacks[s].Set(core.NewSquare(f, r))
 			}
 		}
 	}
 
 	// Bishop attacks.
+	bishopDeltas := []struct {
+		f core.File
+		r core.Rank
+	}{
+		{1, 1}, {-1, 1}, {-1, -1}, {1, -1},
+	}
 	for s := core.A1; s <= core.H8; s++ {
-		f, r := s.File(), s.Rank()
-		for f, r := f-1, r-1; f.Valid() && r.Valid(); f, r = f-1, r-1 {
-			bishopAttacks[s].Set(core.NewSquare(f, r))
-		}
-		for f, r := f+1, r-1; f.Valid() && r.Valid(); f, r = f+1, r-1 {
-			bishopAttacks[s].Set(core.NewSquare(f, r))
-		}
-		for f, r := f-1, r+1; f.Valid() && r.Valid(); f, r = f-1, r+1 {
-			bishopAttacks[s].Set(core.NewSquare(f, r))
-		}
-		for f, r := f+1, r+1; f.Valid() && r.Valid(); f, r = f+1, r+1 {
-			bishopAttacks[s].Set(core.NewSquare(f, r))
+		for _, d := range bishopDeltas {
+			f := s.File() + d.f
+			r := s.Rank() + d.r
+			for f.Valid() && r.Valid() {
+				bishopAttacks[s].Set(core.NewSquare(f, r))
+				f += d.f
+				r += d.r
+			}
 		}
 	}
 
 	// Rook attacks.
+	rookDeltas := []struct {
+		f core.File
+		r core.Rank
+	}{
+		{0, 1}, {1, 0}, {0, -1}, {-1, 0},
+	}
 	for s := core.A1; s <= core.H8; s++ {
-		f, r := s.File(), s.Rank()
-		for f := f - 1; f.Valid(); f-- {
-			rookAttacks[s].Set(core.NewSquare(f, r))
-		}
-		for f := f + 1; f.Valid(); f++ {
-			rookAttacks[s].Set(core.NewSquare(f, r))
-		}
-		for r := r - 1; r.Valid(); r-- {
-			rookAttacks[s].Set(core.NewSquare(f, r))
-		}
-		for r := r + 1; r.Valid(); r++ {
-			rookAttacks[s].Set(core.NewSquare(f, r))
+		for _, d := range rookDeltas {
+			f := s.File() + d.f
+			r := s.Rank() + d.r
+			for f.Valid() && r.Valid() {
+				rookAttacks[s].Set(core.NewSquare(f, r))
+				f += d.f
+				r += d.r
+			}
 		}
 	}
 
@@ -115,11 +119,11 @@ func init() {
 		{-1, 0}, {-1, -1}, {0, -1}, {1, -1},
 	}
 	for s := core.A1; s <= core.H8; s++ {
-		f, r := s.File(), s.Rank()
 		for _, delta := range kingDeltas {
-			ff, rr := f+delta.f, r+delta.r
-			if ff.Valid() && rr.Valid() {
-				kingAttacks[s].Set(core.NewSquare(ff, rr))
+			f := s.File() + delta.f
+			r := s.Rank() + delta.r
+			if f.Valid() && r.Valid() {
+				kingAttacks[s].Set(core.NewSquare(f, r))
 			}
 		}
 	}
