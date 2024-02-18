@@ -308,6 +308,16 @@ func (s Square) Below() Square {
 	return s - 8
 }
 
+// Left returns the square to the left of s.
+func (s Square) Left() Square {
+	return s - 1
+}
+
+// Right returns the square to the right of s.
+func (s Square) Right() Square {
+	return s + 1
+}
+
 // A Move represents a chess move.
 // For castling moves, From and To are the king's squares.
 type Move struct {
