@@ -8,7 +8,7 @@ import (
 
 func TestBitboardMoveCounts(t *testing.T) {
 	cases := []struct {
-		bb   [64]core.Bitboard
+		bbs  [64]core.Bitboard
 		want int
 	}{
 		{whitePawnPushes, 6*8 + 8},         // 56
@@ -23,7 +23,7 @@ func TestBitboardMoveCounts(t *testing.T) {
 	}
 	for i, tc := range cases {
 		var got int
-		for _, bb := range tc.bb {
+		for _, bb := range tc.bbs {
 			got += bb.Count()
 		}
 		if got != tc.want {
