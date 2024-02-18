@@ -26,6 +26,11 @@ func (b *Bitboard) Get(s Square) bool {
 	return *b&(1<<s) != 0
 }
 
+// Count returns the number of squares set to 1.
+func (b *Bitboard) Count() int {
+	return bits.OnesCount64(uint64(*b))
+}
+
 // FlipV flips the bitboard horizontally.
 func (b *Bitboard) FlipV() {
 	*b = Bitboard(bits.ReverseBytes64(uint64(*b)))

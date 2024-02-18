@@ -49,23 +49,32 @@ func init() {
 	}
 
 	// Knight attacks.
+
 	for s := range core.H8 {
 		f, r := s.File(), s.Rank()
-		if f >= core.FileC {
-			if r <= core.Rank6 {
-				knightAttacks[s].Set(s.Above().Above().Left())
-			}
-			if r >= core.Rank3 {
-				knightAttacks[s].Set(s.Below().Below().Left())
-			}
+		if f >= core.FileC && r <= core.Rank6 {
+			knightAttacks[s].Set(s.Above().Above().Left())
 		}
-		if f <= core.FileG {
-			if r <= core.Rank6 {
-				knightAttacks[s].Set(s.Above().Above().Right())
-			}
-			if r >= core.Rank3 {
-				knightAttacks[s].Set(s.Below().Below().Right())
-			}
+		if f <= core.FileG && r <= core.Rank6 {
+			knightAttacks[s].Set(s.Above().Above().Right())
+		}
+		if f >= core.FileB && r <= core.Rank7 {
+			knightAttacks[s].Set(s.Above().Left().Left())
+		}
+		if f <= core.FileG && r <= core.Rank7 {
+			knightAttacks[s].Set(s.Above().Right().Right())
+		}
+		if f >= core.FileB && r >= core.Rank2 {
+			knightAttacks[s].Set(s.Above().Left().Left())
+		}
+		if f <= core.FileG && r >= core.Rank2 {
+			knightAttacks[s].Set(s.Below().Right().Right())
+		}
+		if f >= core.FileC && r >= core.Rank3 {
+			knightAttacks[s].Set(s.Below().Below().Left())
+		}
+		if f <= core.FileG && r >= core.Rank3 {
+			knightAttacks[s].Set(s.Below().Below().Right())
 		}
 	}
 
