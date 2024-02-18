@@ -33,18 +33,18 @@ func Encode(p core.Position) string {
 
 	// Board.
 	for r := core.Rank8; r >= core.Rank1; r-- {
-		empty := 0
+		gap := 0
 		for f := core.FileA; f <= core.FileH; f++ {
 			piece, ok := p.Board.Get(core.NewSquare(f, r))
 			if !ok { // empty square
-				empty++
+				gap++
 				if f == core.FileH {
-					fmt.Fprintf(&b, "%d", empty)
+					fmt.Fprintf(&b, "%d", gap)
 				}
 			} else { // occupied square
-				if empty > 0 {
-					fmt.Fprintf(&b, "%d", empty)
-					empty = 0
+				if gap > 0 {
+					fmt.Fprintf(&b, "%d", gap)
+					gap = 0
 				}
 				b.WriteRune(encodePiece[piece])
 			}
