@@ -55,8 +55,7 @@ func init() {
 
 		// Knight attacks.
 		for _, d := range knightDeltas {
-			f := f + d.f
-			r := r + d.r
+			f, r := f+d.f, r+d.r
 			if f.Valid() && r.Valid() {
 				knightAttacks[s].Set(core.NewSquare(f, r))
 			}
@@ -64,41 +63,34 @@ func init() {
 
 		// Bishop attacks.
 		for _, d := range bishopDeltas {
-			f := f + d.f
-			r := r + d.r
+			f, r := f+d.f, r+d.r
 			for f.Valid() && r.Valid() {
 				bishopAttacks[s].Set(core.NewSquare(f, r))
-				f += d.f
-				r += d.r
+				f, r = f+d.f, r+d.r
 			}
 		}
 
 		// Rook attacks.
 		for _, d := range rookDeltas {
-			f := f + d.f
-			r := r + d.r
+			f, r := f+d.f, r+d.r
 			for f.Valid() && r.Valid() {
 				rookAttacks[s].Set(core.NewSquare(f, r))
-				f += d.f
-				r += d.r
+				f, r = f+d.f, r+d.r
 			}
 		}
 
 		// Queen attacks.
 		for _, d := range queenDeltas {
-			f := f + d.f
-			r := r + d.r
+			f, r := f+d.f, r+d.r
 			for f.Valid() && r.Valid() {
 				queenAttacks[s].Set(core.NewSquare(f, r))
-				f += d.f
-				r += d.r
+				f, r = f+d.f, r+d.r
 			}
 		}
 
 		// King attacks.
 		for _, d := range kingDeltas {
-			f := f + d.f
-			r := r + d.r
+			f, r := f+d.f, r+d.r
 			if f.Valid() && r.Valid() {
 				kingAttacks[s].Set(core.NewSquare(f, r))
 			}
