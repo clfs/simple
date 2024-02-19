@@ -112,7 +112,7 @@ type delta struct {
 
 func knightAttacks() [64]core.Bitboard {
 	var t [64]core.Bitboard
-	deltas := []delta{{2, 1}, {1, 2}, {-2, 1}, {-1, 2}, {2, -1}, {1, -2}, {-2, -1}, {-1, -2}}
+	deltas := []delta{{2, 1}, {2, -1}, {1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {-2, 1}, {-2, -1}}
 	for s := core.A1; s <= core.H8; s++ {
 		for _, d := range deltas {
 			f, r := s.File()+d.f, s.Rank()+d.r
@@ -126,7 +126,7 @@ func knightAttacks() [64]core.Bitboard {
 
 func kingAttacks() [64]core.Bitboard {
 	var t [64]core.Bitboard
-	deltas := []delta{{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}}
+	deltas := []delta{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}
 	for s := core.A1; s <= core.H8; s++ {
 		for _, d := range deltas {
 			f, r := s.File()+d.f, s.Rank()+d.r
