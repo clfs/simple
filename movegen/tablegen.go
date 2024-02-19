@@ -54,50 +54,54 @@ func main() {
 	}
 }
 
-func whitePawnPushes() (table [64]core.Bitboard) {
+func whitePawnPushes() [64]core.Bitboard {
+	var t [64]core.Bitboard
 	for s := core.A2; s <= core.H7; s++ {
-		table[s].Set(s.Above())
+		t[s].Set(s.Above())
 		if s.Rank() == core.Rank2 {
-			table[s].Set(s.Above().Above())
+			t[s].Set(s.Above().Above())
 		}
 	}
-	return
+	return t
 }
 
-func blackPawnPushes() (table [64]core.Bitboard) {
+func blackPawnPushes() [64]core.Bitboard {
+	var t [64]core.Bitboard
 	for s := core.A2; s <= core.H7; s++ {
-		table[s].Set(s.Below())
+		t[s].Set(s.Below())
 		if s.Rank() == core.Rank7 {
-			table[s].Set(s.Below().Below())
+			t[s].Set(s.Below().Below())
 		}
 	}
-	return
+	return t
 }
 
-func whitePawnAttacks() (table [64]core.Bitboard) {
+func whitePawnAttacks() [64]core.Bitboard {
+	var t [64]core.Bitboard
 	for s := core.A2; s <= core.H7; s++ {
 		f := s.File()
 		if f != core.FileA {
-			table[s].Set(s.Above().Left())
+			t[s].Set(s.Above().Left())
 		}
 		if f != core.FileH {
-			table[s].Set(s.Above().Right())
+			t[s].Set(s.Above().Right())
 		}
 	}
-	return
+	return t
 }
 
-func blackPawnAttacks() (table [64]core.Bitboard) {
+func blackPawnAttacks() [64]core.Bitboard {
+	var t [64]core.Bitboard
 	for s := core.A2; s <= core.H7; s++ {
 		f := s.File()
 		if f != core.FileA {
-			table[s].Set(s.Below().Left())
+			t[s].Set(s.Below().Left())
 		}
 		if f != core.FileH {
-			table[s].Set(s.Below().Right())
+			t[s].Set(s.Below().Right())
 		}
 	}
-	return
+	return t
 }
 
 // delta represents a square translation.
@@ -106,28 +110,30 @@ type delta struct {
 	r core.Rank
 }
 
-func knightAttacks() (table [64]core.Bitboard) {
+func knightAttacks() [64]core.Bitboard {
+	var t [64]core.Bitboard
 	deltas := []delta{{2, 1}, {1, 2}, {-2, 1}, {-1, 2}, {2, -1}, {1, -2}, {-2, -1}, {-1, -2}}
 	for s := core.A1; s <= core.H8; s++ {
 		for _, d := range deltas {
 			f, r := s.File()+d.f, s.Rank()+d.r
 			if f.Valid() && r.Valid() {
-				table[s].Set(core.NewSquare(f, r))
+				t[s].Set(core.NewSquare(f, r))
 			}
 		}
 	}
-	return
+	return t
 }
 
-func kingAttacks() (table [64]core.Bitboard) {
+func kingAttacks() [64]core.Bitboard {
+	var t [64]core.Bitboard
 	deltas := []delta{{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}}
 	for s := core.A1; s <= core.H8; s++ {
 		for _, d := range deltas {
 			f, r := s.File()+d.f, s.Rank()+d.r
 			if f.Valid() && r.Valid() {
-				table[s].Set(core.NewSquare(f, r))
+				t[s].Set(core.NewSquare(f, r))
 			}
 		}
 	}
-	return
+	return t
 }
