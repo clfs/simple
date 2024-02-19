@@ -1,3 +1,5 @@
+//go:generate go run tablegen.go -output tables.go
+
 // Package movegen generates moves.
 package movegen
 
