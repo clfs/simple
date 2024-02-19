@@ -115,21 +115,15 @@ func blackPawnAttacks() []core.Bitboard {
 	return table[:]
 }
 
+// delta represents a square translation.
+type delta struct {
+	f core.File
+	r core.Rank
+}
+
 func knightAttacks() []core.Bitboard {
 	var table [64]core.Bitboard
-	deltas := []struct {
-		f core.File
-		r core.Rank
-	}{
-		{2, 1},
-		{1, 2},
-		{-2, 1},
-		{-1, 2},
-		{2, -1},
-		{1, -2},
-		{-2, -1},
-		{-1, -2},
-	}
+	deltas := []delta{{2, 1}, {1, 2}, {-2, 1}, {-1, 2}, {2, -1}, {1, -2}, {-2, -1}, {-1, -2}}
 	for s := core.A1; s <= core.H8; s++ {
 		for _, d := range deltas {
 			f, r := s.File()+d.f, s.Rank()+d.r
@@ -143,19 +137,7 @@ func knightAttacks() []core.Bitboard {
 
 func kingAttacks() []core.Bitboard {
 	var table [64]core.Bitboard
-	deltas := []struct {
-		f core.File
-		r core.Rank
-	}{
-		{1, 0},
-		{1, 1},
-		{0, 1},
-		{-1, 1},
-		{-1, 0},
-		{-1, -1},
-		{0, -1},
-		{1, -1},
-	}
+	deltas := []delta{{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}}
 	for s := core.A1; s <= core.H8; s++ {
 		for _, d := range deltas {
 			f, r := s.File()+d.f, s.Rank()+d.r
