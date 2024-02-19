@@ -76,10 +76,11 @@ func blackPawnPushes() (table [64]core.Bitboard) {
 
 func whitePawnAttacks() (table [64]core.Bitboard) {
 	for s := core.A2; s <= core.H7; s++ {
-		if s.File() != core.FileA {
+		f := s.File()
+		if f != core.FileA {
 			table[s].Set(s.Above().Left())
 		}
-		if s.File() != core.FileH {
+		if f != core.FileH {
 			table[s].Set(s.Above().Right())
 		}
 	}
@@ -88,10 +89,11 @@ func whitePawnAttacks() (table [64]core.Bitboard) {
 
 func blackPawnAttacks() (table [64]core.Bitboard) {
 	for s := core.A2; s <= core.H7; s++ {
-		if s.File() != core.FileA {
+		f := s.File()
+		if f != core.FileA {
 			table[s].Set(s.Below().Left())
 		}
-		if s.File() != core.FileH {
+		if f != core.FileH {
 			table[s].Set(s.Below().Right())
 		}
 	}
