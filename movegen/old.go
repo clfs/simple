@@ -5,11 +5,9 @@ import (
 )
 
 var (
-	knightAttacks [64]core.Bitboard
 	bishopAttacks [64]core.Bitboard
 	rookAttacks   [64]core.Bitboard
 	queenAttacks  [64]core.Bitboard
-	kingAttacks   [64]core.Bitboard
 )
 
 func init() {
@@ -19,23 +17,13 @@ func init() {
 	}
 
 	var (
-		knightDeltas = []delta{{2, 1}, {1, 2}, {-2, 1}, {-1, 2}, {2, -1}, {1, -2}, {-2, -1}, {-1, -2}}
 		bishopDeltas = []delta{{1, 1}, {-1, 1}, {-1, -1}, {1, -1}}
 		rookDeltas   = []delta{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
 		queenDeltas  = []delta{{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}}
-		kingDeltas   = []delta{{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}}
 	)
 
 	for s := core.A1; s <= core.H8; s++ {
 		f, r := s.File(), s.Rank()
-
-		// Knight attacks.
-		for _, d := range knightDeltas {
-			f, r := f+d.f, r+d.r
-			if f.Valid() && r.Valid() {
-				knightAttacks[s].Set(core.NewSquare(f, r))
-			}
-		}
 
 		// Bishop attacks.
 		for _, d := range bishopDeltas {
@@ -61,14 +49,6 @@ func init() {
 			for f.Valid() && r.Valid() {
 				queenAttacks[s].Set(core.NewSquare(f, r))
 				f, r = f+d.f, r+d.r
-			}
-		}
-
-		// King attacks.
-		for _, d := range kingDeltas {
-			f, r := f+d.f, r+d.r
-			if f.Valid() && r.Valid() {
-				kingAttacks[s].Set(core.NewSquare(f, r))
 			}
 		}
 	}

@@ -39,6 +39,8 @@ func main() {
 	writeTable(&b, "blackPawnPushes", blackPawnPushes())
 	writeTable(&b, "whitePawnAttacks", whitePawnAttacks())
 	writeTable(&b, "blackPawnAttacks", blackPawnAttacks())
+	writeTable(&b, "knightAttacks", knightAttacks())
+	writeTable(&b, "kingAttacks", kingAttacks())
 
 	source, err := format.Source(b.Bytes())
 	if err != nil {
@@ -57,7 +59,10 @@ func main() {
 func writeTable(w io.Writer, name string, table []core.Bitboard) {
 	fmt.Fprintf(w, "var %s = [%d]core.Bitboard{\n", name, len(table))
 	for i := range table {
-		fmt.Fprintf(w, "%d,\n", table[i])
+		fmt.Fprintf(w, "%#016x,", table[i])
+		if i%8 == 7 {
+			fmt.Fprint(w, "\n")
+		}
 	}
 	fmt.Fprint(w, "}\n\n")
 }
@@ -105,6 +110,58 @@ func blackPawnAttacks() []core.Bitboard {
 		}
 		if s.File() != core.FileH {
 			table[s].Set(s.Below().Right())
+		}
+	}
+	return table[:]
+}
+
+func knightAttacks() []core.Bitboard {
+	var table [64]core.Bitboard
+	deltas := []struct {
+		f core.File
+		r core.Rank
+	}{
+		{2, 1},
+		{1, 2},
+		{-2, 1},
+		{-1, 2},
+		{2, -1},
+		{1, -2},
+		{-2, -1},
+		{-1, -2},
+	}
+	for s := core.A1; s <= core.H8; s++ {
+		for _, d := range deltas {
+			f, r := s.File()+d.f, s.Rank()+d.r
+			if f.Valid() && r.Valid() {
+				table[s].Set(core.NewSquare(f, r))
+			}
+		}
+	}
+	return table[:]
+}
+
+func kingAttacks() []core.Bitboard {
+	var table [64]core.Bitboard
+	deltas := []struct {
+		f core.File
+		r core.Rank
+	}{
+		{1, 0},
+		{1, 1},
+		{0, 1},
+		{-1, 1},
+		{-1, 0},
+		{-1, -1},
+		{0, -1},
+		{1, -1},
+	}
+	for s := core.A1; s <= core.H8; s++ {
+		for _, d := range deltas {
+			f, r := s.File()+d.f, s.Rank()+d.r
+			if f.Valid() && r.Valid() {
+				table[s].Set(core.NewSquare(f, r))
+			}
 		}
 	}
 	return table[:]
