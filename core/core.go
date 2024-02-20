@@ -33,7 +33,7 @@ func (c Color) Uint64() uint64 {
 }
 
 // A PieceType is a type of piece.
-type PieceType int
+type PieceType uint64
 
 // Piece type constants.
 const (

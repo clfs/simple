@@ -45,7 +45,6 @@ func TestPieceType_String(t *testing.T) {
 		{Rook, "Rook"},
 		{Queen, "Queen"},
 		{King, "King"},
-		{PieceType(-1), "PieceType(-1)"},
 		{PieceType(42), "PieceType(42)"},
 	}
 	for i, c := range cases {
