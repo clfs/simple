@@ -187,7 +187,6 @@ func TestRank_String(t *testing.T) {
 		{Rank6, "Rank6"},
 		{Rank7, "Rank7"},
 		{Rank8, "Rank8"},
-		{Rank(-1), "Rank(-1)"},
 		{Rank(42), "Rank(42)"},
 	}
 	for i, c := range cases {

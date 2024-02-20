@@ -172,7 +172,7 @@ func (f File) Valid() bool {
 }
 
 // A Rank is a row on the chess board.
-type Rank int
+type Rank uint64
 
 // Rank constants.
 const (
