@@ -33,7 +33,7 @@ func (c Color) Uint64() uint64 {
 }
 
 // A PieceType is a type of piece.
-type PieceType int
+type PieceType uint64
 
 // Piece type constants.
 const (
@@ -65,7 +65,7 @@ func (p PieceType) String() string {
 }
 
 // A Piece represents a chess piece.
-type Piece int
+type Piece uint64
 
 // White piece constants.
 const (
@@ -130,7 +130,7 @@ func (p Piece) Color() Color {
 }
 
 // A File is a column on the chess board.
-type File int
+type File uint64
 
 // File constants.
 const (
@@ -172,7 +172,7 @@ func (f File) Valid() bool {
 }
 
 // A Rank is a row on the chess board.
-type Rank int
+type Rank uint64
 
 // Rank constants.
 const (
@@ -214,7 +214,7 @@ func (r Rank) Valid() bool {
 }
 
 // A Square is a location on the chess board.
-type Square int
+type Square uint64
 
 // Square constants.
 const (

@@ -45,7 +45,6 @@ func TestPieceType_String(t *testing.T) {
 		{Rook, "Rook"},
 		{Queen, "Queen"},
 		{King, "King"},
-		{PieceType(-1), "PieceType(-1)"},
 		{PieceType(42), "PieceType(42)"},
 	}
 	for i, c := range cases {
@@ -90,7 +89,6 @@ func TestPiece_String(t *testing.T) {
 		{BlackRook, "BlackRook"},
 		{BlackQueen, "BlackQueen"},
 		{BlackKing, "BlackKing"},
-		{Piece(-1), "Piece(-1)"},
 		{Piece(42), "Piece(42)"},
 	}
 	for i, c := range cases {
@@ -166,7 +164,6 @@ func TestFile_String(t *testing.T) {
 		{FileF, "FileF"},
 		{FileG, "FileG"},
 		{FileH, "FileH"},
-		{File(-1), "File(-1)"},
 		{File(42), "File(42)"},
 	}
 	for i, c := range cases {
@@ -190,7 +187,6 @@ func TestRank_String(t *testing.T) {
 		{Rank6, "Rank6"},
 		{Rank7, "Rank7"},
 		{Rank8, "Rank8"},
-		{Rank(-1), "Rank(-1)"},
 		{Rank(42), "Rank(42)"},
 	}
 	for i, c := range cases {
@@ -227,7 +223,6 @@ func TestSquare_String(t *testing.T) {
 		{A1, "A1"},
 		{D4, "D4"},
 		{H8, "H8"},
-		{Square(-1), "Square(-1)"},
 		{Square(1000), "Square(1000)"},
 	}
 	for i, c := range cases {
