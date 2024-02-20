@@ -292,3 +292,67 @@ func TestBoard(t *testing.T) {
 		t.Error("A3 not empty")
 	}
 }
+
+func TestSquare_Above(t *testing.T) {
+	cases := []struct {
+		sq   Square
+		want Square
+	}{
+		{A1, A2},
+		{D4, D5},
+	}
+	for i, c := range cases {
+		got := c.sq.Above()
+		if got != c.want {
+			t.Errorf("%d: got %s, want %s", i, got, c.want)
+		}
+	}
+}
+
+func TestSquare_Below(t *testing.T) {
+	cases := []struct {
+		sq   Square
+		want Square
+	}{
+		{A2, A1},
+		{D5, D4},
+	}
+	for i, c := range cases {
+		got := c.sq.Below()
+		if got != c.want {
+			t.Errorf("%d: got %s, want %s", i, got, c.want)
+		}
+	}
+}
+
+func TestSquare_Left(t *testing.T) {
+	cases := []struct {
+		sq   Square
+		want Square
+	}{
+		{B2, A2},
+		{D5, C5},
+	}
+	for i, c := range cases {
+		got := c.sq.Left()
+		if got != c.want {
+			t.Errorf("%d: got %s, want %s", i, got, c.want)
+		}
+	}
+}
+
+func TestSquare_Right(t *testing.T) {
+	cases := []struct {
+		sq   Square
+		want Square
+	}{
+		{A1, B1},
+		{D4, E4},
+	}
+	for i, c := range cases {
+		got := c.sq.Right()
+		if got != c.want {
+			t.Errorf("%d: got %s, want %s", i, got, c.want)
+		}
+	}
+}
