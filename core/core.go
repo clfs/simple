@@ -4,28 +4,32 @@ package core
 import "fmt"
 
 // A Color is white or black.
-type Color int
+type Color bool
 
 // Color constants.
 const (
-	White Color = iota
-	Black
+	White Color = false
+	Black Color = true
 )
 
 func (c Color) String() string {
-	switch c {
-	case White:
-		return "White"
-	case Black:
+	if c {
 		return "Black"
-	default:
-		return fmt.Sprintf("Color(%d)", c)
 	}
+	return "White"
 }
 
 // Other returns the other color.
 func (c Color) Other() Color {
-	return 1 - c
+	return !c
+}
+
+// Uint64 returns 0 for white and 1 for black.
+func (c Color) Uint64() uint64 {
+	if c {
+		return 1
+	}
+	return 0
 }
 
 // A PieceType is a type of piece.
@@ -81,7 +85,7 @@ const (
 
 // NewPiece returns a new piece.
 func NewPiece(c Color, pt PieceType) Piece {
-	return Piece(c)*6 + Piece(pt)
+	return Piece(c.Uint64()*6 + uint64(pt))
 }
 
 func (p Piece) String() string {
@@ -122,7 +126,7 @@ func (p Piece) Type() PieceType {
 
 // Color returns a piece's color.
 func (p Piece) Color() Color {
-	return Color(p / 6)
+	return p >= BlackPawn
 }
 
 // A File is a column on the chess board.
