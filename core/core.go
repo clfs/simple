@@ -65,7 +65,7 @@ func (p PieceType) String() string {
 }
 
 // A Piece represents a chess piece.
-type Piece int
+type Piece uint64
 
 // White piece constants.
 const (

@@ -89,7 +89,6 @@ func TestPiece_String(t *testing.T) {
 		{BlackRook, "BlackRook"},
 		{BlackQueen, "BlackQueen"},
 		{BlackKing, "BlackKing"},
-		{Piece(-1), "Piece(-1)"},
 		{Piece(42), "Piece(42)"},
 	}
 	for i, c := range cases {
