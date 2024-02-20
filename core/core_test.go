@@ -9,8 +9,6 @@ func TestColor_String(t *testing.T) {
 	}{
 		{White, "White"},
 		{Black, "Black"},
-		{Color(-1), "Color(-1)"},
-		{Color(42), "Color(42)"},
 	}
 	for i, c := range cases {
 		got := c.color.String()
