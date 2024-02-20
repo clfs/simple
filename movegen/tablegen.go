@@ -106,8 +106,8 @@ func blackPawnAttacks() [64]core.Bitboard {
 
 // delta represents a square translation.
 type delta struct {
-	f core.File
-	r core.Rank
+	f int
+	r int
 }
 
 func knightAttacks() [64]core.Bitboard {
@@ -115,7 +115,7 @@ func knightAttacks() [64]core.Bitboard {
 	deltas := []delta{{2, 1}, {2, -1}, {1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {-2, 1}, {-2, -1}}
 	for s := core.A1; s <= core.H8; s++ {
 		for _, d := range deltas {
-			f, r := s.File()+d.f, s.Rank()+d.r
+			f, r := s.File()+core.File(d.f), s.Rank()+core.Rank(d.r)
 			if f.Valid() && r.Valid() {
 				t[s].Set(core.NewSquare(f, r))
 			}
@@ -129,7 +129,7 @@ func kingAttacks() [64]core.Bitboard {
 	deltas := []delta{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}
 	for s := core.A1; s <= core.H8; s++ {
 		for _, d := range deltas {
-			f, r := s.File()+d.f, s.Rank()+d.r
+			f, r := s.File()+core.File(d.f), s.Rank()+core.Rank(d.r)
 			if f.Valid() && r.Valid() {
 				t[s].Set(core.NewSquare(f, r))
 			}
