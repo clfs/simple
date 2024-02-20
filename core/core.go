@@ -130,7 +130,7 @@ func (p Piece) Color() Color {
 }
 
 // A File is a column on the chess board.
-type File int
+type File uint64
 
 // File constants.
 const (

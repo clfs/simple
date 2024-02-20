@@ -12,7 +12,7 @@ var (
 
 func init() {
 	type delta struct {
-		f core.File
+		f int
 		r core.Rank
 	}
 
@@ -27,28 +27,28 @@ func init() {
 
 		// Bishop attacks.
 		for _, d := range bishopDeltas {
-			f, r := f+d.f, r+d.r
+			f, r := f+core.File(d.f), r+d.r
 			for f.Valid() && r.Valid() {
 				bishopAttacks[s].Set(core.NewSquare(f, r))
-				f, r = f+d.f, r+d.r
+				f, r = f+core.File(d.f), r+d.r
 			}
 		}
 
 		// Rook attacks.
 		for _, d := range rookDeltas {
-			f, r := f+d.f, r+d.r
+			f, r := f+core.File(d.f), r+d.r
 			for f.Valid() && r.Valid() {
 				rookAttacks[s].Set(core.NewSquare(f, r))
-				f, r = f+d.f, r+d.r
+				f, r = f+core.File(d.f), r+d.r
 			}
 		}
 
 		// Queen attacks.
 		for _, d := range queenDeltas {
-			f, r := f+d.f, r+d.r
+			f, r := f+core.File(d.f), r+d.r
 			for f.Valid() && r.Valid() {
 				queenAttacks[s].Set(core.NewSquare(f, r))
-				f, r = f+d.f, r+d.r
+				f, r = f+core.File(d.f), r+d.r
 			}
 		}
 	}

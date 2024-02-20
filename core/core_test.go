@@ -164,7 +164,6 @@ func TestFile_String(t *testing.T) {
 		{FileF, "FileF"},
 		{FileG, "FileG"},
 		{FileH, "FileH"},
-		{File(-1), "File(-1)"},
 		{File(42), "File(42)"},
 	}
 	for i, c := range cases {
