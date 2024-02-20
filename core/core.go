@@ -88,35 +88,30 @@ func NewPiece(c Color, pt PieceType) Piece {
 	return Piece(c.Uint64()*6 + uint64(pt))
 }
 
+func (p Piece) Valid() bool {
+	return p <= BlackKing
+}
+
+var pieceNames = [12]string{
+	"WhitePawn",
+	"WhiteKnight",
+	"WhiteBishop",
+	"WhiteRook",
+	"WhiteQueen",
+	"WhiteKing",
+	"BlackPawn",
+	"BlackKnight",
+	"BlackBishop",
+	"BlackRook",
+	"BlackQueen",
+	"BlackKing",
+}
+
 func (p Piece) String() string {
-	switch p {
-	case WhitePawn:
-		return "WhitePawn"
-	case WhiteKnight:
-		return "WhiteKnight"
-	case WhiteBishop:
-		return "WhiteBishop"
-	case WhiteRook:
-		return "WhiteRook"
-	case WhiteQueen:
-		return "WhiteQueen"
-	case WhiteKing:
-		return "WhiteKing"
-	case BlackPawn:
-		return "BlackPawn"
-	case BlackKnight:
-		return "BlackKnight"
-	case BlackBishop:
-		return "BlackBishop"
-	case BlackRook:
-		return "BlackRook"
-	case BlackQueen:
-		return "BlackQueen"
-	case BlackKing:
-		return "BlackKing"
-	default:
-		return fmt.Sprintf("Piece(%d)", p)
+	if p.Valid() {
+		return pieceNames[p]
 	}
+	return fmt.Sprintf("Piece(%d)", p)
 }
 
 // Type returns a piece's type.
@@ -320,19 +315,9 @@ func (s Square) Above() Square {
 	return s + 8
 }
 
-// IsAbove returns true if s is above other.
-func (s Square) IsAbove(other Square) bool {
-	return s.Rank() > other.Rank()
-}
-
 // Below returns the square below s.
 func (s Square) Below() Square {
 	return s - 8
-}
-
-// IsBelow returns true if s is below other.
-func (s Square) IsBelow(other Square) bool {
-	return s.Rank() < other.Rank()
 }
 
 // Left returns the square to the left of s.
@@ -340,19 +325,9 @@ func (s Square) Left() Square {
 	return s - 1
 }
 
-// IsLeftOf returns true if s is to the left of other.
-func (s Square) IsLeftOf(other Square) bool {
-	return s.File() < other.File()
-}
-
 // Right returns the square to the right of s.
 func (s Square) Right() Square {
 	return s + 1
-}
-
-// IsRightOf returns true if s is to the right of other.
-func (s Square) IsRightOf(other Square) bool {
-	return s.File() > other.File()
 }
 
 // A Move represents a chess move.

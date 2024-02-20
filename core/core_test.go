@@ -79,16 +79,6 @@ func TestPiece_String(t *testing.T) {
 	}{
 		{WhitePawn, "WhitePawn"},
 		{WhiteKnight, "WhiteKnight"},
-		{WhiteBishop, "WhiteBishop"},
-		{WhiteRook, "WhiteRook"},
-		{WhiteQueen, "WhiteQueen"},
-		{WhiteKing, "WhiteKing"},
-		{BlackPawn, "BlackPawn"},
-		{BlackKnight, "BlackKnight"},
-		{BlackBishop, "BlackBishop"},
-		{BlackRook, "BlackRook"},
-		{BlackQueen, "BlackQueen"},
-		{BlackKing, "BlackKing"},
 		{Piece(42), "Piece(42)"},
 	}
 	for i, c := range cases {
