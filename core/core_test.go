@@ -223,7 +223,6 @@ func TestSquare_String(t *testing.T) {
 		{A1, "A1"},
 		{D4, "D4"},
 		{H8, "H8"},
-		{Square(-1), "Square(-1)"},
 		{Square(1000), "Square(1000)"},
 	}
 	for i, c := range cases {

@@ -214,7 +214,7 @@ func (r Rank) Valid() bool {
 }
 
 // A Square is a location on the chess board.
-type Square int
+type Square uint64
 
 // Square constants.
 const (
