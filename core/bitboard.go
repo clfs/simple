@@ -12,10 +12,9 @@ type Bitboard uint64
 // Debug returns an 8x8 representation of the bitboard.
 func (b *Bitboard) Debug() string {
 	var buf bytes.Buffer
-	for r := 7; r >= 0; r-- {
-		for f := 0; f < 8; f++ {
-			sq := Square(r*8 + f)
-			if b.Get(sq) {
+	for r := Rank8; r.Valid(); r-- {
+		for f := FileA; f.Valid(); f++ {
+			if b.Get(NewSquare(f, r)) {
 				buf.WriteByte('X')
 			} else {
 				buf.WriteByte('.')
