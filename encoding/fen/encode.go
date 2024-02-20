@@ -32,9 +32,9 @@ func Encode(p core.Position) string {
 	var b strings.Builder
 
 	// Board.
-	for r := core.Rank8; r >= core.Rank1; r-- {
+	for r := core.Rank8; r.Valid(); r-- {
 		gap := 0
-		for f := core.FileA; f <= core.FileH; f++ {
+		for f := core.FileA; f.Valid(); f++ {
 			piece, ok := p.Board.Get(core.NewSquare(f, r))
 			// Empty square, so increment the gap and move to the next square.
 			if !ok {
