@@ -45,23 +45,24 @@ const (
 	King
 )
 
+var pieceTypeNames = [...]string{
+	"Pawn",
+	"Knight",
+	"Bishop",
+	"Rook",
+	"Queen",
+	"King",
+}
+
+func (p PieceType) Valid() bool {
+	return p <= King
+}
+
 func (p PieceType) String() string {
-	switch p {
-	case Pawn:
-		return "Pawn"
-	case Knight:
-		return "Knight"
-	case Bishop:
-		return "Bishop"
-	case Rook:
-		return "Rook"
-	case Queen:
-		return "Queen"
-	case King:
-		return "King"
-	default:
-		return fmt.Sprintf("PieceType(%d)", p)
+	if p.Valid() {
+		return pieceTypeNames[p]
 	}
+	return fmt.Sprintf("PieceType(%d)", p)
 }
 
 // A Piece represents a chess piece.
@@ -92,7 +93,7 @@ func (p Piece) Valid() bool {
 	return p <= BlackKing
 }
 
-var pieceNames = [12]string{
+var pieceNames = [...]string{
 	"WhitePawn",
 	"WhiteKnight",
 	"WhiteBishop",
