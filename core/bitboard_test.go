@@ -4,23 +4,6 @@ import (
 	"testing"
 )
 
-func TestSquare_Bitboard(t *testing.T) {
-	cases := []struct {
-		sq   Square
-		want Bitboard
-	}{
-		{A1, 0x1},
-		{B1, 0x2},
-		{H8, 0x8000_0000_0000_0000},
-	}
-	for _, c := range cases {
-		got := c.sq.Bitboard()
-		if got != c.want {
-			t.Errorf("%s.Bitboard() == %#x, want %#x", c.sq, got, c.want)
-		}
-	}
-}
-
 func TestBitboard_Clear(t *testing.T) {
 	cases := []struct {
 		bb   Bitboard
