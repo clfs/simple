@@ -300,6 +300,11 @@ func (s Square) String() string {
 	return fmt.Sprintf("%c%c", file, rank)
 }
 
+// Bitboard returns a bitboard with only this square set.
+func (s Square) Bitboard() Bitboard {
+	return 1 << s
+}
+
 // File returns a square's file.
 func (s Square) File() File {
 	return File(s % 8)

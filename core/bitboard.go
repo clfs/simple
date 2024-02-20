@@ -6,11 +6,6 @@ import "math/bits"
 // The LSB is a1, and the MSB is h8.
 type Bitboard uint64
 
-// Bitboard returns a bitboard with only this square set.
-func (s Square) Bitboard() Bitboard {
-	return 1 << s
-}
-
 // Clear clears the given square to 0.
 func (b *Bitboard) Clear(s Square) {
 	*b &= ^(1 << s)
