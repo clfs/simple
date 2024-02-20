@@ -9,6 +9,15 @@ import (
 // The LSB is a1, and the MSB is h8.
 type Bitboard uint64
 
+// NewBitboard returns a new bitboard with the given squares set.
+func NewBitboard(s ...Square) Bitboard {
+	var b Bitboard
+	for _, sq := range s {
+		b.Set(sq)
+	}
+	return b
+}
+
 // Debug returns an 8x8 representation of the bitboard.
 func (b *Bitboard) Debug() string {
 	var buf bytes.Buffer
