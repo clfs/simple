@@ -1,8 +1,6 @@
 package core
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func ExampleBitboard_Clear() {
 	b := NewBitboard(A1, H8)
