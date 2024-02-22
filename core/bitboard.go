@@ -1,14 +1,37 @@
 package core
 
-import "math/bits"
+import (
+	"bytes"
+	"math/bits"
+)
 
 // A Bitboard represents each square on the board as a bit.
 // The LSB is a1, and the MSB is h8.
 type Bitboard uint64
 
-// Bitboard returns a bitboard with only this square set.
-func (s Square) Bitboard() Bitboard {
-	return 1 << s
+// NewBitboard returns a new bitboard with the given squares set.
+func NewBitboard(s ...Square) Bitboard {
+	var b Bitboard
+	for _, sq := range s {
+		b.Set(sq)
+	}
+	return b
+}
+
+// Debug returns an 8x8 representation of the bitboard.
+func (b *Bitboard) Debug() string {
+	var buf bytes.Buffer
+	for r := Rank8; r.Valid(); r-- {
+		for f := FileA; f.Valid(); f++ {
+			if b.Get(NewSquare(f, r)) {
+				buf.WriteByte('X')
+			} else {
+				buf.WriteByte('.')
+			}
+		}
+		buf.WriteByte('\n')
+	}
+	return buf.String()
 }
 
 // Clear clears the given square to 0.

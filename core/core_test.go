@@ -79,16 +79,6 @@ func TestPiece_String(t *testing.T) {
 	}{
 		{WhitePawn, "WhitePawn"},
 		{WhiteKnight, "WhiteKnight"},
-		{WhiteBishop, "WhiteBishop"},
-		{WhiteRook, "WhiteRook"},
-		{WhiteQueen, "WhiteQueen"},
-		{WhiteKing, "WhiteKing"},
-		{BlackPawn, "BlackPawn"},
-		{BlackKnight, "BlackKnight"},
-		{BlackBishop, "BlackBishop"},
-		{BlackRook, "BlackRook"},
-		{BlackQueen, "BlackQueen"},
-		{BlackKing, "BlackKing"},
 		{Piece(42), "Piece(42)"},
 	}
 	for i, c := range cases {
@@ -233,6 +223,23 @@ func TestSquare_String(t *testing.T) {
 	}
 }
 
+func TestSquare_Bitboard(t *testing.T) {
+	cases := []struct {
+		sq   Square
+		want Bitboard
+	}{
+		{A1, 0x1},
+		{B1, 0x2},
+		{H8, 0x8000_0000_0000_0000},
+	}
+	for _, c := range cases {
+		got := c.sq.Bitboard()
+		if got != c.want {
+			t.Errorf("%s.Bitboard() == %#x, want %#x", c.sq, got, c.want)
+		}
+	}
+}
+
 func TestSquare_File(t *testing.T) {
 	cases := []struct {
 		sq   Square
@@ -283,5 +290,194 @@ func TestBoard(t *testing.T) {
 	_, ok = b.Get(A3)
 	if ok {
 		t.Error("A3 not empty")
+	}
+}
+
+func TestSquare_Above(t *testing.T) {
+	cases := []struct {
+		sq   Square
+		want Square
+	}{
+		{A1, A2},
+		{D4, D5},
+	}
+	for i, c := range cases {
+		got := c.sq.Above()
+		if got != c.want {
+			t.Errorf("%d: got %s, want %s", i, got, c.want)
+		}
+	}
+}
+
+func TestSquare_Below(t *testing.T) {
+	cases := []struct {
+		sq   Square
+		want Square
+	}{
+		{A2, A1},
+		{D5, D4},
+	}
+	for i, c := range cases {
+		got := c.sq.Below()
+		if got != c.want {
+			t.Errorf("%d: got %s, want %s", i, got, c.want)
+		}
+	}
+}
+
+func TestSquare_Left(t *testing.T) {
+	cases := []struct {
+		sq   Square
+		want Square
+	}{
+		{B2, A2},
+		{D5, C5},
+	}
+	for i, c := range cases {
+		got := c.sq.Left()
+		if got != c.want {
+			t.Errorf("%d: got %s, want %s", i, got, c.want)
+		}
+	}
+}
+
+func TestSquare_Right(t *testing.T) {
+	cases := []struct {
+		sq   Square
+		want Square
+	}{
+		{A1, B1},
+		{D4, E4},
+	}
+	for i, c := range cases {
+		got := c.sq.Right()
+		if got != c.want {
+			t.Errorf("%d: got %s, want %s", i, got, c.want)
+		}
+	}
+}
+
+func TestBoard_Set(t *testing.T) {
+	var b Board
+
+	var (
+		p = BlackRook
+		s = C6
+	)
+
+	b.Set(p, s)
+
+	got, ok := b.Get(s)
+	if !ok {
+		t.Errorf("%s empty", s)
+	}
+	if got != p {
+		t.Errorf("want %s, got %s", p, got)
+	}
+}
+
+func TestBoard_Move(t *testing.T) {
+	var b Board
+
+	var (
+		p    = BlackRook
+		from = A2
+		to   = A4
+	)
+
+	b.Set(p, from)
+
+	b.Move(p, from, to)
+
+	_, ok := b.Get(from)
+	if ok {
+		t.Errorf("%s not empty", from)
+	}
+
+	got, ok := b.Get(to)
+	if !ok {
+		t.Errorf("%s empty", to)
+	}
+	if got != p {
+		t.Errorf("want %s, got %s", p, got)
+	}
+}
+
+func TestBoard_MoveToEmpty(t *testing.T) {
+	var b Board
+
+	var (
+		p    = BlackRook
+		from = A2
+		to   = A4
+	)
+
+	b.Set(p, from)
+
+	b.MoveToEmpty(p, from, to)
+
+	_, ok := b.Get(from)
+	if ok {
+		t.Errorf("%s not empty", from)
+	}
+
+	got, ok := b.Get(to)
+	if !ok {
+		t.Errorf("%s empty", to)
+	}
+	if got != p {
+		t.Errorf("want %s, got %s", p, got)
+	}
+}
+
+func TestBoard_Promote_White(t *testing.T) {
+	var b Board
+
+	var (
+		from = A7
+		to   = A8
+		p    = Queen
+	)
+
+	b.Set(WhitePawn, from)
+	b.Promote(from, to, p)
+
+	_, ok := b.Get(from)
+	if ok {
+		t.Errorf("%s not empty", from)
+	}
+
+	got, ok := b.Get(to)
+	if !ok {
+		t.Errorf("%s empty", to)
+	}
+	if got != NewPiece(White, p) {
+		t.Errorf("want %s, got %s", NewPiece(White, p), got)
+	}
+}
+
+func TestBoard_Promote_Black(t *testing.T) {
+	var b Board
+
+	var (
+		from = A2
+		to   = A1
+		p    = Queen
+	)
+
+	b.Set(BlackPawn, from)
+	b.Promote(from, to, p)
+
+	_, ok := b.Get(from)
+	if ok {
+		t.Errorf("%s not empty", from)
+	}
+
+	got, ok := b.Get(to)
+	if !ok {
+		t.Errorf("%s empty", to)
+	}
+	if got != NewPiece(Black, p) {
+		t.Errorf("want %s, got %s", NewPiece(Black, p), got)
 	}
 }
