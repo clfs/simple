@@ -115,3 +115,16 @@ func TestPosition_Make_EnPassant(t *testing.T) {
 		t.Errorf("expected en passant square A6, got %s", p.EnPassant)
 	}
 }
+
+func TestPosition_Make_Capture(t *testing.T) {
+	var p Position
+
+	p.Board.Set(WhitePawn, A2)
+	p.Board.Set(BlackPawn, B3)
+
+	p.Make(Move{From: A2, To: B3})
+	piece, ok := p.Board.Get(B3)
+	if !ok || piece != WhitePawn {
+		t.Errorf("expected WhitePawn on B3, got %s, %t", piece, ok)
+	}
+}
