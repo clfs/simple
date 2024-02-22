@@ -61,18 +61,14 @@ func (p *Position) Make(m Move) {
 
 	// Update castling rights.
 	switch {
-	case heldPiece.Type() == King && p.SideToMove == White:
+	case heldPiece == WhiteKing:
 		p.WhiteOO, p.WhiteOOO = false, false
-	case heldPiece.Type() == King && p.SideToMove == Black:
+	case heldPiece == WhiteRook && (m.From == A1 || m.From == H1):
+		p.WhiteOO, p.WhiteOOO = false, false
+	case heldPiece == BlackKing:
 		p.BlackOO, p.BlackOOO = false, false
-	case heldPiece.Type() == Rook && m.From == A1:
-		p.WhiteOOO = false
-	case heldPiece.Type() == Rook && m.From == H1:
-		p.WhiteOO = false
-	case heldPiece.Type() == Rook && m.From == A8:
-		p.BlackOOO = false
-	case heldPiece.Type() == Rook && m.From == H8:
-		p.BlackOO = false
+	case heldPiece == BlackRook && (m.From == A8 || m.From == H8):
+		p.BlackOO, p.BlackOOO = false, false
 	}
 
 	// Update the en passant square.
