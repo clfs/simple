@@ -51,29 +51,27 @@ func Decode(s string) (core.Move, error) {
 		return core.Move{}, fmt.Errorf("invalid length: %d", n)
 	}
 
-	var m core.Move
-
-	if sq, ok := decodeSquare(s[:2]); !ok {
+	from, ok := decodeSquare(s[:2])
+	if !ok {
 		return core.Move{}, fmt.Errorf("invalid source square: %s", s[:2])
-	} else {
-		m.From = sq
 	}
 
-	if sq, ok := decodeSquare(s[2:4]); !ok {
+	to, ok := decodeSquare(s[2:4])
+	if !ok {
 		return core.Move{}, fmt.Errorf("invalid target square: %s", s[2:4])
-	} else {
-		m.To = sq
 	}
 
-	if len(s) == 5 {
-		if p, ok := decodePromotion[s[4]]; !ok {
-			return core.Move{}, fmt.Errorf("invalid promotion: %c", s[4])
-		} else {
-			m.Promotion = p
-		}
+	// No promotion.
+	if len(s) == 4 {
+		return core.Move{From: from, To: to}, nil
 	}
 
-	return m, nil
+	promotion, ok := decodePromotion[s[4]]
+	if !ok {
+		return core.Move{}, fmt.Errorf("invalid promotion: %c", s[4])
+	}
+
+	return core.Move{From: from, To: to, Promotion: promotion}, nil
 }
 
 // MustDecode is like Decode but panics if the PCN is invalid.
