@@ -5,5 +5,121 @@ import "github.com/clfs/simple/core"
 
 // LegalMoves returns all legal moves in a position.
 func LegalMoves(p core.Position) []core.Move {
-	return nil
+	if p.HalfMoveClock >= 75 {
+		return nil
+	}
+
+	var moves []core.Move
+	moves = append(moves, pawnPushes(p)...)
+	moves = append(moves, knightMoves(p)...)
+
+	return moves
+}
+
+func pawnPushes(p core.Position) []core.Move {
+	var moves []core.Move
+
+	var fromBB core.Bitboard
+
+	if p.SideToMove == core.White {
+		fromBB = p.Board[core.WhitePawn]
+	} else {
+		fromBB = p.Board[core.BlackPawn]
+	}
+
+	for from := core.A2; from <= core.H7; from++ {
+		if !fromBB.Get(from) {
+			continue // empty square
+		}
+
+		var to core.Square
+
+		// single push
+		if p.SideToMove == core.White {
+			to = from.Above()
+		} else {
+			to = from.Below()
+		}
+
+		if p.Board.IsEmpty(to) {
+			moves = append(moves, core.Move{From: from, To: to})
+		} else {
+			continue // double push not possible
+		}
+
+		// double push
+		if p.SideToMove == core.White && from.Rank() == core.Rank2 {
+			to = from.Above().Above()
+		} else if p.SideToMove == core.Black && from.Rank() == core.Rank7 {
+			to = from.Below().Below()
+		}
+
+		if p.Board.IsEmpty(to) {
+			moves = append(moves, core.Move{From: from, To: to})
+		}
+	}
+
+	return moves
+}
+
+func knightMoves(p core.Position) []core.Move {
+	var moves []core.Move
+
+	var fromBB core.Bitboard
+
+	if p.SideToMove == core.White {
+		fromBB = p.Board[core.WhiteKnight]
+	} else {
+		fromBB = p.Board[core.BlackKnight]
+	}
+
+	for from := core.A1; from <= core.H8; from++ {
+		if !fromBB.Get(from) {
+			continue // empty square
+		}
+
+		var tos []core.Square
+
+		f, r := from.File(), from.Rank()
+
+		if f >= core.FileB && r <= core.Rank6 {
+			tos = append(tos, from.Above().Above().Left())
+		}
+
+		if f <= core.FileG && r <= core.Rank6 {
+			tos = append(tos, from.Above().Above().Right())
+		}
+
+		if f >= core.FileC && r <= core.Rank7 {
+			tos = append(tos, from.Above().Left().Left())
+		}
+
+		if f <= core.FileF && r <= core.Rank7 {
+			tos = append(tos, from.Above().Right().Right())
+		}
+
+		if f >= core.FileC && r >= core.Rank2 {
+			tos = append(tos, from.Below().Left().Left())
+		}
+
+		if f <= core.FileF && r >= core.Rank2 {
+			tos = append(tos, from.Below().Right().Right())
+		}
+
+		if f >= core.FileB && r >= core.Rank3 {
+			tos = append(tos, from.Below().Below().Left())
+		}
+
+		if f <= core.FileG && r >= core.Rank3 {
+			tos = append(tos, from.Below().Below().Right())
+		}
+
+		for _, to := range tos {
+			if p.Board.IsEmpty(to) {
+				moves = append(moves, core.Move{From: from, To: to})
+			}
+		}
+	}
+
+	return moves
 }

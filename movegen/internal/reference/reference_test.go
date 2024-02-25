@@ -19,8 +19,6 @@ func encodeMoves(t *testing.T, moves []core.Move) []string {
 }
 
 func TestLegalMoves(t *testing.T) {
-	t.Skip("not implemented")
-
 	cases := []struct {
 		name string
 		in   string
