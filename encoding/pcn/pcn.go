@@ -53,12 +53,12 @@ func Decode(s string) (core.Move, error) {
 
 	from, ok := decodeSquare(s[:2])
 	if !ok {
-		return core.Move{}, fmt.Errorf("invalid source square: %s", s[:2])
+		return core.Move{}, fmt.Errorf("invalid start square: %s", s[:2])
 	}
 
 	to, ok := decodeSquare(s[2:4])
 	if !ok {
-		return core.Move{}, fmt.Errorf("invalid target square: %s", s[2:4])
+		return core.Move{}, fmt.Errorf("invalid end square: %s", s[2:4])
 	}
 
 	// No promotion.

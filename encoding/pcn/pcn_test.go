@@ -34,21 +34,21 @@ func TestDecode(t *testing.T) {
 		{in: "b2b4", want: core.Move{From: core.B2, To: core.B4}},
 		{in: "f2f1q", want: core.Move{From: core.F2, To: core.F1, Promotion: core.Queen}},
 		{in: "e1g1", want: core.Move{From: core.E1, To: core.G1}},
-
 		{in: "b2b4x", wantErr: "invalid promotion: x"},
 		{in: "b2b", wantErr: "invalid length: 3"},
 		{in: "b2b4qq", wantErr: "invalid length: 6"},
-		{in: "k1b2", wantErr: "invalid source square: k1"},
-		{in: "b2k1", wantErr: "invalid target square: k1"},
+		{in: "k1b2", wantErr: "invalid start square: k1"},
+		{in: "b2k1", wantErr: "invalid end square: k1"},
 	}
 
 	for _, tc := range cases {
 		got, err := Decode(tc.in)
 		if err != nil {
-			if err.Error() != tc.wantErr {
-				t.Errorf("Decode(%q) error = %q, want %q", tc.in, err, tc.wantErr)
+			if tc.wantErr == "" {
+				t.Errorf("Decode(%q) returned error %v", tc.in, err)
+			} else if err.Error() != tc.wantErr {
+				t.Errorf("Decode(%q) returned error %v, want error %v", tc.in, err, tc.wantErr)
 			}
-			continue
 		}
 		if got != tc.want {
 			t.Errorf("Decode(%q) = %v, want %v", tc.in, got, tc.want)
