@@ -82,40 +82,42 @@ func knightMoves(p core.Position) []core.Move {
 
 		f, r := from.File(), from.Rank()
 
-		if f >= core.FileB && r <= core.Rank6 {
-			tos = append(tos, from.Above().Above().Left())
+		if f >= core.FileB {
+			if r >= core.Rank3 {
+				tos = append(tos, from.Below().Below().Left())
+			}
+			if r <= core.Rank6 {
+				tos = append(tos, from.Above().Above().Left())
+			}
 		}
-
-		if f <= core.FileG && r <= core.Rank6 {
-			tos = append(tos, from.Above().Above().Right())
+		if f >= core.FileC {
+			if r >= core.Rank2 {
+				tos = append(tos, from.Below().Left().Left())
+			}
+			if r <= core.Rank7 {
+				tos = append(tos, from.Above().Left().Left())
+			}
 		}
-
-		if f >= core.FileC && r <= core.Rank7 {
-			tos = append(tos, from.Above().Left().Left())
+		if f <= core.FileF {
+			if r >= core.Rank2 {
+				tos = append(tos, from.Below().Right().Right())
+			}
+			if r <= core.Rank7 {
+				tos = append(tos, from.Above().Right().Right())
+			}
 		}
-
-		if f <= core.FileF && r <= core.Rank7 {
-			tos = append(tos, from.Above().Right().Right())
-		}
-
-		if f >= core.FileC && r >= core.Rank2 {
-			tos = append(tos, from.Below().Left().Left())
-		}
-
-		if f <= core.FileF && r >= core.Rank2 {
-			tos = append(tos, from.Below().Right().Right())
-		}
-
-		if f >= core.FileB && r >= core.Rank3 {
-			tos = append(tos, from.Below().Below().Left())
-		}
-
-		if f <= core.FileG && r >= core.Rank3 {
-			tos = append(tos, from.Below().Below().Right())
+		if f <= core.FileG {
+			if r >= core.Rank3 {
+				tos = append(tos, from.Below().Below().Right())
+			}
+			if r <= core.Rank6 {
+				tos = append(tos, from.Above().Above().Right())
+			}
 		}
 
 		for _, to := range tos {
-			if p.Board.IsEmpty(to) {
+			capturedPiece, occupied := p.Board.Get(to)
+			if !occupied || capturedPiece.Color() != p.SideToMove {
 				moves = append(moves, core.Move{From: from, To: to})
 			}
 		}
