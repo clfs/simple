@@ -145,3 +145,56 @@ func TestBoard_Promote_Black(t *testing.T) {
 		t.Errorf("want %s, got %s", NewPiece(Black, p), got)
 	}
 }
+
+func TestBoard_IsEmpty(t *testing.T) {
+	var b Board
+
+	var (
+		p = BlackRook
+		s = C6
+	)
+
+	if !b.IsEmpty(s) {
+		t.Errorf("%s not empty", s)
+	}
+
+	b.Set(p, s)
+
+	if b.IsEmpty(s) {
+		t.Errorf("%s empty", s)
+	}
+}
+
+func TestBoard_WhitePieces(t *testing.T) {
+	var b Board
+
+	var (
+		p    = WhiteRook
+		s    = C6
+		want = C6.Bitboard()
+	)
+
+	b.Set(p, s)
+
+	got := b.WhitePieces()
+	if got != want {
+		t.Errorf("want %v, got %v", want, got)
+	}
+}
+
+func TestBoard_BlackPieces(t *testing.T) {
+	var b Board
+
+	var (
+		p    = BlackRook
+		s    = C6
+		want = C6.Bitboard()
+	)
+
+	b.Set(p, s)
+
+	got := b.BlackPieces()
+	if got != want {
+		t.Errorf("want %v, got %v", want, got)
+	}
+}
