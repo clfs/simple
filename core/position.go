@@ -115,3 +115,19 @@ func (p *Position) Make(m Move) {
 	// Switch sides.
 	p.SideToMove = p.SideToMove.Other()
 }
+
+// FriendlyKing returns the location of the side to move's king.
+func (p *Position) FriendlyKing() Square {
+	if p.SideToMove == White {
+		return p.Board.WhiteKing()
+	}
+	return p.Board.BlackKing()
+}
+
+// EnemyKing returns the location of the opponent's king.
+func (p *Position) EnemyKing() Square {
+	if p.SideToMove == White {
+		return p.Board.BlackKing()
+	}
+	return p.Board.WhiteKing()
+}

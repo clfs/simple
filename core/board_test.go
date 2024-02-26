@@ -198,3 +198,37 @@ func TestBoard_BlackPieces(t *testing.T) {
 		t.Errorf("want %v, got %v", want, got)
 	}
 }
+
+func TestBoard_WhiteKing(t *testing.T) {
+	var b Board
+
+	var (
+		p    = WhiteKing
+		s    = C6
+		want = C6
+	)
+
+	b.Set(p, s)
+
+	got := b.WhiteKing()
+	if got != want {
+		t.Errorf("want %s, got %s", want, got)
+	}
+}
+
+func TestBoard_BlackKing(t *testing.T) {
+	var b Board
+
+	var (
+		p    = BlackKing
+		s    = C6
+		want = C6
+	)
+
+	b.Set(p, s)
+
+	got := b.BlackKing()
+	if got != want {
+		t.Errorf("want %s, got %s", want, got)
+	}
+}

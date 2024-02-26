@@ -75,6 +75,16 @@ func (b *Board) WhitePieces() Bitboard {
 	return bb
 }
 
+// WhiteKing returns the location of the white king.
+func (b *Board) WhiteKing() Square {
+	return b[WhiteKing].First()
+}
+
+// BlackKing returns the location of the black king.
+func (b *Board) BlackKing() Square {
+	return b[BlackKing].First()
+}
+
 // BlackPieces returns the location of all black pieces.
 func (b *Board) BlackPieces() Bitboard {
 	var bb Bitboard

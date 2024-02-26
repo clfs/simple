@@ -78,3 +78,10 @@ func ExampleBitboard_With() {
 	// X.......
 	// X.......
 }
+
+func ExampleBitboard_First() {
+	b := NewBitboard(E5, D4, C3)
+	fmt.Println(b.First())
+	// Output:
+	// C3
+}

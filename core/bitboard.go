@@ -63,3 +63,9 @@ func (b *Bitboard) FlipV() {
 func (b *Bitboard) With(other Bitboard) {
 	*b |= other
 }
+
+// First returns the first square set to 1.
+// If the bitboard is empty, it returns Square(64).
+func (b *Bitboard) First() Square {
+	return Square(bits.TrailingZeros64(uint64(*b)))
+}
