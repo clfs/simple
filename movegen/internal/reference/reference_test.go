@@ -19,8 +19,6 @@ func encodeMoves(t *testing.T, moves []core.Move) []string {
 }
 
 func TestLegalMoves(t *testing.T) {
-	t.Skip("not implemented")
-
 	cases := []struct {
 		name string
 		in   string
@@ -38,7 +36,8 @@ func TestLegalMoves(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := encodeMoves(t, LegalMoves(fen.MustDecode(tc.in)))
+			moves := LegalMoves(fen.MustDecode(tc.in))
+			got := encodeMoves(t, moves)
 			if diff := cmp.Diff(tc.want, got); diff != "" {
 				t.Errorf("%q: mismatch (-want +got):\n%s", tc.in, diff)
 			}
