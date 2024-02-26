@@ -1,7 +1,11 @@
 // Package reference is a reference move generator implementation.
 package reference
 
-import "github.com/clfs/simple/core"
+import (
+	"slices"
+
+	"github.com/clfs/simple/core"
+)
 
 // LegalMoves returns all legal moves in a position.
 func LegalMoves(p core.Position) []core.Move {
@@ -9,13 +13,28 @@ func LegalMoves(p core.Position) []core.Move {
 		return nil
 	}
 
-	var moves []core.Move
-	moves = append(moves, pawnPushes(p)...)
-	moves = append(moves, knightMoves(p)...)
+	moves := slices.Concat(
+		pawnPushes(p),
+		pawnAttacks(p),
+		knightMoves(p),
+		bishopMoves(p),
+		rookMoves(p),
+		queenMoves(p),
+		kingMoves(p),
+	)
+
+	// TODO: Implement castling.
+
+	moves = slices.DeleteFunc(moves, func(m core.Move) bool {
+		p2 := p
+		p2.Make(m)
+		return isEnemyKingTargeted(p2)
+	})
 
 	return moves
 }
 
+// pawnPushes returns available pawn pushes, without considering checks.
 func pawnPushes(p core.Position) []core.Move {
 	var moves []core.Move
 
@@ -62,6 +81,12 @@ func pawnPushes(p core.Position) []core.Move {
 	return moves
 }
 
+// pawnAttacks returns available pawn attacks, without considering checks.
+func pawnAttacks(p core.Position) []core.Move {
+	return nil // TODO
+}
+
+// knightMoves returns available knight moves, without considering checks.
 func knightMoves(p core.Position) []core.Move {
 	var moves []core.Move
 
@@ -124,4 +149,47 @@ func knightMoves(p core.Position) []core.Move {
 	}
 
 	return moves
+}
+
+// bishopMoves returns available bishop moves, without considering checks.
+func bishopMoves(p core.Position) []core.Move {
+	return nil // TODO
+}
+
+// rookMoves returns available rook moves, without considering checks.
+func rookMoves(p core.Position) []core.Move {
+	return nil // TODO
+}
+
+// queenMoves returns available queen moves, without considering checks.
+func queenMoves(p core.Position) []core.Move {
+	return nil // TODO
+}
+
+// kingMoves returns available king moves, without considering checks.
+func kingMoves(p core.Position) []core.Move {
+	return nil // TODO
+}
+
+// isEnemyKingTargeted returns true if the enemy king is targeted by an attack.
+//
+// Note that a king may target an adjacent king.
+func isEnemyKingTargeted(p core.Position) bool {
+	s := p.EnemyKing()
+
+	moves := slices.Concat(
+		pawnAttacks(p),
+		knightMoves(p),
+		bishopMoves(p),
+		rookMoves(p),
+		queenMoves(p),
+		kingMoves(p),
+	)
+
+	for _, m := range moves {
+		if m.To == s {
+			return true
+		}
+	}
+	return false
 }
