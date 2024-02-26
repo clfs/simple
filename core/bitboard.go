@@ -65,7 +65,7 @@ func (b *Bitboard) With(other Bitboard) {
 }
 
 // First returns the first square set to 1.
-// If the bitboard is empty, it returns Square(64).
+// If the bitboard is empty, it returns an invalid square.
 func (b *Bitboard) First() Square {
 	return Square(bits.TrailingZeros64(uint64(*b)))
 }
