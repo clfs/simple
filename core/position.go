@@ -70,18 +70,6 @@ func (p *Position) Make(m Move) {
 		p.Board.Promote(m.From, m.To, m.Promotion)
 	}
 
-	// Adjust rook positions if castling.
-	switch {
-	case heldPiece.Type() == King && m.From == E1 && m.To == G1: // WhiteOO
-		p.Board.MoveToEmpty(WhiteRook, H1, F1)
-	case heldPiece.Type() == King && m.From == E1 && m.To == C1: // WhiteOOO
-		p.Board.MoveToEmpty(WhiteRook, A1, D1)
-	case heldPiece.Type() == King && m.From == E8 && m.To == G8: // BlackOO
-		p.Board.MoveToEmpty(BlackRook, H8, F8)
-	case heldPiece.Type() == King && m.From == E8 && m.To == C8: // BlackOOO
-		p.Board.MoveToEmpty(BlackRook, A8, D8)
-	}
-
 	// Adjust pawn positions if capturing en passant.
 	switch {
 	case heldPiece == WhitePawn && m.To == p.EnPassant:
@@ -110,6 +98,18 @@ func (p *Position) Make(m Move) {
 		p.EnPassant = m.From.Below()
 	default:
 		p.EnPassant = 0
+	}
+
+	// Adjust rook positions if castling.
+	switch {
+	case heldPiece.Type() == King && m.From == E1 && m.To == G1: // WhiteOO
+		p.Board.MoveToEmpty(WhiteRook, H1, F1)
+	case heldPiece.Type() == King && m.From == E1 && m.To == C1: // WhiteOOO
+		p.Board.MoveToEmpty(WhiteRook, A1, D1)
+	case heldPiece.Type() == King && m.From == E8 && m.To == G8: // BlackOO
+		p.Board.MoveToEmpty(BlackRook, H8, F8)
+	case heldPiece.Type() == King && m.From == E8 && m.To == C8: // BlackOOO
+		p.Board.MoveToEmpty(BlackRook, A8, D8)
 	}
 
 	// Update the half move clock.
