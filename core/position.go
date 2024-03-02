@@ -63,7 +63,7 @@ func (p *Position) Make(m Move) {
 	isCapture := p.Board.IsOccupied(m.To) ||
 		(heldPiece.Type() == Pawn && m.To == p.EnPassant)
 
-	// Adjust pawn positions if capturing en passant.
+	// Adjust pawn placements if capturing en passant.
 	switch {
 	case heldPiece == WhitePawn && m.To == p.EnPassant:
 		p.Board.Clear(p.EnPassant.Below())
