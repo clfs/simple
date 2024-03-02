@@ -63,13 +63,6 @@ func (p *Position) Make(m Move) {
 	isCapture := p.Board.IsOccupied(m.To) ||
 		(heldPiece.Type() == Pawn && m.To == p.EnPassant)
 
-	// Move the piece.
-	if m.Promotion == 0 {
-		p.Board.Move(heldPiece, m.From, m.To)
-	} else {
-		p.Board.Promote(m.From, m.To, m.Promotion)
-	}
-
 	// Adjust pawn positions if capturing en passant.
 	switch {
 	case heldPiece == WhitePawn && m.To == p.EnPassant:
@@ -110,6 +103,13 @@ func (p *Position) Make(m Move) {
 		p.Board.MoveToEmpty(BlackRook, H8, F8)
 	case heldPiece.Type() == King && m.From == E8 && m.To == C8: // BlackOOO
 		p.Board.MoveToEmpty(BlackRook, A8, D8)
+	}
+
+	// Move the piece.
+	if m.Promotion == 0 {
+		p.Board.Move(heldPiece, m.From, m.To)
+	} else {
+		p.Board.Promote(m.From, m.To, m.Promotion)
 	}
 
 	// Update the half move clock.
