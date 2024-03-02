@@ -23,8 +23,6 @@ func LegalMoves(p core.Position) []core.Move {
 		kingMoves(p),
 	)
 
-	// TODO: Implement castling.
-
 	moves = slices.DeleteFunc(moves, func(m core.Move) bool {
 		p2 := p
 		p2.Make(m)
@@ -167,6 +165,8 @@ func queenMoves(p core.Position) []core.Move {
 }
 
 // kingMoves returns available king moves, without considering checks.
+//
+// Note that king moves include castling.
 func kingMoves(p core.Position) []core.Move {
 	return nil // TODO
 }
