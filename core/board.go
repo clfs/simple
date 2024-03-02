@@ -28,6 +28,13 @@ func (b *Board) Get(s Square) (Piece, bool) {
 	return 0, false
 }
 
+// Clear removes a piece from a square, if any.
+func (b *Board) Clear(s Square) {
+	for i := range b {
+		b[i].Clear(s)
+	}
+}
+
 // IsEmpty returns true if the square is empty.
 func (b *Board) IsEmpty(s Square) bool {
 	for _, bb := range b {
@@ -36,6 +43,16 @@ func (b *Board) IsEmpty(s Square) bool {
 		}
 	}
 	return true
+}
+
+// IsOccupied returns true if the square is occupied.
+func (b *Board) IsOccupied(s Square) bool {
+	for _, bb := range b {
+		if bb.Get(s) {
+			return true
+		}
+	}
+	return false
 }
 
 // Move moves a piece to a square.

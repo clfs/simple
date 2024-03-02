@@ -56,8 +56,39 @@ func NewPosition() Position {
 // Make makes a move.
 // It does not check for invalid moves.
 func (p *Position) Make(m Move) {
+	// Select the piece that we're going to move.
 	heldPiece, _ := p.Board.Get(m.From)
-	_, isCapture := p.Board.Get(m.To)
+
+	// Determine if the move is a capture.
+	isCapture := p.Board.IsOccupied(m.To) ||
+		(heldPiece.Type() == Pawn && m.To == p.EnPassant)
+
+	// Move the piece.
+	if m.Promotion == 0 {
+		p.Board.Move(heldPiece, m.From, m.To)
+	} else {
+		p.Board.Promote(m.From, m.To, m.Promotion)
+	}
+
+	// Adjust rook positions if castling.
+	switch {
+	case heldPiece.Type() == King && m.From == E1 && m.To == G1: // WhiteOO
+		p.Board.MoveToEmpty(WhiteRook, H1, F1)
+	case heldPiece.Type() == King && m.From == E1 && m.To == C1: // WhiteOOO
+		p.Board.MoveToEmpty(WhiteRook, A1, D1)
+	case heldPiece.Type() == King && m.From == E8 && m.To == G8: // BlackOO
+		p.Board.MoveToEmpty(BlackRook, H8, F8)
+	case heldPiece.Type() == King && m.From == E8 && m.To == C8: // BlackOOO
+		p.Board.MoveToEmpty(BlackRook, A8, D8)
+	}
+
+	// Adjust pawn positions if capturing en passant.
+	switch {
+	case heldPiece == WhitePawn && m.To == p.EnPassant:
+		p.Board.Clear(p.EnPassant.Below())
+	case heldPiece == BlackPawn && m.To == p.EnPassant:
+		p.Board.Clear(p.EnPassant.Above())
+	}
 
 	// Update castling rights.
 	switch {
@@ -79,25 +110,6 @@ func (p *Position) Make(m Move) {
 		p.EnPassant = m.From.Below()
 	default:
 		p.EnPassant = 0
-	}
-
-	// Adjust rook positions if castling.
-	switch {
-	case heldPiece.Type() == King && m.From == E1 && m.To == G1: // WhiteOO
-		p.Board.MoveToEmpty(WhiteRook, H1, F1)
-	case heldPiece.Type() == King && m.From == E1 && m.To == C1: // WhiteOOO
-		p.Board.MoveToEmpty(WhiteRook, A1, D1)
-	case heldPiece.Type() == King && m.From == E8 && m.To == G8: // BlackOO
-		p.Board.MoveToEmpty(BlackRook, H8, F8)
-	case heldPiece.Type() == King && m.From == E8 && m.To == C8: // BlackOOO
-		p.Board.MoveToEmpty(BlackRook, A8, D8)
-	}
-
-	// Move the piece.
-	if m.Promotion == 0 {
-		p.Board.Move(heldPiece, m.From, m.To)
-	} else {
-		p.Board.Promote(m.From, m.To, m.Promotion)
 	}
 
 	// Update the half move clock.
