@@ -128,3 +128,39 @@ func TestPosition_Make_Capture(t *testing.T) {
 		t.Errorf("expected WhitePawn on B3, got %s, %t", piece, ok)
 	}
 }
+
+func TestPosition_Make_WhiteEPCapture(t *testing.T) {
+	var p Position
+
+	p.Board.Set(WhitePawn, A5)
+	p.Board.Set(BlackPawn, B5)
+	p.EnPassant = B6
+
+	p.Make(Move{From: A5, To: B6})
+	piece, ok := p.Board.Get(B6)
+	if !ok || piece != WhitePawn {
+		t.Errorf("expected WhitePawn on B6, got %s, %t", piece, ok)
+	}
+	piece, ok = p.Board.Get(B5)
+	if ok {
+		t.Errorf("expected no BlackPawn on B5, got %s, %t", piece, ok)
+	}
+}
+
+func TestPosition_Make_BlackEPCapture(t *testing.T) {
+	var p Position
+
+	p.Board.Set(BlackPawn, A4)
+	p.Board.Set(WhitePawn, B4)
+	p.EnPassant = B3
+
+	p.Make(Move{From: A4, To: B3})
+	piece, ok := p.Board.Get(B3)
+	if !ok || piece != BlackPawn {
+		t.Errorf("expected BlackPawn on B3, got %s, %t", piece, ok)
+	}
+	piece, ok = p.Board.Get(B4)
+	if ok {
+		t.Errorf("expected no WhitePawn on B4, got %s, %t", piece, ok)
+	}
+}

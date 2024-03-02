@@ -56,8 +56,20 @@ func NewPosition() Position {
 // Make makes a move.
 // It does not check for invalid moves.
 func (p *Position) Make(m Move) {
+	// Select the piece that we're going to move.
 	heldPiece, _ := p.Board.Get(m.From)
-	_, isCapture := p.Board.Get(m.To)
+
+	// Determine if the move is a capture.
+	isCapture := p.Board.IsOccupied(m.To) ||
+		(heldPiece.Type() == Pawn && m.To == p.EnPassant)
+
+	// Adjust pawn placements if capturing en passant.
+	switch {
+	case heldPiece == WhitePawn && m.To == p.EnPassant:
+		p.Board.Clear(p.EnPassant.Below())
+	case heldPiece == BlackPawn && m.To == p.EnPassant:
+		p.Board.Clear(p.EnPassant.Above())
+	}
 
 	// Update castling rights.
 	switch {
