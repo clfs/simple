@@ -43,3 +43,13 @@ func (r Rank) String() string {
 func (r Rank) Valid() bool {
 	return r >= Rank1 && r <= Rank8
 }
+
+// Above returns the rank above r, wrapping around if necessary.
+func (r Rank) Above() Rank {
+	return (r + 1) % 8
+}
+
+// Below returns the rank below r, wrapping around if necessary.
+func (r Rank) Below() Rank {
+	return (r - 1) % 8
+}

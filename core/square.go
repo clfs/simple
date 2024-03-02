@@ -104,22 +104,22 @@ func (s Square) Rank() Rank {
 	return Rank(s / 8)
 }
 
-// Above returns the square above s.
+// Above returns the square above s, wrapping around if necessary.
 func (s Square) Above() Square {
-	return s + 8
+	return NewSquare(s.File(), s.Rank().Above())
 }
 
-// Below returns the square below s.
+// Below returns the square below s, wrapping around if necessary.
 func (s Square) Below() Square {
-	return s - 8
+	return NewSquare(s.File(), s.Rank().Below())
 }
 
-// Left returns the square to the left of s.
+// Left returns the square to the left of s, wrapping around if necessary.
 func (s Square) Left() Square {
-	return s - 1
+	return NewSquare(s.File().Left(), s.Rank())
 }
 
-// Right returns the square to the right of s.
+// Right returns the square to the right of s, wrapping around if necessary.
 func (s Square) Right() Square {
-	return s + 1
+	return NewSquare(s.File().Right(), s.Rank())
 }

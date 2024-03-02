@@ -96,6 +96,7 @@ func TestSquare_Above(t *testing.T) {
 	}{
 		{A1, A2},
 		{D4, D5},
+		{G8, G1},
 	}
 	for i, c := range cases {
 		got := c.sq.Above()
@@ -112,6 +113,7 @@ func TestSquare_Below(t *testing.T) {
 	}{
 		{A2, A1},
 		{D5, D4},
+		{G1, G8},
 	}
 	for i, c := range cases {
 		got := c.sq.Below()
@@ -128,6 +130,7 @@ func TestSquare_Left(t *testing.T) {
 	}{
 		{B2, A2},
 		{D5, C5},
+		{A6, H6},
 	}
 	for i, c := range cases {
 		got := c.sq.Left()
@@ -144,6 +147,7 @@ func TestSquare_Right(t *testing.T) {
 	}{
 		{A1, B1},
 		{D4, E4},
+		{H6, A6},
 	}
 	for i, c := range cases {
 		got := c.sq.Right()

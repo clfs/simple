@@ -43,3 +43,13 @@ func (f File) String() string {
 func (f File) Valid() bool {
 	return f >= FileA && f <= FileH
 }
+
+// Left returns the file to the left of f, wrapping around if necessary.
+func (f File) Left() File {
+	return (f - 1) % 8
+}
+
+// Right returns the file to the right of f, wrapping around if necessary.
+func (f File) Right() File {
+	return (f + 1) % 8
+}
