@@ -39,11 +39,11 @@ type translation struct {
 
 // Available translations by piece type.
 var (
-	knightTranslations = []translation{{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}}
-	bishopTranslations = []translation{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}}
-	rookTranslations   = []translation{{1, 0}, {0, 1}, {-1, 0}, {0, -1}}
-	queenTranslations  = []translation{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {1, 0}, {0, 1}, {-1, 0}, {0, -1}}
-	kingTranslations   = []translation{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {1, 0}, {0, 1}, {-1, 0}, {0, -1}}
+	knightTranslations = []translation{{-2, 1}, {-2, -1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}}
+	bishopTranslations = []translation{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}
+	rookTranslations   = []translation{{-1, 0}, {0, -1}, {0, 1}, {1, 0}}
+	queenTranslations  = []translation{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
+	kingTranslations   = []translation{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
 )
 
 // translate tries to apply a translation to a square.
