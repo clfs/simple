@@ -173,24 +173,17 @@ func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
 		}
 
 		for _, t := range translations {
-			to := from
-			for {
-				var ok bool
-
-				to, ok = translate(to, t)
-				if !ok {
-					break // out of bounds
-				}
-
+			for to, ok := translate(from, t); ok; to, ok = translate(to, t) {
 				blocker, blocked := p.Board.Get(to)
 
-				if !blocked || blocker.Color() != p.SideToMove {
-					moves = append(moves, core.Move{From: from, To: to})
-				}
-
 				if blocked {
+					if blocker.Color() != p.SideToMove {
+						moves = append(moves, core.Move{From: from, To: to})
+					}
 					break
 				}
+
+				moves = append(moves, core.Move{From: from, To: to})
 			}
 		}
 	}
