@@ -182,23 +182,20 @@ func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
 					break // out of bounds
 				}
 
-				moves = append(moves, core.Move{
-					From: from,
-					To:   to,
-				})
+				m := core.Move{From: from, To: to}
 
-				if _, ok := p.Board.Get(to); ok {
-					break // blocked by another piece
+				blocker, ok := p.Board.Get(to)
+				if ok {
+					if blocker.Color() != p.SideToMove {
+						moves = append(moves, m)
+					}
+					break
 				}
+
+				moves = append(moves, m)
 			}
 		}
 	}
-
-	// Remove moves that capture friendly pieces.
-	moves = slices.DeleteFunc(moves, func(m core.Move) bool {
-		piece, ok := p.Board.Get(m.To)
-		return ok && piece.Color() == p.SideToMove
-	})
 
 	return moves
 }
