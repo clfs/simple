@@ -172,9 +172,6 @@ func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
 			continue
 		}
 
-		// Valid destinations.
-		var tos []core.Square
-
 		for _, t := range translations {
 			to := from
 			for {
@@ -185,17 +182,15 @@ func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
 					break // out of bounds
 				}
 
-				tos = append(tos, to)
+				moves = append(moves, core.Move{
+					From: from,
+					To:   to,
+				})
 
 				if _, ok := p.Board.Get(to); ok {
 					break // blocked by another piece
 				}
 			}
-		}
-
-		// Add moves.
-		for _, to := range tos {
-			moves = append(moves, core.Move{From: from, To: to})
 		}
 	}
 
