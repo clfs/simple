@@ -147,6 +147,65 @@ func knightMoves(p core.Position) []core.Move {
 	return moves
 }
 
+func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
+	var moves []core.Move
+
+	var translations []translation
+
+	switch pt {
+	case core.Bishop:
+		translations = bishopTranslations
+	case core.Rook:
+		translations = rookTranslations
+	case core.Queen:
+		translations = queenTranslations
+	default:
+		panic("invalid piece type")
+	}
+
+	piece := core.NewPiece(p.SideToMove, pt)
+	fromBB := p.Board[piece]
+
+	for from := core.A1; from <= core.H8; from++ {
+		// Skip non-starting squares.
+		if !fromBB.Get(from) {
+			continue
+		}
+
+		// Valid destinations.
+		var tos []core.Square
+
+		for _, t := range translations {
+			to := from
+			for {
+				to, ok := translate(to, t)
+				if !ok {
+					break // out of bounds
+				}
+
+				tos = append(tos, to)
+
+				if _, ok := p.Board.Get(to); ok {
+					break // blocked by another piece
+				}
+			}
+		}
+
+		// Add moves.
+		for _, to := range tos {
+			moves = append(moves, core.Move{From: from, To: to})
+		}
+	}
+
+	// Remove moves that capture friendly pieces.
+	moves = slices.DeleteFunc(moves, func(m core.Move) bool {
+		piece, ok := p.Board.Get(m.To)
+		return ok && piece.Color() == p.SideToMove
+	})
+
+	return moves
+}
+
 // bishopMoves returns available bishop moves, without considering checks.
 func bishopMoves(p core.Position) []core.Move {
 	var moves []core.Move
