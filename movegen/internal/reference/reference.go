@@ -200,7 +200,10 @@ func bishopMoves(p core.Position) []core.Move {
 					break
 				}
 
-				moves = append(moves, core.Move{From: from, To: to})
+				moves = append(moves, core.Move{
+					From: from,
+					To:   to,
+				})
 
 				if _, ok := p.Board.Get(to); ok {
 					break
