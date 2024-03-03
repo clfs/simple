@@ -197,7 +197,7 @@ func bishopMoves(p core.Position) []core.Move {
 			for {
 				to, ok := translate(to, t)
 				if !ok {
-					break
+					break // off the board
 				}
 
 				moves = append(moves, core.Move{
@@ -206,7 +206,7 @@ func bishopMoves(p core.Position) []core.Move {
 				})
 
 				if _, ok := p.Board.Get(to); ok {
-					break
+					break // occupied square
 				}
 			}
 		}
