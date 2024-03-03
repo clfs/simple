@@ -147,37 +147,36 @@ func knightMoves(p core.Position) []core.Move {
 	return moves
 }
 
-// bishopMoves returns available bishop moves, without considering checks.
-func bishopMoves(p core.Position) []core.Move {
+func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
 	var moves []core.Move
 
-	var fromBB core.Bitboard
-	if p.SideToMove == core.White {
-		fromBB = p.Board[core.WhiteBishop]
-	} else {
-		fromBB = p.Board[core.BlackBishop]
+	var translations []translation
+
+	switch pt {
+	case core.Bishop:
+		translations = bishopTranslations
+	case core.Rook:
+		translations = rookTranslations
+	case core.Queen:
+		translations = queenTranslations
+	default:
+		panic("invalid piece type")
 	}
 
+	piece := core.NewPiece(p.SideToMove, pt)
+	fromBB := p.Board[piece]
+
 	for from := core.A1; from <= core.H8; from++ {
+		// Skip non-starting squares.
 		if !fromBB.Get(from) {
-			continue // empty square
+			continue
 		}
 
-		for _, t := range bishopTranslations {
-			to := from
-			for {
-				to, ok := translate(to, t)
-				if !ok {
-					break // off the board
-				}
-
-				moves = append(moves, core.Move{
-					From: from,
-					To:   to,
-				})
-
+		for _, t := range translations {
+			for to, ok := translate(from, t); ok; to, ok = translate(to, t) {
+				moves = append(moves, core.Move{From: from, To: to})
 				if _, ok := p.Board.Get(to); ok {
-					break // occupied square
+					break
 				}
 			}
 		}
@@ -192,14 +191,19 @@ func bishopMoves(p core.Position) []core.Move {
 	return moves
 }
 
+// bishopMoves returns available bishop moves, without considering checks.
+func bishopMoves(p core.Position) []core.Move {
+	return slidingMoves(p, core.Bishop)
+}
+
 // rookMoves returns available rook moves, without considering checks.
 func rookMoves(p core.Position) []core.Move {
-	return nil // TODO
+	return slidingMoves(p, core.Rook)
 }
 
 // queenMoves returns available queen moves, without considering checks.
 func queenMoves(p core.Position) []core.Move {
-	return nil // TODO
+	return slidingMoves(p, core.Queen)
 }
 
 // kingMoves returns available king moves, without considering checks.
