@@ -32,6 +32,33 @@ func LegalMoves(p core.Position) []core.Move {
 	return moves
 }
 
+// A translation describes movement in a direction.
+type translation struct {
+	df, dr int
+}
+
+// Available translations by piece type.
+var (
+	knightTranslations = []translation{{-2, 1}, {-2, -1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}}
+	bishopTranslations = []translation{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}
+	rookTranslations   = []translation{{-1, 0}, {0, -1}, {0, 1}, {1, 0}}
+	queenTranslations  = []translation{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
+	kingTranslations   = []translation{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
+)
+
+// translate tries to apply a translation to a square.
+// If successful, it returns the new square.
+func translate(s core.Square, t translation) (core.Square, bool) {
+	f := s.File() + core.File(t.df)
+	r := s.Rank() + core.Rank(t.dr)
+
+	if !f.Valid() || !r.Valid() {
+		return 0, false
+	}
+
+	return core.NewSquare(f, r), true
+}
+
 // pawnPushes returns available pawn pushes, without considering checks.
 func pawnPushes(p core.Position) []core.Move {
 	var moves []core.Move
@@ -151,7 +178,47 @@ func knightMoves(p core.Position) []core.Move {
 
 // bishopMoves returns available bishop moves, without considering checks.
 func bishopMoves(p core.Position) []core.Move {
-	return nil // TODO
+	var moves []core.Move
+
+	var fromBB core.Bitboard
+	if p.SideToMove == core.White {
+		fromBB = p.Board[core.WhiteBishop]
+	} else {
+		fromBB = p.Board[core.BlackBishop]
+	}
+
+	for from := core.A1; from <= core.H8; from++ {
+		if !fromBB.Get(from) {
+			continue // empty square
+		}
+
+		for _, t := range bishopTranslations {
+			to := from
+			for {
+				to, ok := translate(to, t)
+				if !ok {
+					break // off the board
+				}
+
+				moves = append(moves, core.Move{
+					From: from,
+					To:   to,
+				})
+
+				if _, ok := p.Board.Get(to); ok {
+					break // occupied square
+				}
+			}
+		}
+	}
+
+	// Remove moves that capture friendly pieces.
+	moves = slices.DeleteFunc(moves, func(m core.Move) bool {
+		piece, ok := p.Board.Get(m.To)
+		return ok && piece.Color() == p.SideToMove
+	})
+
+	return moves
 }
 
 // rookMoves returns available rook moves, without considering checks.
