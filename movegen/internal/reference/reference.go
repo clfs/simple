@@ -178,7 +178,9 @@ func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
 		for _, t := range translations {
 			to := from
 			for {
-				to, ok := translate(to, t)
+				var ok bool
+
+				to, ok = translate(to, t)
 				if !ok {
 					break // out of bounds
 				}
@@ -208,57 +210,17 @@ func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
 
 // bishopMoves returns available bishop moves, without considering checks.
 func bishopMoves(p core.Position) []core.Move {
-	var moves []core.Move
-
-	var fromBB core.Bitboard
-	if p.SideToMove == core.White {
-		fromBB = p.Board[core.WhiteBishop]
-	} else {
-		fromBB = p.Board[core.BlackBishop]
-	}
-
-	for from := core.A1; from <= core.H8; from++ {
-		if !fromBB.Get(from) {
-			continue // empty square
-		}
-
-		for _, t := range bishopTranslations {
-			to := from
-			for {
-				to, ok := translate(to, t)
-				if !ok {
-					break // off the board
-				}
-
-				moves = append(moves, core.Move{
-					From: from,
-					To:   to,
-				})
-
-				if _, ok := p.Board.Get(to); ok {
-					break // occupied square
-				}
-			}
-		}
-	}
-
-	// Remove moves that capture friendly pieces.
-	moves = slices.DeleteFunc(moves, func(m core.Move) bool {
-		piece, ok := p.Board.Get(m.To)
-		return ok && piece.Color() == p.SideToMove
-	})
-
-	return moves
+	return slidingMoves(p, core.Bishop)
 }
 
 // rookMoves returns available rook moves, without considering checks.
 func rookMoves(p core.Position) []core.Move {
-	return nil // TODO
+	return slidingMoves(p, core.Rook)
 }
 
 // queenMoves returns available queen moves, without considering checks.
 func queenMoves(p core.Position) []core.Move {
-	return nil // TODO
+	return slidingMoves(p, core.Queen)
 }
 
 // kingMoves returns available king moves, without considering checks.

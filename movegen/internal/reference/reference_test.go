@@ -7,6 +7,7 @@ import (
 	"github.com/clfs/simple/encoding/fen"
 	"github.com/clfs/simple/encoding/pcn"
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 func encodeMoves(t *testing.T, moves []core.Move) []string {
@@ -33,12 +34,20 @@ func TestLegalMoves(t *testing.T) {
 				"b1a3", "b1c3", "g1f3", "g1h3",
 			},
 		},
+		{
+			name: "center bishop",
+			in:   "k7/1R4p1/2B3P1/4b3/8/8/1P6/1K6 b - - 0 1",
+			want: []string{
+				"e5b8", "e5c7", "e5d6", "e5f4", "e5g3", "e5h2", "e5b2", "e5c3",
+				"e5d4", "e5f6",
+			},
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			moves := LegalMoves(fen.MustDecode(tc.in))
 			got := encodeMoves(t, moves)
-			if diff := cmp.Diff(tc.want, got); diff != "" {
+			if diff := cmp.Diff(tc.want, got, cmpopts.SortSlices(func(a, b string) bool { return a < b })); diff != "" {
 				t.Errorf("%q: mismatch (-want +got):\n%s", tc.in, diff)
 			}
 		})
