@@ -48,9 +48,9 @@ var (
 
 // translate tries to apply a translation to a square.
 // If successful, it returns the new square.
-func translate(s core.Square, d translation) (core.Square, bool) {
-	f := s.File() + core.File(d.df)
-	r := s.Rank() + core.Rank(d.dr)
+func translate(s core.Square, t translation) (core.Square, bool) {
+	f := s.File() + core.File(t.df)
+	r := s.Rank() + core.Rank(t.dr)
 
 	if !f.Valid() || !r.Valid() {
 		return 0, false
@@ -192,10 +192,10 @@ func bishopMoves(p core.Position) []core.Move {
 			continue // empty square
 		}
 
-		for _, d := range bishopTranslations {
+		for _, t := range bishopTranslations {
 			to := from
 			for {
-				to, ok := translate(to, d)
+				to, ok := translate(to, t)
 				if !ok {
 					break
 				}
