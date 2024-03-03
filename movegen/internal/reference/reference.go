@@ -113,27 +113,44 @@ func pawnAttacks(p core.Position) []core.Move {
 
 // knightMoves returns available knight moves, without considering checks.
 func knightMoves(p core.Position) []core.Move {
-	var moves []core.Move
+	return steppingMoves(p, core.Knight)
+}
 
-	var fromBB core.Bitboard
+// steppingMoves returns available moves for stepping pieces, like knights and
+// non-castling kings.
+func steppingMoves(p core.Position, pt core.PieceType) []core.Move {
+	var (
+		moves        []core.Move
+		translations []translation
+	)
 
-	if p.SideToMove == core.White {
-		fromBB = p.Board[core.WhiteKnight]
-	} else {
-		fromBB = p.Board[core.BlackKnight]
+	switch pt {
+	case core.Knight:
+		translations = knightTranslations
+	case core.King:
+		translations = kingTranslations
+	default:
+		panic("invalid piece type")
 	}
 
+	piece := core.NewPiece(p.SideToMove, pt)
+	fromBB := p.Board[piece]
+
 	for from := core.A1; from <= core.H8; from++ {
+		// Skip non-starting squares.
 		if !fromBB.Get(from) {
-			continue // empty square
+			continue
 		}
 
-		for _, t := range knightTranslations {
+		for _, t := range translations {
+			// Apply the translation. If it fails, try the next one.
 			to, ok := translate(from, t)
 			if !ok {
-				continue // off the board
+				continue
 			}
 
+			// If the destination's empty or occupied by the enemy, generate
+			// the move.
 			piece, ok := p.Board.Get(to)
 			if !ok || piece.Color() != p.SideToMove {
 				moves = append(moves, core.Move{
