@@ -173,9 +173,13 @@ func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
 		}
 
 		for _, t := range translations {
+			// Repeatedly apply the translation until it fails.
 			for to, ok := translate(from, t); ok; to, ok = translate(to, t) {
+				// Always generate the move, even if there's a piece already on
+				// the destination square. Friendly captures are removed later.
 				moves = append(moves, core.Move{From: from, To: to})
-				if _, ok := p.Board.Get(to); ok {
+				// We're blocked, so try the next translation direction.
+				if p.Board.IsOccupied(to) {
 					break
 				}
 			}
