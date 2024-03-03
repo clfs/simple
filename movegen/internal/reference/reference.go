@@ -128,47 +128,18 @@ func knightMoves(p core.Position) []core.Move {
 			continue // empty square
 		}
 
-		var tos []core.Square
+		for _, t := range knightTranslations {
+			to, ok := translate(from, t)
+			if !ok {
+				continue // off the board
+			}
 
-		f, r := from.File(), from.Rank()
-
-		if f >= core.FileB {
-			if r >= core.Rank3 {
-				tos = append(tos, from.Below().Below().Left())
-			}
-			if r <= core.Rank6 {
-				tos = append(tos, from.Above().Above().Left())
-			}
-		}
-		if f >= core.FileC {
-			if r >= core.Rank2 {
-				tos = append(tos, from.Below().Left().Left())
-			}
-			if r <= core.Rank7 {
-				tos = append(tos, from.Above().Left().Left())
-			}
-		}
-		if f <= core.FileF {
-			if r >= core.Rank2 {
-				tos = append(tos, from.Below().Right().Right())
-			}
-			if r <= core.Rank7 {
-				tos = append(tos, from.Above().Right().Right())
-			}
-		}
-		if f <= core.FileG {
-			if r >= core.Rank3 {
-				tos = append(tos, from.Below().Below().Right())
-			}
-			if r <= core.Rank6 {
-				tos = append(tos, from.Above().Above().Right())
-			}
-		}
-
-		for _, to := range tos {
-			capturedPiece, occupied := p.Board.Get(to)
-			if !occupied || capturedPiece.Color() != p.SideToMove {
-				moves = append(moves, core.Move{From: from, To: to})
+			piece, ok := p.Board.Get(to)
+			if !ok || piece.Color() != p.SideToMove {
+				moves = append(moves, core.Move{
+					From: from,
+					To:   to,
+				})
 			}
 		}
 	}
