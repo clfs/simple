@@ -200,18 +200,20 @@ func bishopMoves(p core.Position) []core.Move {
 					break
 				}
 
-				piece, ok := p.Board.Get(to)
-				if ok {
-					if piece.Color() != p.SideToMove {
-						moves = append(moves, core.Move{From: from, To: to})
-					}
+				moves = append(moves, core.Move{From: from, To: to})
+
+				if _, ok := p.Board.Get(to); ok {
 					break
 				}
-
-				moves = append(moves, core.Move{From: from, To: to})
 			}
 		}
 	}
+
+	// Remove moves that capture friendly pieces.
+	moves = slices.DeleteFunc(moves, func(m core.Move) bool {
+		piece, ok := p.Board.Get(m.To)
+		return ok && piece.Color() == p.SideToMove
+	})
 
 	return moves
 }
