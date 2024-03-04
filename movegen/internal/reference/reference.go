@@ -278,6 +278,10 @@ func kingAttacks(p core.Position) []core.Move {
 
 // castlingMoves returns available castling moves.
 func castlingMoves(p core.Position) []core.Move {
+	if isCheck(p) {
+		return nil
+	}
+
 	var moves []core.Move
 
 	if p.SideToMove == core.White {
@@ -297,6 +301,29 @@ func castlingMoves(p core.Position) []core.Move {
 	}
 
 	return moves
+}
+
+// isCheck returns true if the side to move is in check.
+func isCheck(p core.Position) bool {
+	s := p.FriendlyKing()
+
+	// Switch sides to generate enemy attacks.
+	p.SideToMove = p.SideToMove.Other()
+
+	moves := slices.Concat(
+		pawnAttacks(p),
+		knightAttacks(p),
+		bishopAttacks(p),
+		rookAttacks(p),
+		queenAttacks(p),
+	)
+
+	for _, m := range moves {
+		if m.To == s {
+			return true
+		}
+	}
+	return false
 }
 
 // isEnemyKingTargeted returns true if the enemy king is targeted by an attack.
