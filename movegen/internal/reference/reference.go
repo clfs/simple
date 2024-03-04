@@ -235,7 +235,7 @@ func queenAttacks(p core.Position) []core.Move {
 
 // kingAttacks returns available king attacks, without considering checks.
 func kingAttacks(p core.Position) []core.Move {
-	return nil // TODO
+	return steppingAttacks(p, core.King)
 }
 
 // isEnemyKingTargeted returns true if the enemy king is targeted by an attack.
