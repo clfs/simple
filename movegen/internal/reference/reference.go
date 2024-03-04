@@ -297,26 +297,26 @@ func castlingMoves(p core.Position) []core.Move {
 	if p.SideToMove == core.White {
 		if p.WhiteOO {
 			bb := core.NewBitboard(core.F1, core.G1)
-			if !attacked.Intersects(bb) && p.Board.IsEmptyBB(bb) {
+			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
 				moves = append(moves, core.Move{From: core.E1, To: core.G1})
 			}
 		}
 		if p.WhiteOOO {
 			bb := core.NewBitboard(core.B1, core.C1, core.D1)
-			if !attacked.Intersects(bb) && p.Board.IsEmptyBB(bb) {
+			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
 				moves = append(moves, core.Move{From: core.E1, To: core.C1})
 			}
 		}
 	} else {
 		if p.BlackOO {
 			bb := core.NewBitboard(core.F8, core.G8)
-			if !attacked.Intersects(bb) && p.Board.IsEmptyBB(bb) {
+			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
 				moves = append(moves, core.Move{From: core.E8, To: core.G8})
 			}
 		}
 		if p.BlackOOO {
 			bb := core.NewBitboard(core.B8, core.C8, core.D8)
-			if !attacked.Intersects(bb) && p.Board.IsEmptyBB(bb) {
+			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
 				moves = append(moves, core.Move{From: core.E8, To: core.C8})
 			}
 		}
