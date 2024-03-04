@@ -344,29 +344,6 @@ func attackedSquares(p core.Position) core.Bitboard {
 	return bb
 }
 
-// isCheck returns true if the side to move is in check.
-func isCheck(p core.Position) bool {
-	s := p.FriendlyKing()
-
-	// Switch sides to generate enemy attacks.
-	p.SideToMove = p.SideToMove.Other()
-
-	moves := slices.Concat(
-		pawnAttacks(p),
-		knightAttacks(p),
-		bishopAttacks(p),
-		rookAttacks(p),
-		queenAttacks(p),
-	)
-
-	for _, m := range moves {
-		if m.To == s {
-			return true
-		}
-	}
-	return false
-}
-
 // isEnemyKingTargeted returns true if the enemy king is targeted by an attack.
 //
 // Note that a king may target an adjacent king.
