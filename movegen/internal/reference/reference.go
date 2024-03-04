@@ -21,6 +21,7 @@ func LegalMoves(p core.Position) []core.Move {
 		rookAttacks(p),
 		queenAttacks(p),
 		kingAttacks(p),
+		castlingMoves(p),
 	)
 
 	moves = slices.DeleteFunc(moves, func(m core.Move) bool {
@@ -273,6 +274,29 @@ func queenAttacks(p core.Position) []core.Move {
 // kingAttacks returns available king attacks, without considering checks.
 func kingAttacks(p core.Position) []core.Move {
 	return steppingAttacks(p, core.King)
+}
+
+// castlingMoves returns available castling moves.
+func castlingMoves(p core.Position) []core.Move {
+	var moves []core.Move
+
+	if p.SideToMove == core.White {
+		if p.WhiteOO && p.Board.AllEmpty(core.F1, core.G1) {
+			moves = append(moves, core.Move{From: core.E1, To: core.G1})
+		}
+		if p.WhiteOOO && p.Board.AllEmpty(core.B1, core.C1, core.D1) {
+			moves = append(moves, core.Move{From: core.E1, To: core.C1})
+		}
+	} else {
+		if p.BlackOO && p.Board.AllEmpty(core.F8, core.G8) {
+			moves = append(moves, core.Move{From: core.E8, To: core.G8})
+		}
+		if p.BlackOOO && p.Board.AllEmpty(core.B8, core.C8, core.D8) {
+			moves = append(moves, core.Move{From: core.E8, To: core.C8})
+		}
+	}
+
+	return moves
 }
 
 // isEnemyKingTargeted returns true if the enemy king is targeted by an attack.
