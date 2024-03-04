@@ -108,7 +108,44 @@ func pawnPushes(p core.Position) []core.Move {
 
 // pawnAttacks returns available pawn attacks, without considering checks.
 func pawnAttacks(p core.Position) []core.Move {
-	return nil // TODO
+	var moves []core.Move
+
+	fromBB := p.Board[core.NewPiece(p.SideToMove, core.Pawn)]
+
+	for from := core.A2; from <= core.H7; from++ {
+		// Skip non-starting squares.
+		if !fromBB.Get(from) {
+			continue
+		}
+
+		var to core.Square
+
+		// Leftward attack.
+		if p.SideToMove == core.White {
+			to = from.Above().Left()
+		} else {
+			to = from.Below().Left()
+		}
+
+		piece, ok := p.Board.Get(to)
+		if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
+			moves = append(moves, core.Move{From: from, To: to})
+		}
+
+		// Rightward attack.
+		if p.SideToMove == core.White {
+			to = from.Above().Right()
+		} else {
+			to = from.Below().Right()
+		}
+
+		piece, ok = p.Board.Get(to)
+		if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
+			moves = append(moves, core.Move{From: from, To: to})
+		}
+	}
+
+	return moves
 }
 
 // knightAttacks returns available knight attacks, without considering checks.
