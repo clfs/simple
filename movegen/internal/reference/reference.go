@@ -276,31 +276,72 @@ func kingAttacks(p core.Position) []core.Move {
 	return steppingAttacks(p, core.King)
 }
 
+// switchSides returns a new position with the side to move switched.
+func switchSides(p core.Position) core.Position {
+	p.SideToMove = p.SideToMove.Other()
+	return p
+}
+
 // castlingMoves returns available castling moves.
+// It accounts for checks and enemy attacks.
 func castlingMoves(p core.Position) []core.Move {
-	if isCheck(p) {
+	attacked := attackedSquares(switchSides(p))
+
+	// If the king is in check, castling isn't possible.
+	if attacked.Get(p.FriendlyKing()) {
 		return nil
 	}
 
 	var moves []core.Move
 
 	if p.SideToMove == core.White {
-		if p.WhiteOO && p.Board.AllEmpty(core.F1, core.G1) {
-			moves = append(moves, core.Move{From: core.E1, To: core.G1})
+		if p.WhiteOO {
+			bb := core.NewBitboard(core.F1, core.G1)
+			if !attacked.Intersects(bb) && p.Board.IsEmptyBB(bb) {
+				moves = append(moves, core.Move{From: core.E1, To: core.G1})
+			}
 		}
-		if p.WhiteOOO && p.Board.AllEmpty(core.B1, core.C1, core.D1) {
-			moves = append(moves, core.Move{From: core.E1, To: core.C1})
+		if p.WhiteOOO {
+			bb := core.NewBitboard(core.B1, core.C1, core.D1)
+			if !attacked.Intersects(bb) && p.Board.IsEmptyBB(bb) {
+				moves = append(moves, core.Move{From: core.E1, To: core.C1})
+			}
 		}
 	} else {
-		if p.BlackOO && p.Board.AllEmpty(core.F8, core.G8) {
-			moves = append(moves, core.Move{From: core.E8, To: core.G8})
+		if p.BlackOO {
+			bb := core.NewBitboard(core.F8, core.G8)
+			if !attacked.Intersects(bb) && p.Board.IsEmptyBB(bb) {
+				moves = append(moves, core.Move{From: core.E8, To: core.G8})
+			}
 		}
-		if p.BlackOOO && p.Board.AllEmpty(core.B8, core.C8, core.D8) {
-			moves = append(moves, core.Move{From: core.E8, To: core.C8})
+		if p.BlackOOO {
+			bb := core.NewBitboard(core.B8, core.C8, core.D8)
+			if !attacked.Intersects(bb) && p.Board.IsEmptyBB(bb) {
+				moves = append(moves, core.Move{From: core.E8, To: core.C8})
+			}
 		}
 	}
 
 	return moves
+}
+
+// attackedSquares returns all squares attacked by the side to move.
+// It does not consider checks.
+func attackedSquares(p core.Position) core.Bitboard {
+	moves := slices.Concat(
+		pawnAttacks(p),
+		knightAttacks(p),
+		bishopAttacks(p),
+		rookAttacks(p),
+		queenAttacks(p),
+		kingAttacks(p),
+	)
+
+	var bb core.Bitboard
+	for _, m := range moves {
+		bb.Set(m.To)
+	}
+	return bb
 }
 
 // isCheck returns true if the side to move is in check.

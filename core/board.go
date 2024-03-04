@@ -45,6 +45,16 @@ func (b *Board) IsEmpty(s Square) bool {
 	return true
 }
 
+// IsEmptyBB returns true if all squares set in the bitboard are empty.
+func (b *Board) IsEmptyBB(bb Bitboard) bool {
+	for i := range b {
+		if b[i].Intersects(bb) {
+			return false
+		}
+	}
+	return true
+}
+
 // AllEmpty returns true if the given squares are all empty.
 func (b *Board) AllEmpty(ss ...Square) bool {
 	bb := NewBitboard(ss...)

@@ -143,3 +143,9 @@ func (p *Position) EnemyKing() Square {
 	}
 	return p.Board.WhiteKing()
 }
+
+// SwitchSides switches the side to move.
+// The resulting position may be invalid.
+func (p *Position) SwitchSides() {
+	p.SideToMove = p.SideToMove.Other()
+}
