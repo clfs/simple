@@ -16,11 +16,11 @@ func LegalMoves(p core.Position) []core.Move {
 	moves := slices.Concat(
 		pawnPushes(p),
 		pawnAttacks(p),
-		knightMoves(p),
-		bishopMoves(p),
-		rookMoves(p),
-		queenMoves(p),
-		kingMoves(p),
+		knightAttacks(p),
+		bishopAttacks(p),
+		rookAttacks(p),
+		queenAttacks(p),
+		kingAttacks(p),
 	)
 
 	moves = slices.DeleteFunc(moves, func(m core.Move) bool {
@@ -111,14 +111,16 @@ func pawnAttacks(p core.Position) []core.Move {
 	return nil // TODO
 }
 
-// knightMoves returns available knight moves, without considering checks.
-func knightMoves(p core.Position) []core.Move {
-	return steppingMoves(p, core.Knight)
+// knightAttacks returns available knight attacks, without considering checks.
+func knightAttacks(p core.Position) []core.Move {
+	return steppingAttacks(p, core.Knight)
 }
 
-// steppingMoves returns available moves for stepping pieces, like knights and
-// non-castling kings.
-func steppingMoves(p core.Position, pt core.PieceType) []core.Move {
+// steppingAttacks returns available stepping attacks, which include knight
+// moves and non-castling king moves.
+//
+// It does not consider checks.
+func steppingAttacks(p core.Position, pt core.PieceType) []core.Move {
 	var (
 		moves        []core.Move
 		translations []translation
@@ -164,7 +166,11 @@ func steppingMoves(p core.Position, pt core.PieceType) []core.Move {
 	return moves
 }
 
-func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
+// slidingAttacks returns available sliding attacks, which include bishop, rook,
+// and queen moves.
+//
+// It does not consider checks.
+func slidingAttacks(p core.Position, pt core.PieceType) []core.Move {
 	var moves []core.Move
 
 	var translations []translation
@@ -212,25 +218,23 @@ func slidingMoves(p core.Position, pt core.PieceType) []core.Move {
 	return moves
 }
 
-// bishopMoves returns available bishop moves, without considering checks.
-func bishopMoves(p core.Position) []core.Move {
-	return slidingMoves(p, core.Bishop)
+// bishopAttacks returns available bishop attacks, without considering checks.
+func bishopAttacks(p core.Position) []core.Move {
+	return slidingAttacks(p, core.Bishop)
 }
 
-// rookMoves returns available rook moves, without considering checks.
-func rookMoves(p core.Position) []core.Move {
-	return slidingMoves(p, core.Rook)
+// rookAttacks returns available rook attacks, without considering checks.
+func rookAttacks(p core.Position) []core.Move {
+	return slidingAttacks(p, core.Rook)
 }
 
-// queenMoves returns available queen moves, without considering checks.
-func queenMoves(p core.Position) []core.Move {
-	return slidingMoves(p, core.Queen)
+// queenAttacks returns available queen attacks, without considering checks.
+func queenAttacks(p core.Position) []core.Move {
+	return slidingAttacks(p, core.Queen)
 }
 
-// kingMoves returns available king moves, without considering checks.
-//
-// Note that king moves include castling.
-func kingMoves(p core.Position) []core.Move {
+// kingAttacks returns available king attacks, without considering checks.
+func kingAttacks(p core.Position) []core.Move {
 	return nil // TODO
 }
 
@@ -242,11 +246,11 @@ func isEnemyKingTargeted(p core.Position) bool {
 
 	moves := slices.Concat(
 		pawnAttacks(p),
-		knightMoves(p),
-		bishopMoves(p),
-		rookMoves(p),
-		queenMoves(p),
-		kingMoves(p),
+		knightAttacks(p),
+		bishopAttacks(p),
+		rookAttacks(p),
+		queenAttacks(p),
+		kingAttacks(p),
 	)
 
 	for _, m := range moves {
