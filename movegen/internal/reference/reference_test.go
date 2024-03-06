@@ -44,6 +44,14 @@ func TestLegalMoves(t *testing.T) {
 				"e5g3", "e5h2",
 			},
 		},
+		{
+			name: "castling",
+			in:   "4k3/8/8/8/4p3/p2pPp1p/P2P1P1P/R3K2R w KQ - 0 1",
+			want: []string{
+				"a1b1", "a1c1", "a1d1", "e1c1", "e1d1", "e1f1", "e1g1", "h1f1",
+				"h1g1",
+			},
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

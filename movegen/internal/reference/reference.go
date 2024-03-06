@@ -122,27 +122,31 @@ func pawnAttacks(p core.Position) []core.Move {
 		var to core.Square
 
 		// Leftward attack.
-		if p.SideToMove == core.White {
-			to = from.Above().Left()
-		} else {
-			to = from.Below().Left()
-		}
+		if from.File() != core.FileA {
+			if p.SideToMove == core.White {
+				to = from.Above().Left()
+			} else {
+				to = from.Below().Left()
+			}
 
-		piece, ok := p.Board.Get(to)
-		if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
-			moves = append(moves, core.Move{From: from, To: to})
+			piece, ok := p.Board.Get(to)
+			if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
+				moves = append(moves, core.Move{From: from, To: to})
+			}
 		}
 
 		// Rightward attack.
-		if p.SideToMove == core.White {
-			to = from.Above().Right()
-		} else {
-			to = from.Below().Right()
-		}
+		if from.File() != core.FileH {
+			if p.SideToMove == core.White {
+				to = from.Above().Right()
+			} else {
+				to = from.Below().Right()
+			}
 
-		piece, ok = p.Board.Get(to)
-		if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
-			moves = append(moves, core.Move{From: from, To: to})
+			piece, ok := p.Board.Get(to)
+			if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
+				moves = append(moves, core.Move{From: from, To: to})
+			}
 		}
 	}
 
