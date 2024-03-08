@@ -4,54 +4,7 @@ import (
 	"testing"
 
 	"github.com/clfs/simple/encoding/fen"
-	"github.com/clfs/simple/encoding/pcn"
-	"github.com/google/go-cmp/cmp"
 )
-
-func TestDivide(t *testing.T) {
-	cases := []struct {
-		in    string
-		depth int
-		want  map[string]int
-	}{
-		{
-			fen.Starting,
-			5,
-			map[string]int{
-				"a2a3": 181046,
-				"a2a4": 217832,
-				"b1a3": 198572,
-				"b1c3": 234656,
-				"b2b3": 215255,
-				"b2b4": 216145,
-				"c2c3": 222861,
-				"c2c4": 240082,
-				"d2d3": 328511,
-				"d2d4": 361790,
-				"e2e3": 402988,
-				"e2e4": 405385,
-				"f2f3": 178889,
-				"f2f4": 198473,
-				"g1f3": 233491,
-				"g1h3": 198502,
-				"g2g3": 217210,
-				"g2g4": 214048,
-				"h2h3": 181044,
-				"h2h4": 218829,
-			},
-		},
-	}
-
-	for _, tc := range cases {
-		got := make(map[string]int)
-		for k, v := range Divide(fen.MustDecode(tc.in), tc.depth) {
-			got[pcn.Encode(k)] = v
-		}
-		if diff := cmp.Diff(tc.want, got); diff != "" {
-			t.Errorf("%q: -want +got\n%s", tc.in, diff)
-		}
-	}
-}
 
 func TestPerft(t *testing.T) {
 	cases := []struct {

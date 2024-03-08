@@ -31,21 +31,3 @@ func Perft(p core.Position, depth int) int {
 	}
 	return n
 }
-
-// Divide returns a map from moves to the number of nodes at the decremented
-// depth.
-func Divide(p core.Position, depth int) map[core.Move]int {
-	if depth == 0 {
-		return nil
-	}
-
-	moves := LegalMoves(p)
-
-	res := make(map[core.Move]int)
-	for _, m := range moves {
-		child := p
-		child.Make(m)
-		res[m] = Perft(child, depth-1)
-	}
-	return res
-}
