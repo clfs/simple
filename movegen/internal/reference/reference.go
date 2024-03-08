@@ -95,12 +95,14 @@ func pawnPushes(p core.Position) []core.Move {
 		// double push
 		if p.SideToMove == core.White && from.Rank() == core.Rank2 {
 			to = from.Above().Above()
+			if p.Board.IsEmpty(to) {
+				moves = append(moves, core.Move{From: from, To: to})
+			}
 		} else if p.SideToMove == core.Black && from.Rank() == core.Rank7 {
 			to = from.Below().Below()
-		}
-
-		if p.Board.IsEmpty(to) {
-			moves = append(moves, core.Move{From: from, To: to})
+			if p.Board.IsEmpty(to) {
+				moves = append(moves, core.Move{From: from, To: to})
+			}
 		}
 	}
 
