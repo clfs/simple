@@ -10,7 +10,8 @@ func LegalMoves(p core.Position) []core.Move {
 	return reference.LegalMoves(p)
 }
 
-// Perft walks the game tree and returns the number of nodes at the given depth.
+// Perft walks a move generation tree and returns the number of leaf nodes at
+// the given depth.
 //
 // It panics if depth is negative.
 func Perft(p core.Position, depth int) int {
