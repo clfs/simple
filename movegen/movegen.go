@@ -11,7 +11,13 @@ func LegalMoves(p core.Position) []core.Move {
 }
 
 // Perft walks the game tree and returns the number of nodes at the given depth.
+//
+// It panics if depth is negative.
 func Perft(p core.Position, depth int) int {
+	if depth < 0 {
+		panic("negative perft depth")
+	}
+
 	if depth == 0 {
 		return 1
 	}
