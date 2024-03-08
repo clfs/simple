@@ -9,3 +9,38 @@ import (
 func LegalMoves(p core.Position) []core.Move {
 	return reference.LegalMoves(p)
 }
+
+// Perft walks the game tree and returns the number of nodes at the given depth.
+func Perft(p core.Position, depth int) int {
+	if depth == 0 {
+		return 1
+	}
+
+	moves := LegalMoves(p)
+
+	var nodes int
+	for _, m := range moves {
+		child := p
+		child.Make(m)
+		nodes += Perft(child, depth-1)
+	}
+	return nodes
+}
+
+// Divide returns a map from moves to the number of nodes at the decremented
+// depth.
+func Divide(p core.Position, depth int) map[core.Move]int {
+	if depth == 0 {
+		return nil
+	}
+
+	moves := LegalMoves(p)
+
+	res := make(map[core.Move]int)
+	for _, m := range moves {
+		child := p
+		child.Make(m)
+		res[m] = Perft(child, depth-1)
+	}
+	return res
+}
