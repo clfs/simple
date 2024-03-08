@@ -23,15 +23,13 @@ func Perft(p core.Position, depth int) int {
 		return 1
 	}
 
-	moves := LegalMoves(p)
-
-	var nodes int
-	for _, m := range moves {
+	var n int
+	for _, m := range LegalMoves(p) {
 		child := p
 		child.Make(m)
-		nodes += Perft(child, depth-1)
+		n += Perft(child, depth-1)
 	}
-	return nodes
+	return n
 }
 
 // Divide returns a map from moves to the number of nodes at the decremented
