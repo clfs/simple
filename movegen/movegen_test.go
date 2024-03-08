@@ -7,7 +7,6 @@ import (
 )
 
 func TestPerft(t *testing.T) {
-	t.Skip("failing")
 	cases := []struct {
 		in   string
 		want []int
