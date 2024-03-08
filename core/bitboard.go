@@ -69,3 +69,8 @@ func (b *Bitboard) With(other Bitboard) {
 func (b *Bitboard) First() Square {
 	return Square(bits.TrailingZeros64(uint64(*b)))
 }
+
+// Intersects returns true if the bitboards have any squares in common.
+func (b *Bitboard) Intersects(other Bitboard) bool {
+	return *b&other != 0
+}

@@ -85,3 +85,14 @@ func ExampleBitboard_First() {
 	// Output:
 	// C3
 }
+
+func ExampleBitboard_Intersects() {
+	a := NewBitboard(A1, H8)
+	b := NewBitboard(A2, H7)
+	c := NewBitboard(A1, H7)
+	fmt.Println(a.Intersects(b))
+	fmt.Println(a.Intersects(c))
+	// Output:
+	// false
+	// true
+}

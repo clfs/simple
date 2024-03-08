@@ -21,6 +21,7 @@ func LegalMoves(p core.Position) []core.Move {
 		rookAttacks(p),
 		queenAttacks(p),
 		kingAttacks(p),
+		castlingMoves(p),
 	)
 
 	moves = slices.DeleteFunc(moves, func(m core.Move) bool {
@@ -121,27 +122,31 @@ func pawnAttacks(p core.Position) []core.Move {
 		var to core.Square
 
 		// Leftward attack.
-		if p.SideToMove == core.White {
-			to = from.Above().Left()
-		} else {
-			to = from.Below().Left()
-		}
+		if from.File() != core.FileA {
+			if p.SideToMove == core.White {
+				to = from.Above().Left()
+			} else {
+				to = from.Below().Left()
+			}
 
-		piece, ok := p.Board.Get(to)
-		if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
-			moves = append(moves, core.Move{From: from, To: to})
+			piece, ok := p.Board.Get(to)
+			if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
+				moves = append(moves, core.Move{From: from, To: to})
+			}
 		}
 
 		// Rightward attack.
-		if p.SideToMove == core.White {
-			to = from.Above().Right()
-		} else {
-			to = from.Below().Right()
-		}
+		if from.File() != core.FileH {
+			if p.SideToMove == core.White {
+				to = from.Above().Right()
+			} else {
+				to = from.Below().Right()
+			}
 
-		piece, ok = p.Board.Get(to)
-		if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
-			moves = append(moves, core.Move{From: from, To: to})
+			piece, ok := p.Board.Get(to)
+			if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
+				moves = append(moves, core.Move{From: from, To: to})
+			}
 		}
 	}
 
@@ -273,6 +278,74 @@ func queenAttacks(p core.Position) []core.Move {
 // kingAttacks returns available king attacks, without considering checks.
 func kingAttacks(p core.Position) []core.Move {
 	return steppingAttacks(p, core.King)
+}
+
+// switchSides returns a new position with the side to move switched.
+func switchSides(p core.Position) core.Position {
+	p.SideToMove = p.SideToMove.Other()
+	return p
+}
+
+// castlingMoves returns available castling moves.
+// It accounts for checks and enemy attacks.
+func castlingMoves(p core.Position) []core.Move {
+	attacked := attackedSquares(switchSides(p))
+
+	// If the king is in check, castling isn't possible.
+	if attacked.Get(p.FriendlyKing()) {
+		return nil
+	}
+
+	var moves []core.Move
+
+	if p.SideToMove == core.White {
+		if p.WhiteOO {
+			bb := core.NewBitboard(core.F1, core.G1)
+			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
+				moves = append(moves, core.Move{From: core.E1, To: core.G1})
+			}
+		}
+		if p.WhiteOOO {
+			bb := core.NewBitboard(core.B1, core.C1, core.D1)
+			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
+				moves = append(moves, core.Move{From: core.E1, To: core.C1})
+			}
+		}
+	} else {
+		if p.BlackOO {
+			bb := core.NewBitboard(core.F8, core.G8)
+			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
+				moves = append(moves, core.Move{From: core.E8, To: core.G8})
+			}
+		}
+		if p.BlackOOO {
+			bb := core.NewBitboard(core.B8, core.C8, core.D8)
+			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
+				moves = append(moves, core.Move{From: core.E8, To: core.C8})
+			}
+		}
+	}
+
+	return moves
+}
+
+// attackedSquares returns all squares attacked by the side to move.
+// It does not consider checks.
+func attackedSquares(p core.Position) core.Bitboard {
+	moves := slices.Concat(
+		pawnAttacks(p),
+		knightAttacks(p),
+		bishopAttacks(p),
+		rookAttacks(p),
+		queenAttacks(p),
+		kingAttacks(p),
+	)
+
+	var bb core.Bitboard
+	for _, m := range moves {
+		bb.Set(m.To)
+	}
+	return bb
 }
 
 // isEnemyKingTargeted returns true if the enemy king is targeted by an attack.
