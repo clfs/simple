@@ -9,3 +9,25 @@ import (
 func LegalMoves(p core.Position) []core.Move {
 	return reference.LegalMoves(p)
 }
+
+// Perft walks a move generation tree and returns the number of leaf nodes at
+// the given depth.
+//
+// It panics if depth is negative.
+func Perft(p core.Position, depth int) int {
+	if depth < 0 {
+		panic("negative perft depth")
+	}
+
+	if depth == 0 {
+		return 1
+	}
+
+	var n int
+	for _, m := range LegalMoves(p) {
+		child := p
+		child.Make(m)
+		n += Perft(child, depth-1)
+	}
+	return n
+}
