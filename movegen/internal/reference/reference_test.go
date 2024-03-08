@@ -59,6 +59,18 @@ func TestLegalMoves(t *testing.T) {
 				"b4c5", "c4c5", "d2d4", "f1f2", "f3d4", "g1h1",
 			},
 		},
+		{
+			"castling",
+			"rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8",
+			[]string{
+				"a2a3", "a2a4", "b1a3", "b1c3", "b1d2", "b2b3", "b2b4", "c1d2",
+				"c1e3", "c1f4", "c1g5", "c1h6", "c2c3", "c4a6", "c4b3", "c4b5",
+				"c4d3", "c4d5", "c4e6", "c4f7", "d1d2", "d1d3", "d1d4", "d1d5",
+				"d1d6", "d7c8b", "d7c8n", "d7c8q", "d7c8r", "e1d2", "e1f1",
+				"e1f2", "e1g1", "e2c3", "e2d4", "e2f4", "e2g1", "e2g3", "g2g3",
+				"g2g4", "h1f1", "h1g1", "h2h3", "h2h4",
+			},
+		},
 	}
 
 	for _, tc := range cases {
