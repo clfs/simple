@@ -75,12 +75,16 @@ func (p *Position) Make(m Move) {
 	switch {
 	case heldPiece == WhiteKing:
 		p.WhiteOO, p.WhiteOOO = false, false
-	case heldPiece == WhiteRook && (m.From == A1 || m.From == H1):
-		p.WhiteOO, p.WhiteOOO = false, false
+	case heldPiece == WhiteRook && m.From == A1:
+		p.WhiteOOO = false
+	case heldPiece == WhiteRook && m.From == H1:
+		p.WhiteOO = false
 	case heldPiece == BlackKing:
 		p.BlackOO, p.BlackOOO = false, false
-	case heldPiece == BlackRook && (m.From == A8 || m.From == H8):
-		p.BlackOO, p.BlackOOO = false, false
+	case heldPiece == BlackRook && m.From == A8:
+		p.BlackOOO = false
+	case heldPiece == BlackRook && m.From == H8:
+		p.BlackOO = false
 	}
 
 	// Update the en passant square.

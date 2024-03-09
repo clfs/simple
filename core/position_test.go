@@ -94,11 +94,17 @@ func TestPosition_Make_RookRights(t *testing.T) {
 	p.Make(Move{From: A1, To: A3})
 	p.Make(Move{From: A8, To: A6})
 
-	if p.WhiteOO || p.WhiteOOO || p.BlackOO || p.BlackOOO {
-		t.Errorf(
-			"expected no castling rights, got WhiteOO=%v WhiteOOO=%v BlackOO=%v BlackOOO=%v",
-			p.WhiteOO, p.WhiteOOO, p.BlackOO, p.BlackOOO,
-		)
+	if !p.WhiteOO {
+		t.Errorf("expected WhiteOO=true, got %t", p.WhiteOO)
+	}
+	if p.WhiteOOO {
+		t.Errorf("expected WhiteOOO=false, got %t", p.WhiteOOO)
+	}
+	if !p.BlackOO {
+		t.Errorf("expected BlackOO=true, got %t", p.BlackOO)
+	}
+	if p.BlackOOO {
+		t.Errorf("expected BlackOOO=false, got %t", p.BlackOOO)
 	}
 }
 
