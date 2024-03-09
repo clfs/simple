@@ -46,11 +46,11 @@ func Divide(p core.Position, depth int) map[core.Move]int {
 		return nil
 	}
 
-	m := make(map[core.Move]int)
+	res := make(map[core.Move]int)
 	for _, move := range LegalMoves(p) {
 		child := p
 		child.Make(move)
-		m[move] = Perft(child, depth-1)
+		res[move] = Perft(child, depth-1)
 	}
-	return m
+	return res
 }
