@@ -31,3 +31,15 @@ func Perft(p core.Position, depth int) int {
 	}
 	return n
 }
+
+// Divide returns a map from legal moves to their Perft counts at a decremented
+// depth.
+func Divide(p core.Position, depth int) map[core.Move]int {
+	m := make(map[core.Move]int)
+	for _, move := range LegalMoves(p) {
+		child := p
+		child.Make(move)
+		m[move] = Perft(child, depth-1)
+	}
+	return m
+}
