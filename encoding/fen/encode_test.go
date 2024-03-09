@@ -51,6 +51,13 @@ func TestEncode(t *testing.T) {
 			},
 			want: "rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3",
 		},
+		{
+			p: MustDecode("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"),
+			moves: []core.Move{
+				{From: core.A1, To: core.B1},
+			},
+			want: "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/1R2K2R b Kkq - 1 1",
+		},
 	}
 	for i, tc := range cases {
 		for _, m := range tc.moves {
