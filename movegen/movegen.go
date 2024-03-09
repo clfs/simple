@@ -31,3 +31,26 @@ func Perft(p core.Position, depth int) int {
 	}
 	return n
 }
+
+// Divide divides a [Perft] result between a position's legal moves.
+//
+// If depth is zero, Divide returns nil.
+//
+// If depth is negative, Divide panics.
+func Divide(p core.Position, depth int) map[core.Move]int {
+	if depth < 0 {
+		panic("negative depth")
+	}
+
+	if depth == 0 {
+		return nil
+	}
+
+	res := make(map[core.Move]int)
+	for _, move := range LegalMoves(p) {
+		child := p
+		child.Make(move)
+		res[move] = Perft(child, depth-1)
+	}
+	return res
+}
