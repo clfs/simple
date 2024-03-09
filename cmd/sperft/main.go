@@ -21,6 +21,11 @@ var (
 func main() {
 	log.SetFlags(0)
 	flag.Parse()
+
+	if *depthFlag < 1 {
+		log.Fatal("error: -depth must be at least 1")
+	}
+
 	if err := run(os.Stdout); err != nil {
 		log.Fatal(err)
 	}
