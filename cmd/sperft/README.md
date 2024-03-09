@@ -36,7 +36,7 @@ Usage of sperft:
 ## Example
 
 In position `2r2k2/1pnR2p1/p7/P1PP4/5pp1/8/5PPP/6K1 w - - 0 39`, there are 4,009
-possible leaf nodes after 3 plies, and 58 of these leaf nodes started with White
+possible leaf nodes after 3 plies, and 58 of those leaf nodes started with White
 playing `d7d8`.
 
 ```text
