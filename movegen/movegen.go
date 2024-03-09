@@ -34,9 +34,9 @@ func Perft(p core.Position, depth int) int {
 
 // Divide divides a [Perft] result between a position's legal moves.
 //
-// If the search depth is zero, Divide returns nil.
+// If depth is zero, Divide returns nil.
 //
-// If the search depth is negative, Divide panics.
+// If depth is negative, Divide panics.
 func Divide(p core.Position, depth int) map[core.Move]int {
 	if depth < 0 {
 		panic("negative depth")
