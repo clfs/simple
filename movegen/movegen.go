@@ -32,8 +32,8 @@ func Perft(p core.Position, depth int) int {
 	return n
 }
 
-// Divide returns a map from legal moves to their Perft counts at a decremented
-// depth.
+// Divide returns a map from legal moves to their Perft counts at the
+// decremented depth.
 func Divide(p core.Position, depth int) map[core.Move]int {
 	m := make(map[core.Move]int)
 	for _, move := range LegalMoves(p) {
