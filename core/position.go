@@ -87,6 +87,14 @@ func (p *Position) Make(m Move) {
 		p.BlackOOO = false
 	case heldPiece == BlackRook && m.From == H8:
 		p.BlackOO = false
+	case m.To == A1:
+		p.WhiteOOO = false
+	case m.To == H1:
+		p.WhiteOO = false
+	case m.To == A8:
+		p.BlackOOO = false
+	case m.To == H8:
+		p.BlackOO = false
 	}
 
 	// Update the en passant square.
