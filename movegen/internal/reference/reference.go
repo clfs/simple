@@ -117,6 +117,49 @@ func pawnPushes(p core.Position) []core.Move {
 	return moves
 }
 
+// squaresAttackedByPawns returns all squares attacked by pawns.
+func squaresAttackedByPawns(p core.Position) core.Bitboard {
+	var bb core.Bitboard
+
+	var fromBB core.Bitboard
+
+	if p.SideToMove == core.White {
+		fromBB = p.Board[core.WhitePawn]
+	} else {
+		fromBB = p.Board[core.BlackPawn]
+	}
+
+	for from := core.A2; from <= core.H7; from++ {
+		if !fromBB.Get(from) {
+			continue // empty square
+		}
+
+		var to core.Square
+
+		// leftward attack
+		if from.File() != core.FileA {
+			if p.SideToMove == core.White {
+				to = from.Above().Left()
+			} else {
+				to = from.Below().Left()
+			}
+			bb.Set(to)
+		}
+
+		// rightward attack
+		if from.File() != core.FileH {
+			if p.SideToMove == core.White {
+				to = from.Above().Right()
+			} else {
+				to = from.Below().Right()
+			}
+			bb.Set(to)
+		}
+	}
+
+	return bb
+}
+
 // pawnAttacks returns available pawn attacks, without considering checks.
 func pawnAttacks(p core.Position) []core.Move {
 	var moves []core.Move
@@ -373,6 +416,9 @@ func attackedSquares(p core.Position) core.Bitboard {
 	for _, m := range moves {
 		bb.Set(m.To)
 	}
+
+	bb.With(squaresAttackedByPawns(p))
+
 	return bb
 }
 
