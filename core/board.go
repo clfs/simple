@@ -86,10 +86,10 @@ func (b *Board) MoveToEmpty(p Piece, from, to Square) {
 func (b *Board) Promote(from, to Square, p PieceType) {
 	if to.Rank() == Rank8 { // White
 		b[WhitePawn].Clear(from)
-		b[NewPiece(White, p)].Set(to)
+		b.Set(NewPiece(White, p), to)
 	} else { // Black
 		b[BlackPawn].Clear(from)
-		b[NewPiece(Black, p)].Set(to)
+		b.Set(NewPiece(Black, p), to)
 	}
 }
 
