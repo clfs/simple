@@ -1,6 +1,7 @@
 package movegen
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/clfs/simple/core"
@@ -805,11 +806,14 @@ func TestDivide(t *testing.T) {
 		},
 	}
 
-	for _, tc := range cases {
-		p := fen.MustDecode(tc.in)
-		got := encodeMoveMap(t, Divide(p, tc.depth))
-		if diff := cmp.Diff(tc.want, got); diff != "" {
-			t.Errorf("%q at depth %d: (-want +got)\n%s", tc.in, tc.depth, diff)
-		}
+	for i, tc := range cases {
+		t.Run(fmt.Sprint(i), func(t *testing.T) {
+			t.Parallel()
+			p := fen.MustDecode(tc.in)
+			got := encodeMoveMap(t, Divide(p, tc.depth))
+			if diff := cmp.Diff(tc.want, got); diff != "" {
+				t.Errorf("%q at depth %d: (-want +got)\n%s", tc.in, tc.depth, diff)
+			}
+		})
 	}
 }
