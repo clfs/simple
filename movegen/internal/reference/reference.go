@@ -40,7 +40,7 @@ type translation struct {
 
 // Available translations by piece type.
 var (
-	knightTranslations = []translation{{-2, 1}, {-2, -1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}}
+	knightTranslations = []translation{{-2, -1}, {-2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}}
 	bishopTranslations = []translation{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}
 	rookTranslations   = []translation{{-1, 0}, {0, -1}, {0, 1}, {1, 0}}
 	queenTranslations  = []translation{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}
@@ -87,7 +87,15 @@ func pawnPushes(p core.Position) []core.Move {
 		}
 
 		if p.Board.IsEmpty(to) {
-			moves = append(moves, core.Move{From: from, To: to})
+			// promotions?
+			if (p.SideToMove == core.White && to.Rank() == core.Rank8) ||
+				(p.SideToMove == core.Black && to.Rank() == core.Rank1) {
+				for _, pt := range []core.PieceType{core.Queen, core.Rook, core.Bishop, core.Knight} {
+					moves = append(moves, core.Move{From: from, To: to, Promotion: pt})
+				}
+			} else {
+				moves = append(moves, core.Move{From: from, To: to})
+			}
 		} else {
 			continue // double push not possible
 		}
@@ -95,16 +103,61 @@ func pawnPushes(p core.Position) []core.Move {
 		// double push
 		if p.SideToMove == core.White && from.Rank() == core.Rank2 {
 			to = from.Above().Above()
+			if p.Board.IsEmpty(to) {
+				moves = append(moves, core.Move{From: from, To: to})
+			}
 		} else if p.SideToMove == core.Black && from.Rank() == core.Rank7 {
 			to = from.Below().Below()
-		}
-
-		if p.Board.IsEmpty(to) {
-			moves = append(moves, core.Move{From: from, To: to})
+			if p.Board.IsEmpty(to) {
+				moves = append(moves, core.Move{From: from, To: to})
+			}
 		}
 	}
 
 	return moves
+}
+
+// squaresAttackedByPawns returns all squares attacked by pawns.
+func squaresAttackedByPawns(p core.Position) core.Bitboard {
+	var bb core.Bitboard
+
+	var fromBB core.Bitboard
+
+	if p.SideToMove == core.White {
+		fromBB = p.Board[core.WhitePawn]
+	} else {
+		fromBB = p.Board[core.BlackPawn]
+	}
+
+	for from := core.A2; from <= core.H7; from++ {
+		if !fromBB.Get(from) {
+			continue // empty square
+		}
+
+		var to core.Square
+
+		// leftward attack
+		if from.File() != core.FileA {
+			if p.SideToMove == core.White {
+				to = from.Above().Left()
+			} else {
+				to = from.Below().Left()
+			}
+			bb.Set(to)
+		}
+
+		// rightward attack
+		if from.File() != core.FileH {
+			if p.SideToMove == core.White {
+				to = from.Above().Right()
+			} else {
+				to = from.Below().Right()
+			}
+			bb.Set(to)
+		}
+	}
+
+	return bb
 }
 
 // pawnAttacks returns available pawn attacks, without considering checks.
@@ -130,8 +183,16 @@ func pawnAttacks(p core.Position) []core.Move {
 			}
 
 			piece, ok := p.Board.Get(to)
-			if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
-				moves = append(moves, core.Move{From: from, To: to})
+			if (ok && piece.Color() == p.SideToMove.Other()) || (p.EnPassant != 0 && to == p.EnPassant) {
+				// promotions?
+				if (p.SideToMove == core.White && to.Rank() == core.Rank8) ||
+					(p.SideToMove == core.Black && to.Rank() == core.Rank1) {
+					for _, pt := range []core.PieceType{core.Queen, core.Rook, core.Bishop, core.Knight} {
+						moves = append(moves, core.Move{From: from, To: to, Promotion: pt})
+					}
+				} else {
+					moves = append(moves, core.Move{From: from, To: to})
+				}
 			}
 		}
 
@@ -144,8 +205,16 @@ func pawnAttacks(p core.Position) []core.Move {
 			}
 
 			piece, ok := p.Board.Get(to)
-			if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
-				moves = append(moves, core.Move{From: from, To: to})
+			if (ok && piece.Color() == p.SideToMove.Other()) || (p.EnPassant != 0 && to == p.EnPassant) {
+				// promotions?
+				if (p.SideToMove == core.White && to.Rank() == core.Rank8) ||
+					(p.SideToMove == core.Black && to.Rank() == core.Rank1) {
+					for _, pt := range []core.PieceType{core.Queen, core.Rook, core.Bishop, core.Knight} {
+						moves = append(moves, core.Move{From: from, To: to, Promotion: pt})
+					}
+				} else {
+					moves = append(moves, core.Move{From: from, To: to})
+				}
 			}
 		}
 	}
@@ -300,27 +369,29 @@ func castlingMoves(p core.Position) []core.Move {
 
 	if p.SideToMove == core.White {
 		if p.WhiteOO {
-			bb := core.NewBitboard(core.F1, core.G1)
-			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
+			targets := core.NewBitboard(core.F1, core.G1)
+			if !attacked.Intersects(targets) && p.Board.AllEmpty(targets) {
 				moves = append(moves, core.Move{From: core.E1, To: core.G1})
 			}
 		}
 		if p.WhiteOOO {
-			bb := core.NewBitboard(core.B1, core.C1, core.D1)
-			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
+			targets := core.NewBitboard(core.C1, core.D1)
+			empties := core.NewBitboard(core.B1, core.C1, core.D1)
+			if !attacked.Intersects(targets) && p.Board.AllEmpty(empties) {
 				moves = append(moves, core.Move{From: core.E1, To: core.C1})
 			}
 		}
 	} else {
 		if p.BlackOO {
-			bb := core.NewBitboard(core.F8, core.G8)
-			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
+			targets := core.NewBitboard(core.F8, core.G8)
+			if !attacked.Intersects(targets) && p.Board.AllEmpty(targets) {
 				moves = append(moves, core.Move{From: core.E8, To: core.G8})
 			}
 		}
 		if p.BlackOOO {
-			bb := core.NewBitboard(core.B8, core.C8, core.D8)
-			if !attacked.Intersects(bb) && p.Board.AllEmpty(bb) {
+			targets := core.NewBitboard(core.C8, core.D8)
+			empties := core.NewBitboard(core.B8, core.C8, core.D8)
+			if !attacked.Intersects(targets) && p.Board.AllEmpty(empties) {
 				moves = append(moves, core.Move{From: core.E8, To: core.C8})
 			}
 		}
@@ -345,6 +416,9 @@ func attackedSquares(p core.Position) core.Bitboard {
 	for _, m := range moves {
 		bb.Set(m.To)
 	}
+
+	bb.With(squaresAttackedByPawns(p))
+
 	return bb
 }
 

@@ -51,6 +51,27 @@ func TestEncode(t *testing.T) {
 			},
 			want: "rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3",
 		},
+		{
+			p: MustDecode("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"),
+			moves: []core.Move{
+				{From: core.A1, To: core.B1},
+			},
+			want: "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/1R2K2R b Kkq - 1 1",
+		},
+		{
+			p: MustDecode("r3k2r/Pppp1ppp/1b3nbN/nPB5/B1P1P3/q4N2/Pp1P2PP/R2Q1RK1 b kq - 1 1"),
+			moves: []core.Move{
+				{From: core.B2, To: core.A1, Promotion: core.Bishop},
+			},
+			want: "r3k2r/Pppp1ppp/1b3nbN/nPB5/B1P1P3/q4N2/P2P2PP/b2Q1RK1 w kq - 0 2",
+		},
+		{
+			p: MustDecode("rnbq1k1r/pp1Pbppp/2p5/8/2B5/P7/1PP1NnPP/RNBQK2R b KQ - 0 8"),
+			moves: []core.Move{
+				{From: core.F2, To: core.H1},
+			},
+			want: "rnbq1k1r/pp1Pbppp/2p5/8/2B5/P7/1PP1N1PP/RNBQK2n w Q - 0 9",
+		},
 	}
 	for i, tc := range cases {
 		for _, m := range tc.moves {

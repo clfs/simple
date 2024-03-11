@@ -94,3 +94,74 @@ func TestDecode_Valid(t *testing.T) {
 		}
 	}
 }
+
+func piecePlacements(t *testing.T, b core.Board) map[core.Square]core.Piece {
+	t.Helper()
+
+	m := make(map[core.Square]core.Piece)
+	for s := core.A1; s <= core.H8; s++ {
+		p, ok := b.Get(s)
+		if ok {
+			m[s] = p
+		}
+	}
+	return m
+}
+
+func TestDecode_PiecePlacements(t *testing.T) {
+	cases := []struct {
+		in   string
+		want map[core.Square]core.Piece
+	}{
+		{
+			"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/1R2K2R b Kkq - 1 1",
+			map[core.Square]core.Piece{
+				core.A2: core.WhitePawn,
+				core.A6: core.BlackBishop,
+				core.A7: core.BlackPawn,
+				core.A8: core.BlackRook,
+				core.B1: core.WhiteRook,
+				core.B2: core.WhitePawn,
+				core.B4: core.BlackPawn,
+				core.B6: core.BlackKnight,
+				core.C2: core.WhitePawn,
+				core.C3: core.WhiteKnight,
+				core.C7: core.BlackPawn,
+				core.D2: core.WhiteBishop,
+				core.D5: core.WhitePawn,
+				core.D7: core.BlackPawn,
+				core.E1: core.WhiteKing,
+				core.E2: core.WhiteBishop,
+				core.E4: core.WhitePawn,
+				core.E5: core.WhiteKnight,
+				core.E6: core.BlackPawn,
+				core.E7: core.BlackQueen,
+				core.E8: core.BlackKing,
+				core.F2: core.WhitePawn,
+				core.F3: core.WhiteQueen,
+				core.F6: core.BlackKnight,
+				core.F7: core.BlackPawn,
+				core.G2: core.WhitePawn,
+				core.G6: core.BlackPawn,
+				core.G7: core.BlackBishop,
+				core.H1: core.WhiteRook,
+				core.H2: core.WhitePawn,
+				core.H3: core.BlackPawn,
+				core.H8: core.BlackRook,
+			},
+		},
+	}
+
+	for i, tc := range cases {
+		p, err := Decode(tc.in)
+		if err != nil {
+			t.Errorf("#%d: Decode() error: %v", i, err)
+		}
+
+		got := piecePlacements(t, p.Board)
+
+		if diff := cmp.Diff(tc.want, got); diff != "" {
+			t.Errorf("#%d: piecePlacements() mismatch (-want +got):\n%s", i, diff)
+		}
+	}
+}

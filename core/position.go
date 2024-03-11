@@ -61,26 +61,40 @@ func (p *Position) Make(m Move) {
 
 	// Determine if the move is a capture.
 	isCapture := p.Board.IsOccupied(m.To) ||
-		(heldPiece.Type() == Pawn && m.To == p.EnPassant)
+		(p.EnPassant != 0 && heldPiece.Type() == Pawn && m.To == p.EnPassant)
 
 	// Adjust pawn placements if capturing en passant.
-	switch {
-	case heldPiece == WhitePawn && m.To == p.EnPassant:
-		p.Board.Clear(p.EnPassant.Below())
-	case heldPiece == BlackPawn && m.To == p.EnPassant:
-		p.Board.Clear(p.EnPassant.Above())
+	if p.EnPassant != 0 {
+		switch {
+		case heldPiece == WhitePawn && m.To == p.EnPassant:
+			p.Board.Clear(p.EnPassant.Below())
+		case heldPiece == BlackPawn && m.To == p.EnPassant:
+			p.Board.Clear(p.EnPassant.Above())
+		}
 	}
 
 	// Update castling rights.
 	switch {
 	case heldPiece == WhiteKing:
 		p.WhiteOO, p.WhiteOOO = false, false
-	case heldPiece == WhiteRook && (m.From == A1 || m.From == H1):
-		p.WhiteOO, p.WhiteOOO = false, false
+	case heldPiece == WhiteRook && m.From == A1:
+		p.WhiteOOO = false
+	case heldPiece == WhiteRook && m.From == H1:
+		p.WhiteOO = false
 	case heldPiece == BlackKing:
 		p.BlackOO, p.BlackOOO = false, false
-	case heldPiece == BlackRook && (m.From == A8 || m.From == H8):
-		p.BlackOO, p.BlackOOO = false, false
+	case heldPiece == BlackRook && m.From == A8:
+		p.BlackOOO = false
+	case heldPiece == BlackRook && m.From == H8:
+		p.BlackOO = false
+	case m.To == A1:
+		p.WhiteOOO = false
+	case m.To == H1:
+		p.WhiteOO = false
+	case m.To == A8:
+		p.BlackOOO = false
+	case m.To == H8:
+		p.BlackOO = false
 	}
 
 	// Update the en passant square.
