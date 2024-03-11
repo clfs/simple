@@ -183,7 +183,7 @@ func pawnAttacks(p core.Position) []core.Move {
 			}
 
 			piece, ok := p.Board.Get(to)
-			if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
+			if (ok && piece.Color() == p.SideToMove.Other()) || (p.EnPassant != 0 && to == p.EnPassant) {
 				// promotions?
 				if (p.SideToMove == core.White && to.Rank() == core.Rank8) ||
 					(p.SideToMove == core.Black && to.Rank() == core.Rank1) {
@@ -205,7 +205,7 @@ func pawnAttacks(p core.Position) []core.Move {
 			}
 
 			piece, ok := p.Board.Get(to)
-			if (ok && piece.Color() == p.SideToMove.Other()) || to == p.EnPassant {
+			if (ok && piece.Color() == p.SideToMove.Other()) || (p.EnPassant != 0 && to == p.EnPassant) {
 				// promotions?
 				if (p.SideToMove == core.White && to.Rank() == core.Rank8) ||
 					(p.SideToMove == core.Black && to.Rank() == core.Rank1) {
