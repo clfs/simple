@@ -56,6 +56,13 @@ func TestPerft(t *testing.T) {
 	}
 }
 
+func TestPerft_NegativeDepth(t *testing.T) {
+	p := core.NewPosition()
+	if got := Perft(p, -1); got != 0 {
+		t.Errorf("depth -1: got %d, want 0", got)
+	}
+}
+
 // encodeMoves encodes moves as a sorted slice of PCN strings.
 func encodeMoveMap(t *testing.T, m map[core.Move]int) map[string]int {
 	t.Helper()
@@ -815,5 +822,15 @@ func TestDivide(t *testing.T) {
 				t.Errorf("%q at depth %d: (-want +got)\n%s", tc.in, tc.depth, diff)
 			}
 		})
+	}
+}
+
+func TestDivide_DepthNotPositive(t *testing.T) {
+	p := core.NewPosition()
+	if got := Divide(p, -1); got != nil {
+		t.Errorf("depth -1: got non-nil %v", got)
+	}
+	if got := Divide(p, 0); got != nil {
+		t.Errorf("depth 0: got non-nil %v", got)
 	}
 }
