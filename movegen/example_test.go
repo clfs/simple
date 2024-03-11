@@ -26,6 +26,7 @@ func ExampleDivide() {
 		p = core.NewPosition()
 		m = pcn.MustDecode("e2e4")
 	)
+
 	// How many leaf nodes at depth 3 start with e2e4?
 	fmt.Println("e2e4:", Divide(p, 3)[m])
 	// After e2e4, how many leaf nodes are at depth 2?
