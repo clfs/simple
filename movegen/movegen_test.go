@@ -46,13 +46,16 @@ func TestPerft(t *testing.T) {
 		},
 	}
 
-	for _, tc := range cases {
-		p := fen.MustDecode(tc.in)
-		for i, want := range tc.want {
-			if got := Perft(p, i); got != want {
-				t.Errorf("%q at depth %d: got %d, want %d", tc.in, i, got, want)
+	for i, tc := range cases {
+		t.Run(fmt.Sprint(i), func(t *testing.T) {
+			t.Parallel()
+			p := fen.MustDecode(tc.in)
+			for i, want := range tc.want {
+				if got := Perft(p, i); got != want {
+					t.Errorf("%q at depth %d: got %d, want %d", tc.in, i, got, want)
+				}
 			}
-		}
+		})
 	}
 }
 
