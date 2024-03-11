@@ -10,8 +10,8 @@ func LegalMoves(p core.Position) []core.Move {
 	return reference.LegalMoves(p)
 }
 
-// Perft returns the total number of leaf nodes at the selected depth in a
-// position's move tree.
+// Perft returns the number of leaf nodes at the selected depth in a position's
+// move tree.
 //
 // Perft returns zero if depth is negative.
 func Perft(p core.Position, depth int) int {
