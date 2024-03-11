@@ -10,13 +10,13 @@ func LegalMoves(p core.Position) []core.Move {
 	return reference.LegalMoves(p)
 }
 
-// Perft walks a move generation tree and returns the number of leaf nodes at
-// the given depth.
+// Perft returns the number of leaf nodes at the selected depth in a position's
+// move tree.
 //
-// It panics if depth is negative.
+// Perft returns zero if depth is negative.
 func Perft(p core.Position, depth int) int {
 	if depth < 0 {
-		panic("negative perft depth")
+		return 0
 	}
 
 	if depth == 0 {
@@ -32,17 +32,12 @@ func Perft(p core.Position, depth int) int {
 	return n
 }
 
-// Divide divides a [Perft] result between a position's legal moves.
+// Divide returns a map from legal moves to Perft node counts at a decremented
+// depth.
 //
-// If depth is zero, Divide returns nil.
-//
-// If depth is negative, Divide panics.
+// Divide returns nil if depth is not positive.
 func Divide(p core.Position, depth int) map[core.Move]int {
-	if depth < 0 {
-		panic("negative depth")
-	}
-
-	if depth == 0 {
+	if depth < 1 {
 		return nil
 	}
 
