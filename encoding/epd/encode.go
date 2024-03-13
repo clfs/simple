@@ -1,6 +1,10 @@
 package epd
 
-import "github.com/clfs/simple/core"
+import (
+	"fmt"
+
+	"github.com/clfs/simple/core"
+)
 
 // Encode encodes a position and EPD operations into an EPD string.
 //
@@ -9,4 +13,8 @@ import "github.com/clfs/simple/core"
 // instead.
 func Encode(p core.Position, ops []Op) string {
 	return ""
+}
+
+func (u Unknown) EncodeOp() (string, error) {
+	return fmt.Sprintf("%s %s;", u.Opcode, u.Input), nil
 }

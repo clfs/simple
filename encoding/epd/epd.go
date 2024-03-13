@@ -19,8 +19,8 @@ const (
 
 // Operation represents an EPD operation.
 type Operation interface {
-	UnmarshalEPD(text []byte) error
-	MarshalEPD() ([]byte, error)
+	DecodeOp(s string) error
+	EncodeOp() (string, error)
 }
 
 // Unknown represents an unknown EPD operation.
