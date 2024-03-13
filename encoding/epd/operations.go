@@ -75,7 +75,15 @@ type BestMoves struct {
 // Comment represents the "c0" through "c9" operations.
 type Comment struct {
 	Level   int
-	Operand string
+	Comment string
+}
+
+func (c Comment) Assemble() RawOperation {
+	// TODO: Consider how to handle levels outside of 0-9.
+	return RawOperation{
+		Opcode: fmt.Sprintf("c%d", c.Level),
+		Args:   c.Comment,
+	}
 }
 
 // CentipawnEvaluation represents the "ce" operation.
