@@ -17,6 +17,12 @@ const (
 	OpcodeHalfMoveClock  = "hmvc"
 )
 
+// Operation represents an EPD operation.
+type Operation interface {
+	UnmarshalEPD(text []byte) error
+	MarshalEPD() ([]byte, error)
+}
+
 // Unknown represents an unknown EPD operation.
 type Unknown struct {
 	Opcode string
