@@ -8,6 +8,7 @@ package epd
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 // Operation represents an EPD operation.
@@ -67,9 +68,16 @@ type AvoidMoves struct {
 	Operands []string
 }
 
-// BestMoves represents the "bm" operation.
-type BestMoves struct {
-	Operands []string
+// BM represents the best available moves.
+type BM struct {
+	Moves []string
+}
+
+func (op BM) Assemble() RawOperation {
+	return RawOperation{
+		Opcode: "bm",
+		Args:   strings.Join(op.Moves, " "),
+	}
 }
 
 // Comment represents the "c0" through "c9" operations.
@@ -113,19 +121,40 @@ type ECO struct {
 	Operand string
 }
 
-// FullMoveNumber represents the "fmvn" operation.
-type FullMoveNumber struct {
-	Operand int
+// FMVN represents the full move number.
+type FMVN struct {
+	Number int
 }
 
-// HalfMoveClock represents the "hmvc" operation.
-type HalfMoveClock struct {
-	Operand int
+func (op FMVN) Assemble() RawOperation {
+	return RawOperation{
+		Opcode: "fmvn",
+		Args:   fmt.Sprintf("%d", op.Number),
+	}
 }
 
-// PositionIdentification represents the "id" operation.
-type PositionIdentification struct {
-	Operand string
+// HMVC represents the half move clock.
+type HMVC struct {
+	Clock int
+}
+
+func (op HMVC) Assemble() RawOperation {
+	return RawOperation{
+		Opcode: "hmvc",
+		Args:   fmt.Sprintf("%d", op.Clock),
+	}
+}
+
+// ID represents a position identifier.
+type ID struct {
+	ID string
+}
+
+func (op ID) Assemble() RawOperation {
+	return RawOperation{
+		Opcode: "id",
+		Args:   op.ID,
+	}
 }
 
 // NIC represents the "nic" operation.

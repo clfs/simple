@@ -2,14 +2,13 @@ package epd
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/clfs/simple/core"
 	"github.com/clfs/simple/encoding/fen"
 )
 
-func Decode(s string) (core.Position, []Op, error) {
+func Decode(s string) (core.Position, []Operation, error) {
 	fields := strings.SplitN(s, " ", 5)
 
 	if n := len(fields); n < 4 {
@@ -28,40 +27,28 @@ func Decode(s string) (core.Position, []Op, error) {
 		return p, nil, nil
 	}
 
-	ops, err := decodeOps(fields[4])
+	ops, err := decodeOperations(fields[4])
 	if err != nil {
 		return core.Position{}, nil, err
 	}
 
 	for _, op := range ops {
-		if err := applyOp(&p, op); err != nil {
-			return core.Position{}, nil, err
-		}
+		applyOperation(&p, op)
 	}
 
 	return p, ops, nil
 }
 
-func decodeOps(s string) ([]Op, error) {
+func decodeOperations(_ string) ([]Operation, error) {
 	// TODO: Implement.
 	return nil, nil
 }
 
-func applyOp(p *core.Position, op Op) error {
-	switch op.Opcode {
-	case OpcodeFullMoveNumber:
-		n, err := strconv.Atoi(op.Operands[0])
-		if err != nil {
-			return fmt.Errorf("invalid full move number: %v", err)
-		}
-		p.FullMoveNumber = n
-	case OpcodeHalfMoveClock:
-		n, err := strconv.Atoi(op.Operands[0])
-		if err != nil {
-			return fmt.Errorf("invalid half move clock: %v", err)
-		}
-		p.HalfMoveClock = n
+func applyOperation(p *core.Position, op Operation) {
+	switch v := op.(type) {
+	case FMVN:
+		p.FullMoveNumber = v.Number
+	case HMVC:
+		p.HalfMoveClock = v.Clock
 	}
-
-	return nil
 }
