@@ -13,6 +13,14 @@ func TestOperation_Assemble(t *testing.T) {
 		wantErr string
 	}{
 		{
+			in:   RawOperation{Opcode: "foo", Args: "bar"},
+			want: RawOperation{Opcode: "foo", Args: "bar"},
+		},
+		{
+			in:      RawOperation{Args: "bar"},
+			wantErr: "empty opcode",
+		},
+		{
 			in:   ACN{Nodes: 42},
 			want: RawOperation{"acn", "42"},
 		},
@@ -25,18 +33,15 @@ func TestOperation_Assemble(t *testing.T) {
 	for i, tc := range cases {
 		got, err := tc.in.Assemble()
 
-		// Early continue if an error is expected.
 		if tc.wantErr != "" {
-			if err == nil {
-				t.Errorf("#%d: wrong error: want %q, got <nil>", i, tc.wantErr)
-			} else if err.Error() != tc.wantErr {
-				t.Errorf("#%d: wrong error: want %q, got %q", i, tc.wantErr, err)
+			if diff := cmp.Diff(tc.wantErr, err.Error()); diff != "" {
+				t.Errorf("#%d: wrong error (-want +got):\n%s", i, diff)
 			}
 			continue
 		}
 
 		if err != nil {
-			t.Errorf("#%d: wrong error: want <nil>, got %v", i, err)
+			t.Errorf("#%d: error: got %v", i, err)
 		}
 
 		if diff := cmp.Diff(tc.want, got); diff != "" {

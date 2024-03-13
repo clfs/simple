@@ -30,6 +30,9 @@ type RawOperation struct {
 }
 
 func (op RawOperation) Assemble() (RawOperation, error) {
+	if op.Opcode == "" {
+		return RawOperation{}, fmt.Errorf("empty opcode")
+	}
 	return op, nil
 }
 
