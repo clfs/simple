@@ -17,7 +17,7 @@ func Disassemble(raw []RawOperation) (ops []Operation, allDecoded bool) {
 	return
 }
 
-// RawOperation represents an unknown EPD operation.
+// RawOperation represents a raw EPD operation.
 type RawOperation struct {
 	Opcode string
 	Args   string
