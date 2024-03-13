@@ -16,5 +16,5 @@ func Encode(p core.Position, ops []Op) string {
 }
 
 func (u Unknown) EncodeOp() (string, error) {
-	return fmt.Sprintf("%s %s;", u.Opcode, u.Input), nil
+	return fmt.Sprintf("%s %s;", u.Opcode, u.Args), nil
 }

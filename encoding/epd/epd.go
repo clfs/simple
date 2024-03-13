@@ -26,7 +26,7 @@ type Operation interface {
 // Unknown represents an unknown EPD operation.
 type Unknown struct {
 	Opcode string
-	Input  string
+	Args   string
 }
 
 // AnalysisCountNodes represents the "acn" operation.
