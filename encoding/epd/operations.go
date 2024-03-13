@@ -27,6 +27,11 @@ func (op RawOperation) Assemble() (RawOperation, error) {
 	return op, nil
 }
 
+func (op RawOperation) Disassemble() Operation {
+	// TODO: Implement.
+	return op
+}
+
 // AnalysisCountNodes represents the "acn" operation.
 type AnalysisCountNodes struct {
 	Operand int
