@@ -5,9 +5,14 @@
 // All moves are encoded in Standard Algebraic Notation (SAN).
 package epd
 
+import (
+	"fmt"
+	"strconv"
+)
+
 // Operation represents an EPD operation.
 type Operation interface {
-	Assemble() (RawOperation, error)
+	Assemble() RawOperation
 }
 
 // Disassemble attempts to parse raw back into Operations.
@@ -23,18 +28,33 @@ type RawOperation struct {
 	Args   string
 }
 
-func (op RawOperation) Assemble() (RawOperation, error) {
-	return op, nil
-}
-
-func (op RawOperation) Disassemble() Operation {
-	// TODO: Implement.
+func (op RawOperation) Assemble() RawOperation {
 	return op
 }
 
-// AnalysisCountNodes represents the "acn" operation.
-type AnalysisCountNodes struct {
-	Operand int
+func (op RawOperation) Disassemble() Operation {
+	switch op.Opcode {
+	default:
+		return op
+	case "acn":
+		n, err := strconv.Atoi(op.Args)
+		if err != nil {
+			return op
+		}
+		return ACN{Nodes: n}
+	}
+}
+
+// ACN represents the number of nodes examined in an analysis.
+type ACN struct {
+	Nodes int
+}
+
+func (op ACN) Assemble() RawOperation {
+	return RawOperation{
+		Opcode: "acn",
+		Args:   fmt.Sprintf("%d", op.Nodes),
+	}
 }
 
 // AnalysisCountSeconds represents the "acs" operation.
