@@ -1,9 +1,19 @@
 package epd
 
 import (
-	"fmt"
-
 	"github.com/clfs/simple/core"
+)
+
+// Op represents an EPD operation.
+type Op struct {
+	Opcode   string
+	Operands []string
+}
+
+// EPD opcode constants.
+const (
+	OpcodeFullMoveNumber = "fmvn"
+	OpcodeHalfMoveClock  = "hmvc"
 )
 
 // Encode encodes a position and EPD operations into an EPD string.
@@ -13,8 +23,4 @@ import (
 // instead.
 func Encode(p core.Position, ops []Op) string {
 	return ""
-}
-
-func (op *RawOperation) EncodeOp() (string, error) {
-	return fmt.Sprintf("%s %s;", op.Opcode, op.Args), nil
 }

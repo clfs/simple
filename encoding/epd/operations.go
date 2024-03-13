@@ -5,18 +5,6 @@
 // All moves are encoded in Standard Algebraic Notation (SAN).
 package epd
 
-// Op represents an EPD operation.
-type Op struct {
-	Opcode   string
-	Operands []string
-}
-
-// EPD opcode constants.
-const (
-	OpcodeFullMoveNumber = "fmvn"
-	OpcodeHalfMoveClock  = "hmvc"
-)
-
 // Operation represents an EPD operation.
 type Operation interface {
 	Assemble() (RawOperation, error)
