@@ -19,8 +19,14 @@ const (
 
 // Operation represents an EPD operation.
 type Operation interface {
-	DecodeOp(s string) error
-	EncodeOp() (string, error)
+	Assemble() (RawOperation, error)
+}
+
+// Disassemble attempts to parse raw back into Operations.
+// Unrecognized RawOperations are passed through unchanged to the output.
+// The allDecoded value is true if ops contains no RawOperations.
+func Disassemble(raw []RawOperation) (ops []Operation, allDecoded bool) {
+	return
 }
 
 // RawOperation represents an unknown EPD operation.
