@@ -13,7 +13,7 @@ import (
 
 // Operation represents an EPD operation.
 type Operation interface {
-	Assemble() RawOperation
+	Assemble() (RawOperation, error)
 }
 
 // Disassemble attempts to parse raw back into Operations.
@@ -29,8 +29,8 @@ type RawOperation struct {
 	Args   string
 }
 
-func (op RawOperation) Assemble() RawOperation {
-	return op
+func (op RawOperation) Assemble() (RawOperation, error) {
+	return op, nil
 }
 
 func (op RawOperation) Disassemble() Operation {
@@ -51,11 +51,11 @@ type ACN struct {
 	Nodes int
 }
 
-func (op ACN) Assemble() RawOperation {
-	return RawOperation{
-		Opcode: "acn",
-		Args:   fmt.Sprintf("%d", op.Nodes),
+func (op ACN) Assemble() (RawOperation, error) {
+	if op.Nodes < 0 {
+		return RawOperation{}, fmt.Errorf("invalid node count: %d", op.Nodes)
 	}
+	return RawOperation{"acn", fmt.Sprintf("%d", op.Nodes)}, nil
 }
 
 // ACS represents the number of seconds used for an analysis.
@@ -63,11 +63,11 @@ type ACS struct {
 	Seconds int
 }
 
-func (op ACS) Assemble() RawOperation {
-	return RawOperation{
-		Opcode: "acs",
-		Args:   fmt.Sprintf("%d", op.Seconds),
+func (op ACS) Assemble() (RawOperation, error) {
+	if op.Seconds < 0 {
+		return RawOperation{}, fmt.Errorf("invalid number of seconds: %d", op.Seconds)
 	}
+	return RawOperation{"acs", fmt.Sprintf("%d", op.Seconds)}, nil
 }
 
 // AvoidMoves represents the "am" operation.
@@ -80,11 +80,8 @@ type BM struct {
 	Moves []string
 }
 
-func (op BM) Assemble() RawOperation {
-	return RawOperation{
-		Opcode: "bm",
-		Args:   strings.Join(op.Moves, " "),
-	}
+func (op BM) Assemble() (RawOperation, error) {
+	return RawOperation{"bm", strings.Join(op.Moves, " ")}, nil
 }
 
 // Comment represents the "c0" through "c9" operations.
@@ -93,12 +90,11 @@ type Comment struct {
 	Comment string
 }
 
-func (c Comment) Assemble() RawOperation {
-	// TODO: Consider how to handle levels outside of 0-9.
-	return RawOperation{
-		Opcode: fmt.Sprintf("c%d", c.Level),
-		Args:   c.Comment,
+func (c Comment) Assemble() (RawOperation, error) {
+	if c.Level < 0 || c.Level > 9 {
+		return RawOperation{}, fmt.Errorf("invalid comment level: %d", c.Level)
 	}
+	return RawOperation{fmt.Sprintf("c%d", c.Level), c.Comment}, nil
 }
 
 // CentipawnEvaluation represents the "ce" operation.
@@ -133,11 +129,11 @@ type FMVN struct {
 	Number int
 }
 
-func (op FMVN) Assemble() RawOperation {
-	return RawOperation{
-		Opcode: "fmvn",
-		Args:   fmt.Sprintf("%d", op.Number),
+func (op FMVN) Assemble() (RawOperation, error) {
+	if op.Number < 1 {
+		return RawOperation{}, fmt.Errorf("invalid full move number: %d", op.Number)
 	}
+	return RawOperation{"fmvn", fmt.Sprintf("%d", op.Number)}, nil
 }
 
 // HMVC represents the half move clock.
@@ -145,11 +141,11 @@ type HMVC struct {
 	Clock int
 }
 
-func (op HMVC) Assemble() RawOperation {
-	return RawOperation{
-		Opcode: "hmvc",
-		Args:   fmt.Sprintf("%d", op.Clock),
+func (op HMVC) Assemble() (RawOperation, error) {
+	if op.Clock < 0 {
+		return RawOperation{}, fmt.Errorf("invalid half move clock: %d", op.Clock)
 	}
+	return RawOperation{"hmvc", fmt.Sprintf("%d", op.Clock)}, nil
 }
 
 // ID represents a position identifier.
@@ -157,11 +153,8 @@ type ID struct {
 	ID string
 }
 
-func (op ID) Assemble() RawOperation {
-	return RawOperation{
-		Opcode: "id",
-		Args:   op.ID,
-	}
+func (op ID) Assemble() (RawOperation, error) {
+	return RawOperation{"id", op.ID}, nil
 }
 
 // NIC represents the "nic" operation.
