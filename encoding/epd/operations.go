@@ -58,9 +58,16 @@ func (op ACN) Assemble() RawOperation {
 	}
 }
 
-// AnalysisCountSeconds represents the "acs" operation.
-type AnalysisCountSeconds struct {
-	Operand int
+// ACS represents the number of seconds used for an analysis.
+type ACS struct {
+	Seconds int
+}
+
+func (op ACS) Assemble() RawOperation {
+	return RawOperation{
+		Opcode: "acs",
+		Args:   fmt.Sprintf("%d", op.Seconds),
+	}
 }
 
 // AvoidMoves represents the "am" operation.
