@@ -23,8 +23,8 @@ type Operation interface {
 	EncodeOp() (string, error)
 }
 
-// Unknown represents an unknown EPD operation.
-type Unknown struct {
+// RawOperation represents an unknown EPD operation.
+type RawOperation struct {
 	Opcode string
 	Args   string
 }

@@ -2,12 +2,12 @@ package epd
 
 import "testing"
 
-func TestUnknown_EncodeOp(t *testing.T) {
+func TestRawOperation_EncodeOp(t *testing.T) {
 	cases := []struct {
-		in   Unknown
+		in   RawOperation
 		want string
 	}{
-		{Unknown{"foo", "bar"}, "foo bar;"},
+		{RawOperation{"foo", "bar"}, "foo bar;"},
 	}
 
 	for i, c := range cases {
