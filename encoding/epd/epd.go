@@ -35,6 +35,10 @@ type RawOperation struct {
 	Args   string
 }
 
+func (op *RawOperation) Assemble() (RawOperation, error) {
+	return *op, nil
+}
+
 // AnalysisCountNodes represents the "acn" operation.
 type AnalysisCountNodes struct {
 	Operand int
