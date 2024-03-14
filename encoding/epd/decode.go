@@ -20,7 +20,7 @@ func Decode(s string) (core.Position, []Op, error) {
 		return core.Position{}, nil, fmt.Errorf("too few fields: %d", n)
 	}
 
-	pseudoFEN := strings.Join(fields[:4], " ") + " 0 1"
+	pseudoFEN := fmt.Sprintf("%s 0 1", strings.Join(fields[:4], " "))
 
 	p, err := fen.Decode(pseudoFEN)
 	if err != nil {
