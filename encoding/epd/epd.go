@@ -8,3 +8,9 @@ type Op struct {
 	Opcode string
 	Args   string
 }
+
+// EPD opcode constants.
+const (
+	opcodeFullMoveNumber = "fmvn"
+	opcodeHalfMoveClock  = "hmvc"
+)

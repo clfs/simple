@@ -2,12 +2,17 @@ package epd
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/clfs/simple/core"
 	"github.com/clfs/simple/encoding/fen"
 )
 
+// Decode decodes an EPD string into a position and operations.
+//
+// The returned position has a half move clock of 0 and a full move number of 1,
+// unless the EPD string contains operations that specify them.
 func Decode(s string) (core.Position, []Op, error) {
 	fields := strings.SplitN(s, " ", 5)
 
@@ -44,6 +49,20 @@ func decodeOps(_ string) ([]Op, error) {
 	return nil, nil
 }
 
-func applyOp(p *core.Position, op Op) {
-	// TODO: Implement.
+func applyOp(p *core.Position, op Op) error {
+	switch op.Opcode {
+	case opcodeFullMoveNumber:
+		n, err := strconv.Atoi(op.Args)
+		if err != nil {
+			return err
+		}
+		p.FullMoveNumber = n
+	case opcodeHalfMoveClock:
+		n, err := strconv.Atoi(op.Args)
+		if err != nil {
+			return err
+		}
+		p.HalfMoveClock = n
+	}
+	return nil
 }
