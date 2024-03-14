@@ -12,9 +12,9 @@ func ExampleDecode() {
 }
 
 func ExampleEncode() {
-	ops := []Operation{
-		RawOperation{Opcode: "foo", Args: "bar"},
-		Comment{Level: 0, Comment: "my comment"},
+	ops := []Op{
+		{Opcode: "foo", Args: "bar"},
+		{Opcode: "c0", Args: `"my comment"`},
 	}
 
 	// Indian Defense: 1. d4 Nf6
