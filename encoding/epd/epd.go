@@ -11,6 +11,6 @@ type Op struct {
 
 // EPD opcode constants.
 const (
-	opcodeFullMoveNumber = "fmvn"
-	opcodeHalfMoveClock  = "hmvc"
+	OpcodeFullMoveNumber = "fmvn"
+	OpcodeHalfMoveClock  = "hmvc"
 )

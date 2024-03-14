@@ -51,13 +51,13 @@ func decodeOps(_ string) ([]Op, error) {
 
 func applyOp(p *core.Position, op Op) error {
 	switch op.Opcode {
-	case opcodeFullMoveNumber:
+	case OpcodeFullMoveNumber:
 		n, err := strconv.Atoi(op.Args)
 		if err != nil {
 			return err
 		}
 		p.FullMoveNumber = n
-	case opcodeHalfMoveClock:
+	case OpcodeHalfMoveClock:
 		n, err := strconv.Atoi(op.Args)
 		if err != nil {
 			return err
