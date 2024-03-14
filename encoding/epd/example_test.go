@@ -37,5 +37,5 @@ func ExampleEncode() {
 
 	fmt.Println(Encode(p, ops))
 	// Output:
-	// rn1qkb1r/ppp1pppp/8/3p4/3Pn3/8/PPP2PPP/RNBQKBNR w KQkq - foo bar; c0 "my comment";
+	// rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - foo bar; c0 "my comment";
 }
