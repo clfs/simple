@@ -8,7 +8,7 @@ import (
 	"github.com/clfs/simple/encoding/fen"
 )
 
-func Decode(s string) (core.Position, []Operation, error) {
+func Decode(s string) (core.Position, []Op, error) {
 	fields := strings.SplitN(s, " ", 5)
 
 	if n := len(fields); n < 4 {
@@ -27,28 +27,23 @@ func Decode(s string) (core.Position, []Operation, error) {
 		return p, nil, nil
 	}
 
-	ops, err := decodeOperations(fields[4])
+	ops, err := decodeOps(fields[4])
 	if err != nil {
 		return core.Position{}, nil, err
 	}
 
 	for _, op := range ops {
-		applyOperation(&p, op)
+		applyOp(&p, op)
 	}
 
 	return p, ops, nil
 }
 
-func decodeOperations(_ string) ([]Operation, error) {
+func decodeOps(_ string) ([]Op, error) {
 	// TODO: Implement.
 	return nil, nil
 }
 
-func applyOperation(p *core.Position, op Operation) {
-	switch v := op.(type) {
-	case FMVN:
-		p.FullMoveNumber = v.Number
-	case HMVC:
-		p.HalfMoveClock = v.Clock
-	}
+func applyOp(p *core.Position, op Op) {
+	// TODO: Implement.
 }
