@@ -19,7 +19,7 @@ func Encode(p core.Position, ops []Op) string {
 
 	fenFields := strings.Fields(fen.Encode(p))
 
-	// Drop the half move clock and full move number.
+	// Ignore the half move clock and full move number.
 	fmt.Fprint(&buf, strings.Join(fenFields[:4], " "))
 
 	for _, op := range ops {
