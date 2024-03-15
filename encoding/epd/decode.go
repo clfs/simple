@@ -45,10 +45,6 @@ func Decode(s string) (core.Position, []Op, error) {
 }
 
 func parseOps(s string) ([]Op, error) {
-	if len(s) == 0 {
-		return nil, nil
-	}
-
 	var ops []Op
 	var rawOp []rune
 	var inQuote bool

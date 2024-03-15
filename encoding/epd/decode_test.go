@@ -66,6 +66,10 @@ var decodeTestCases = []decodeTestCase{
 		in:      `4k3/8/P7/8/8/8/8/4K3 w -`,
 		wantErr: "too few fields: 3",
 	},
+	{
+		in:      `4k3/8/P7/8/8/8/8/4K3 h - -`,
+		wantErr: "invalid side to move: h",
+	},
 }
 
 func TestDecode(t *testing.T) {
