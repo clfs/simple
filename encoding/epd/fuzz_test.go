@@ -7,7 +7,9 @@ import (
 )
 
 func FuzzRoundTrip(f *testing.F) {
-	f.Add(`rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - foo bar; c0 "my comment"; bm c4 Nf3;`)
+	for _, tc := range decodeTestCases {
+		f.Add(tc.in)
+	}
 	f.Fuzz(func(t *testing.T, s string) {
 		p, ops, err := Decode(s)
 		if err != nil {
