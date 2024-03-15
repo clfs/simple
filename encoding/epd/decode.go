@@ -32,7 +32,7 @@ func Decode(s string) (core.Position, []Op, error) {
 		return p, nil, nil
 	}
 
-	ops, err := decodeOps(fields[4])
+	ops, err := parseOps(fields[4])
 	if err != nil {
 		return core.Position{}, nil, err
 	}
@@ -44,9 +44,46 @@ func Decode(s string) (core.Position, []Op, error) {
 	return p, ops, nil
 }
 
-func decodeOps(_ string) ([]Op, error) {
-	// TODO: Implement.
-	return nil, nil
+func parseOps(s string) ([]Op, error) {
+	if len(s) == 0 {
+		return nil, nil
+	}
+
+	var ops []Op
+	var rawOp []rune
+	var inQuote bool
+
+	for _, rn := range s {
+		switch rn {
+		case ';':
+			if inQuote {
+				rawOp = append(rawOp, rn)
+				continue
+			}
+			op, err := parseOp(string(rawOp))
+			if err != nil {
+				return nil, err
+			}
+			ops = append(ops, op)
+			rawOp = nil
+		case '"':
+			inQuote = !inQuote
+			rawOp = append(rawOp, rn)
+		default:
+			rawOp = append(rawOp, rn)
+		}
+	}
+
+	return ops, nil
+}
+
+func parseOp(s string) (Op, error) {
+	s = strings.TrimSpace(s)
+	opcode, args, ok := strings.Cut(s, " ")
+	if !ok {
+		return Op{}, fmt.Errorf("invalid operation: %q", s)
+	}
+	return Op{opcode, args}, nil
 }
 
 func applyOp(p *core.Position, op Op) error {

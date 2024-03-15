@@ -51,6 +51,13 @@ func TestDecode(t *testing.T) {
 			},
 		},
 		{
+			in:   "4k3/8/P7/8/8/8/8/4K3 w - - bm a7;",
+			want: "4k3/8/P7/8/8/8/8/4K3 w - - 0 1",
+			wantOps: []Op{
+				{"bm", "a7"},
+			},
+		},
+		{
 			in:   `4k3/8/P7/8/8/8/8/4K3 w - -`,
 			want: `4k3/8/P7/8/8/8/8/4K3 w - - 0 1`,
 		},
