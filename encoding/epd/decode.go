@@ -77,10 +77,7 @@ func parseOps(s string) ([]Op, error) {
 
 func parseOp(s string) (Op, error) {
 	s = strings.TrimSpace(s)
-	opcode, args, ok := strings.Cut(s, " ")
-	if !ok {
-		return Op{}, fmt.Errorf("invalid operation: %q", s)
-	}
+	opcode, args, _ := strings.Cut(s, " ")
 	return Op{opcode, args}, nil
 }
 

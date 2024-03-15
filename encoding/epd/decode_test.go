@@ -70,6 +70,14 @@ var decodeTestCases = []decodeTestCase{
 		in:      `4k3/8/P7/8/8/8/8/4K3 h - -`,
 		wantErr: "invalid side to move: h",
 	},
+	{
+		in:   "4k3/8/P7/8/8/8/8/4K3 w - - bm a7; resign;",
+		want: "4k3/8/P7/8/8/8/8/4K3 w - - 0 1",
+		wantOps: []Op{
+			{"bm", "a7"},
+			{"resign", ""},
+		},
+	},
 }
 
 func TestDecode(t *testing.T) {
