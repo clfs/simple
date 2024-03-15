@@ -45,9 +45,11 @@ func Decode(s string) (core.Position, []Op, error) {
 }
 
 func parseOps(s string) ([]Op, error) {
-	var ops []Op
-	var rawOp []rune
-	var inQuote bool
+	var (
+		ops     []Op
+		rawOp   []rune
+		inQuote bool
+	)
 
 	for _, rn := range s {
 		switch rn {
