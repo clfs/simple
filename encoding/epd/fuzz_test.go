@@ -1,6 +1,10 @@
 package epd
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/google/go-cmp/cmp"
+)
 
 func FuzzRoundTrip(f *testing.F) {
 	f.Add(`rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - foo bar; c0 "my comment"; bm c4 Nf3;`)
@@ -10,9 +14,15 @@ func FuzzRoundTrip(f *testing.F) {
 			return
 		}
 
-		s2 := Encode(p, ops)
-		if s != s2 {
-			t.Errorf("changed after round trip: %q -> %q", s, s2)
+		p2, ops2, err := Decode(Encode(p, ops))
+		if err != nil {
+			t.Errorf("round trip failed: %v", err)
+		}
+		if diff := cmp.Diff(p, p2); diff != "" {
+			t.Errorf("position changed (-old +new): %v", diff)
+		}
+		if diff := cmp.Diff(ops, ops2); diff != "" {
+			t.Errorf("operations changed (-old +new): %v", diff)
 		}
 	})
 }
