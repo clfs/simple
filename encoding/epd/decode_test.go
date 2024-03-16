@@ -74,7 +74,7 @@ var decodeTestCases = []decodeTestCase{
 		want: "4k3/8/P7/8/8/8/8/4K3 w - - 0 1",
 		wantOps: []Op{
 			{"bm", "a7"},
-			{"resign", ""},
+			{Opcode: "resign"},
 		},
 	},
 }
