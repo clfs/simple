@@ -77,6 +77,14 @@ var decodeTestCases = []decodeTestCase{
 			{Opcode: "resign"},
 		},
 	},
+	{
+		in:   `4k3/8/P7/8/8/8/8/4K3 w - - hmvc 5; fmvn 60;`,
+		want: `4k3/8/P7/8/8/8/8/4K3 w - - 5 60`,
+		wantOps: []Op{
+			{Opcode: OpcodeHalfMoveClock, Operands: "5"},
+			{Opcode: OpcodeFullMoveNumber, Operands: "60"},
+		},
+	},
 }
 
 func TestDecode(t *testing.T) {
@@ -90,7 +98,7 @@ func TestDecode(t *testing.T) {
 			} else if err.Error() != tc.wantErr {
 				t.Errorf("#%d: wrong error: want %q, got %q", i, tc.wantErr, err)
 			}
-			return
+			continue
 		}
 
 		if err != nil {
