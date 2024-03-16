@@ -17,6 +17,3 @@ const (
 	OpcodeFullMoveNumber = "fmvn"
 	OpcodeHalfMoveClock  = "hmvc"
 )
-
-// Starting is the EPD string for the starting position.
-const Starting = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -"
