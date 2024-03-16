@@ -1,7 +1,6 @@
 package epd
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/clfs/simple/encoding/fen"
@@ -82,31 +81,29 @@ var decodeTestCases = []decodeTestCase{
 
 func TestDecode(t *testing.T) {
 	for i, tc := range decodeTestCases {
-		t.Run(fmt.Sprint(i), func(t *testing.T) {
-			p, ops, err := Decode(tc.in)
+		p, ops, err := Decode(tc.in)
 
-			// Early exit if an error is expected.
-			if tc.wantErr != "" {
-				if err == nil {
-					t.Errorf("#%d: wrong error: want %q, got <nil>", i, tc.wantErr)
-				} else if err.Error() != tc.wantErr {
-					t.Errorf("#%d: wrong error: want %q, got %q", i, tc.wantErr, err)
-				}
-				return
+		// Early exit if an error is expected.
+		if tc.wantErr != "" {
+			if err == nil {
+				t.Errorf("#%d: wrong error: want %q, got <nil>", i, tc.wantErr)
+			} else if err.Error() != tc.wantErr {
+				t.Errorf("#%d: wrong error: want %q, got %q", i, tc.wantErr, err)
 			}
+			return
+		}
 
-			if err != nil {
-				t.Errorf("#%d: wrong error: want <nil>, got %v", i, err)
-			}
+		if err != nil {
+			t.Errorf("#%d: wrong error: want <nil>, got %v", i, err)
+		}
 
-			got := fen.Encode(p)
-			if got != tc.want {
-				t.Errorf("#%d: wrong position: want %q, got %q", i, tc.want, got)
-			}
+		got := fen.Encode(p)
+		if got != tc.want {
+			t.Errorf("#%d: wrong position: want %q, got %q", i, tc.want, got)
+		}
 
-			if diff := cmp.Diff(tc.wantOps, ops); diff != "" {
-				t.Errorf("#%d: wrong ops (-want +got):\n%s", i, diff)
-			}
-		})
+		if diff := cmp.Diff(tc.wantOps, ops); diff != "" {
+			t.Errorf("#%d: wrong ops (-want +got):\n%s", i, diff)
+		}
 	}
 }
