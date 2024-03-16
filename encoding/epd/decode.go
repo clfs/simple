@@ -39,7 +39,9 @@ func Decode(s string) (core.Position, []Op, error) {
 	}
 
 	for _, op := range ops {
-		applyOp(&p, op)
+		if err := applyOp(&p, op); err != nil {
+			return core.Position{}, nil, err
+		}
 	}
 
 	return p, ops, nil
@@ -83,13 +85,13 @@ func applyOp(p *core.Position, op Op) error {
 	case OpcodeFullMoveNumber:
 		n, err := strconv.Atoi(op.Operands)
 		if err != nil {
-			return err
+			return fmt.Errorf("invalid full move number: %s", op.Operands)
 		}
 		p.FullMoveNumber = n
 	case OpcodeHalfMoveClock:
 		n, err := strconv.Atoi(op.Operands)
 		if err != nil {
-			return err
+			return fmt.Errorf("invalid half move clock: %s", op.Operands)
 		}
 		p.HalfMoveClock = n
 	}

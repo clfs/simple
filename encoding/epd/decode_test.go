@@ -85,6 +85,14 @@ var decodeTestCases = []decodeTestCase{
 			{Opcode: OpcodeFullMoveNumber, Operands: "60"},
 		},
 	},
+	{
+		in:      `4k3/8/P7/8/8/8/8/4K3 w - - hmvc a;`,
+		wantErr: "invalid half move clock: a",
+	},
+	{
+		in:      `4k3/8/P7/8/8/8/8/4K3 w - - fmvn a;`,
+		wantErr: "invalid full move number: a",
+	},
 }
 
 func TestDecode(t *testing.T) {
