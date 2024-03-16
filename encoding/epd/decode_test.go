@@ -97,8 +97,7 @@ func TestDecode(t *testing.T) {
 			t.Errorf("#%d: wrong error: want <nil>, got %v", i, err)
 		}
 
-		got := fen.Encode(p)
-		if got != tc.want {
+		if got := fen.Encode(p); got != tc.want {
 			t.Errorf("#%d: wrong position: want %q, got %q", i, tc.want, got)
 		}
 
