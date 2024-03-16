@@ -8,7 +8,7 @@ import (
 )
 
 func ExampleDecode() {
-	s := `4k3/8/P6P/8/8/8/8/4K3 w - - bm a7 h7; c0 "My example";`
+	s := `4k3/8/P6P/8/8/8/8/4K3 w - - bm a7 h7; c0 "My example"; noop;`
 
 	p, ops, err := Decode(s)
 	if err != nil {
@@ -25,6 +25,7 @@ func ExampleDecode() {
 	// Full move number: 1
 	// epd.Op{Opcode:"bm", Operand:"a7 h7"}
 	// epd.Op{Opcode:"c0", Operand:"\"My example\""}
+	// epd.Op{Opcode:"noop", Operand:""}
 }
 
 func ExampleEncode() {
