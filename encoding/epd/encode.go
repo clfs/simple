@@ -23,7 +23,11 @@ func Encode(p core.Position, ops []Op) string {
 	fmt.Fprint(&buf, strings.Join(fenFields[:4], " "))
 
 	for _, op := range ops {
-		fmt.Fprintf(&buf, " %s %s;", op.Opcode, op.Operands)
+		if op.Operands == "" {
+			fmt.Fprintf(&buf, " %s;", op.Opcode)
+		} else {
+			fmt.Fprintf(&buf, " %s %s;", op.Opcode, op.Operands)
+		}
 	}
 
 	return buf.String()

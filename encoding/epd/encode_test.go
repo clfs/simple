@@ -17,11 +17,11 @@ var encodeTestCases = []encodeTestCase{
 	{
 		fen.Starting,
 		[]Op{
-			{"foo", "bar"},
+			{"noop", ""},
 			{"c0", `"my comment"`},
 			{"bm", "c4 Nf3"},
 		},
-		`rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - foo bar; c0 "my comment"; bm c4 Nf3;`,
+		`rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - noop; c0 "my comment"; bm c4 Nf3;`,
 	},
 }
 
