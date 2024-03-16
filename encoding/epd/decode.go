@@ -52,8 +52,7 @@ func parseOps(s string) []Op {
 	)
 
 	for _, rn := range s {
-		switch {
-		case rn == ';':
+		if rn == ';' {
 			if !inQuote {
 				ops = append(ops, parseOp(string(rawOp)))
 				rawOp = nil
