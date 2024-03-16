@@ -84,13 +84,13 @@ func parseOp(s string) (Op, error) {
 func applyOp(p *core.Position, op Op) error {
 	switch op.Opcode {
 	case OpcodeFullMoveNumber:
-		n, err := strconv.Atoi(op.Args)
+		n, err := strconv.Atoi(op.Operand)
 		if err != nil {
 			return err
 		}
 		p.FullMoveNumber = n
 	case OpcodeHalfMoveClock:
-		n, err := strconv.Atoi(op.Args)
+		n, err := strconv.Atoi(op.Operand)
 		if err != nil {
 			return err
 		}

@@ -1,12 +1,17 @@
 // Package epd implements encoding and decoding of Extended Position Description
 // (EPD) as defined in "Standard: Portable Game Notation Specification and
 // Implementation Guide", revision 1994.03.12.
+//
+// This package adheres to simplified conventions:
+//
+//   - Operands must not contain semicolons.
+//   - Operations have at most one operand.
 package epd
 
 // An Op is an EPD operation.
 type Op struct {
-	Opcode string
-	Args   string
+	Opcode  string
+	Operand string
 }
 
 // EPD opcode constants.
