@@ -18,14 +18,14 @@ func ExampleDecode() {
 	fmt.Println("Half move clock:", p.HalfMoveClock)
 	fmt.Println("Full move number:", p.FullMoveNumber)
 	for _, op := range ops {
-		fmt.Printf("%#v\n", op)
+		fmt.Printf("%q: %q\n", op.Opcode, op.Operand)
 	}
 	// Output:
 	// Half move clock: 0
 	// Full move number: 1
-	// epd.Op{Opcode:"bm", Operand:"a7 h7"}
-	// epd.Op{Opcode:"c0", Operand:"\"My example\""}
-	// epd.Op{Opcode:"noop", Operand:""}
+	// "bm": "a7 h7"
+	// "c0": "\"My example\""
+	// "noop": ""
 }
 
 func ExampleEncode() {
