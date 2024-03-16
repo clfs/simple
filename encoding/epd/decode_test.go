@@ -96,11 +96,9 @@ func TestDecode(t *testing.T) {
 		if err != nil {
 			t.Errorf("#%d: wrong error: want <nil>, got %v", i, err)
 		}
-
 		if got := fen.Encode(p); got != tc.want {
 			t.Errorf("#%d: wrong position: want %q, got %q", i, tc.want, got)
 		}
-
 		if diff := cmp.Diff(tc.wantOps, ops); diff != "" {
 			t.Errorf("#%d: wrong ops (-want +got):\n%s", i, diff)
 		}
