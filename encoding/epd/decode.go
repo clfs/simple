@@ -33,10 +33,7 @@ func Decode(s string) (core.Position, []Op, error) {
 		return p, nil, nil
 	}
 
-	ops, err := parseOps(fields[4])
-	if err != nil {
-		return core.Position{}, nil, err
-	}
+	ops := parseOps(fields[4])
 
 	for _, op := range ops {
 		if err := applyOp(&p, op); err != nil {
@@ -47,7 +44,7 @@ func Decode(s string) (core.Position, []Op, error) {
 	return p, ops, nil
 }
 
-func parseOps(s string) ([]Op, error) {
+func parseOps(s string) []Op {
 	var (
 		ops     []Op
 		rawOp   []rune
@@ -71,7 +68,7 @@ func parseOps(s string) ([]Op, error) {
 		}
 	}
 
-	return ops, nil
+	return ops
 }
 
 func parseOp(s string) Op {
