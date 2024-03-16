@@ -47,22 +47,22 @@ func Decode(s string) (core.Position, []Op, error) {
 func parseOps(s string) []Op {
 	var (
 		ops     []Op
-		rawOp   []rune
+		buf     []rune
 		inQuote bool
 	)
 
 	for _, rn := range s {
 		if rn == ';' {
 			if !inQuote {
-				ops = append(ops, parseOp(string(rawOp)))
-				rawOp = nil
+				ops = append(ops, parseOp(string(buf)))
+				buf = nil
 				continue
 			}
 		}
 		if rn == '"' {
 			inQuote = !inQuote
 		}
-		rawOp = append(rawOp, rn)
+		buf = append(buf, rn)
 	}
 
 	return ops
