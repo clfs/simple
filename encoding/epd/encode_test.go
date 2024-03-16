@@ -17,7 +17,7 @@ var encodeTestCases = []encodeTestCase{
 	{
 		fen.Starting,
 		[]Op{
-			{"noop", ""},
+			{Opcode: "noop"},
 			{"c0", `"my comment"`},
 			{"bm", "c4 Nf3"},
 		},
