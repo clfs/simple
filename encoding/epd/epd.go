@@ -2,10 +2,10 @@
 // (EPD) as defined in "Standard: Portable Game Notation Specification and
 // Implementation Guide", revision 1994.03.12.
 //
-// This package adheres to simplified conventions:
+// This package makes many simplifying assumptions. Most notably:
 //
-//   - Operations have at most one operand.
-//   - Operands must not contain semicolons.
+//   - All operations have at most one operand.
+//   - Operands never contain semicolons.
 package epd
 
 // An Op is an EPD operation.
