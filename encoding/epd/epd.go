@@ -4,8 +4,8 @@
 //
 // This package adheres to simplified conventions:
 //
-//   - Operands must not contain semicolons.
 //   - Operations have at most one operand.
+//   - Operands must not contain semicolons.
 package epd
 
 // An Op is an EPD operation.
