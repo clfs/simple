@@ -59,11 +59,7 @@ func parseOps(s string) ([]Op, error) {
 				rawOp = append(rawOp, rn)
 				continue
 			}
-			op, err := parseOp(string(rawOp))
-			if err != nil {
-				return nil, err
-			}
-			ops = append(ops, op)
+			ops = append(ops, parseOp(string(rawOp)))
 			rawOp = nil
 		case '"':
 			inQuote = !inQuote
@@ -76,10 +72,10 @@ func parseOps(s string) ([]Op, error) {
 	return ops, nil
 }
 
-func parseOp(s string) (Op, error) {
+func parseOp(s string) Op {
 	s = strings.TrimSpace(s)
 	opcode, operands, _ := strings.Cut(s, " ")
-	return Op{opcode, operands}, nil
+	return Op{opcode, operands}
 }
 
 func applyOp(p *core.Position, op Op) error {
