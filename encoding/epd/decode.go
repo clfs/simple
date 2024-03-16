@@ -59,7 +59,8 @@ func parseOps(s string) []Op {
 				rawOp = nil
 				continue
 			}
-		case rn == '"':
+		}
+		if rn == '"' {
 			inQuote = !inQuote
 		}
 		rawOp = append(rawOp, rn)
