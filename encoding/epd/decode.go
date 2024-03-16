@@ -52,14 +52,14 @@ func parseOps(s string) []Op {
 	)
 
 	for _, rn := range s {
-		switch rn {
-		case ';':
+		switch {
+		case rn == ';':
 			if !inQuote {
 				ops = append(ops, parseOp(string(rawOp)))
 				rawOp = nil
 				continue
 			}
-		case '"':
+		case rn == '"':
 			inQuote = !inQuote
 		}
 		rawOp = append(rawOp, rn)
