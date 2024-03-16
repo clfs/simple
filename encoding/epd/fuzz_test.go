@@ -20,7 +20,6 @@ func FuzzRoundTrip(f *testing.F) {
 		if err != nil {
 			t.Errorf("round trip failed: %v", err)
 		}
-
 		if diff := cmp.Diff(p, p2); diff != "" {
 			t.Errorf("position changed (-old +new): %v", diff)
 		}
