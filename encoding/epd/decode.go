@@ -59,13 +59,10 @@ func parseOps(s string) []Op {
 				rawOp = nil
 				continue
 			}
-			rawOp = append(rawOp, rn)
 		case '"':
 			inQuote = !inQuote
-			rawOp = append(rawOp, rn)
-		default:
-			rawOp = append(rawOp, rn)
 		}
+		rawOp = append(rawOp, rn)
 	}
 
 	return ops
