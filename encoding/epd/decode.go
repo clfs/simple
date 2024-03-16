@@ -11,8 +11,9 @@ import (
 
 // Decode decodes an EPD string into a position and operations.
 //
-// The returned position has a half move clock of 0 and a full move number of 1,
-// unless the EPD string contains operations that specify them.
+// The returned position defaults to a half move clock of 0 and a full move
+// number of 1, unless the EPD string contains [OpcodeHalfMoveClock] or
+// [OpcodeFullMoveNumber] operations.
 func Decode(s string) (core.Position, []Op, error) {
 	fields := strings.SplitN(s, " ", 5)
 
