@@ -78,8 +78,8 @@ func parseOps(s string) ([]Op, error) {
 
 func parseOp(s string) (Op, error) {
 	s = strings.TrimSpace(s)
-	opcode, args, _ := strings.Cut(s, " ")
-	return Op{opcode, args}, nil
+	opcode, operand, _ := strings.Cut(s, " ")
+	return Op{opcode, operand}, nil
 }
 
 func applyOp(p *core.Position, op Op) error {
