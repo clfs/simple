@@ -78,20 +78,20 @@ func parseOps(s string) ([]Op, error) {
 
 func parseOp(s string) (Op, error) {
 	s = strings.TrimSpace(s)
-	opcode, operand, _ := strings.Cut(s, " ")
-	return Op{opcode, operand}, nil
+	opcode, operands, _ := strings.Cut(s, " ")
+	return Op{opcode, operands}, nil
 }
 
 func applyOp(p *core.Position, op Op) error {
 	switch op.Opcode {
 	case OpcodeFullMoveNumber:
-		n, err := strconv.Atoi(op.Operand)
+		n, err := strconv.Atoi(op.Operands)
 		if err != nil {
 			return err
 		}
 		p.FullMoveNumber = n
 	case OpcodeHalfMoveClock:
-		n, err := strconv.Atoi(op.Operand)
+		n, err := strconv.Atoi(op.Operands)
 		if err != nil {
 			return err
 		}

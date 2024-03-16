@@ -5,8 +5,8 @@ package epd
 
 // An Op is an EPD operation.
 type Op struct {
-	Opcode  string
-	Operand string
+	Opcode   string
+	Operands string
 }
 
 // EPD opcode constants.
