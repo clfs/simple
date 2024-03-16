@@ -17,11 +17,9 @@ func ExampleDecode() {
 
 	fmt.Println("Half move clock:", p.HalfMoveClock)
 	fmt.Println("Full move number:", p.FullMoveNumber)
-
 	for _, op := range ops {
 		fmt.Printf("%#v\n", op)
 	}
-
 	// Output:
 	// Half move clock: 0
 	// Full move number: 1
