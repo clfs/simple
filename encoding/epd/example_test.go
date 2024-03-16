@@ -30,7 +30,6 @@ func ExampleDecode() {
 
 func ExampleEncode() {
 	p := core.NewPosition()
-
 	p.Make(pcn.MustDecode("e2e4"))
 	p.Make(pcn.MustDecode("e7e5"))
 
