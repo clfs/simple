@@ -103,7 +103,7 @@ func TestDecode(t *testing.T) {
 	for i, tc := range decodeTestCases {
 		p, ops, err := Decode(tc.in)
 
-		// Early exit if an error is expected.
+		// Early continue if an error is expected.
 		if tc.wantErr != "" {
 			if err == nil {
 				t.Errorf("#%d: wrong error: want %q, got <nil>", i, tc.wantErr)
