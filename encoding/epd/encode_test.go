@@ -27,7 +27,10 @@ var encodeTestCases = []encodeTestCase{
 
 func TestEncode(t *testing.T) {
 	for i, tc := range encodeTestCases {
-		got := Encode(fen.MustDecode(tc.in), tc.ops)
+		got, err := Encode(fen.MustDecode(tc.in), tc.ops)
+		if err != nil {
+			t.Errorf("#%d: Encode() failed: %v", i, err)
+		}
 		if diff := cmp.Diff(tc.want, got); diff != "" {
 			t.Errorf("#%d: Encode() mismatch: (-want +got):\n%s", i, diff)
 		}

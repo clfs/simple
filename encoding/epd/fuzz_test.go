@@ -16,10 +16,16 @@ func FuzzRoundTrip(f *testing.F) {
 			return
 		}
 
-		p2, ops2, err := Decode(Encode(p, ops))
+		s2, err := Encode(p, ops)
+		if err != nil {
+			t.Errorf("encode failed: %v", err)
+		}
+
+		p2, ops2, err := Decode(s2)
 		if err != nil {
 			t.Errorf("round trip failed: %v", err)
 		}
+
 		if diff := cmp.Diff(p, p2); diff != "" {
 			t.Errorf("position changed (-old +new): %v", diff)
 		}

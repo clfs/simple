@@ -38,7 +38,12 @@ func ExampleEncode() {
 		{OpcodeFullMoveNumber, fmt.Sprint(p.FullMoveNumber)},
 	}
 
-	fmt.Println(Encode(p, ops))
+	s, err := Encode(p, ops)
+	if err != nil {
+		// Handle error.
+	}
+
+	fmt.Println(s)
 	// Output:
 	// rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 hmvc 0; fmvn 2;
 }
