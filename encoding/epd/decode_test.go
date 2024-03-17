@@ -93,6 +93,10 @@ var decodeTestCases = []decodeTestCase{
 		in:      `4k3/8/P7/8/8/8/8/4K3 w - - fmvn a;`,
 		wantErr: "invalid full move number: a",
 	},
+	{
+		in:      `4k3/8/P7/8/8/8/8/4K3 w - - noop;;`,
+		wantErr: "operation has no opcode",
+	},
 }
 
 func TestDecode(t *testing.T) {

@@ -33,7 +33,10 @@ func Decode(s string) (core.Position, []Op, error) {
 		return p, nil, nil
 	}
 
-	ops := parseOps(fields[4])
+	ops, err := parseOps(fields[4])
+	if err != nil {
+		return core.Position{}, nil, err
+	}
 
 	for _, op := range ops {
 		if err := applyOp(&p, op); err != nil {
@@ -44,7 +47,7 @@ func Decode(s string) (core.Position, []Op, error) {
 	return p, ops, nil
 }
 
-func parseOps(s string) []Op {
+func parseOps(s string) ([]Op, error) {
 	var (
 		ops     []Op
 		inQuote bool
@@ -56,18 +59,25 @@ func parseOps(s string) []Op {
 		case rn == '"':
 			inQuote = !inQuote
 		case rn == ';' && !inQuote:
-			ops = append(ops, parseOp(s[head:i]))
+			op, err := parseOp(s[head:i])
+			if err != nil {
+				return nil, err
+			}
+			ops = append(ops, op)
 			head = i + 1
 		}
 	}
 
-	return ops
+	return ops, nil
 }
 
-func parseOp(s string) Op {
+func parseOp(s string) (Op, error) {
 	s = strings.TrimSpace(s)
+	if s == "" {
+		return Op{}, fmt.Errorf("operation has no opcode")
+	}
 	opcode, operands, _ := strings.Cut(s, " ")
-	return Op{opcode, operands}
+	return Op{opcode, operands}, nil
 }
 
 func applyOp(p *core.Position, op Op) error {
