@@ -14,7 +14,7 @@ import (
 // The returned position defaults to a half move clock of 0 and a full move
 // number of 1, unless the EPD string contains [OpcodeHalfMoveClock] or
 // [OpcodeFullMoveNumber] operations.
-func Decode(s string) (core.Position, []Op, error) {
+func Decode(s string) (core.Position, []Op3, error) {
 	fields := strings.SplitN(s, " ", 5)
 
 	if n := len(fields); n < 4 {
@@ -47,9 +47,9 @@ func Decode(s string) (core.Position, []Op, error) {
 	return p, ops, nil
 }
 
-func parseOps(s string) ([]Op, error) {
+func parseOps(s string) ([]Op3, error) {
 	var (
-		ops     []Op
+		ops     []Op3
 		inQuote bool
 		head    int
 	)
@@ -71,16 +71,16 @@ func parseOps(s string) ([]Op, error) {
 	return ops, nil
 }
 
-func parseOp(s string) (Op, error) {
+func parseOp(s string) (Op3, error) {
 	s = strings.TrimSpace(s)
 	if s == "" {
-		return Op{}, fmt.Errorf("operation has no opcode")
+		return Op3{}, fmt.Errorf("operation has no opcode")
 	}
 	opcode, operands, _ := strings.Cut(s, " ")
-	return Op{opcode, operands}, nil
+	return Op3{opcode, operands}, nil
 }
 
-func applyOp(p *core.Position, op Op) error {
+func applyOp(p *core.Position, op Op3) error {
 	switch op.Opcode {
 	case OpcodeFullMoveNumber:
 		n, err := strconv.Atoi(op.Operands)

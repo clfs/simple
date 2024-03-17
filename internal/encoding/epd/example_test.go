@@ -33,7 +33,7 @@ func ExampleEncode() {
 	p.Make(pcn.MustDecode("e2e4"))
 	p.Make(pcn.MustDecode("e7e5"))
 
-	ops := []Op{
+	ops := []Op3{
 		{OpcodeHalfMoveClock, fmt.Sprint(p.HalfMoveClock)},
 		{OpcodeFullMoveNumber, fmt.Sprint(p.FullMoveNumber)},
 	}

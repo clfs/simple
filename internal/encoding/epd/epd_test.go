@@ -7,12 +7,12 @@ import (
 
 func TestOp_MarshalText(t *testing.T) {
 	cases := []struct {
-		op      Op
+		op      Op3
 		want    string
 		wantErr error
 	}{
 		{
-			op:   Op{Opcode: "noop"},
+			op:   Op3{Opcode: "noop"},
 			want: "noop;",
 		},
 	}

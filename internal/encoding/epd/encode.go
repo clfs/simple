@@ -9,7 +9,7 @@ import (
 	"github.com/clfs/simple/encoding/fen"
 )
 
-func encodeOp(op Op) (string, error) {
+func encodeOp(op Op3) (string, error) {
 	if op.Opcode == "" {
 		return "", fmt.Errorf("missing opcode")
 	}
@@ -30,7 +30,7 @@ func encodeOp(op Op) (string, error) {
 // Encode ignores p's half move clock and full move number. To specify them in
 // the EPD string, use [OpcodeHalfMoveClock] or [OpcodeFullMoveNumber]
 // operations.
-func Encode(p core.Position, ops []Op) (string, error) {
+func Encode(p core.Position, ops []Op3) (string, error) {
 	var buf bytes.Buffer
 
 	fenFields := strings.Fields(fen.Encode(p))

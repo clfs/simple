@@ -9,14 +9,14 @@ import (
 
 type encodeTestCase struct {
 	in   string
-	ops  []Op
+	ops  []Op3
 	want string
 }
 
 var encodeTestCases = []encodeTestCase{
 	{
 		fen.Starting,
-		[]Op{
+		[]Op3{
 			{Opcode: "noop"},
 			{"c0", `"my comment"`},
 			{"bm", "c4 Nf3"},

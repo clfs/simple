@@ -13,8 +13,8 @@ import (
 	"strings"
 )
 
-// An Op is an EPD operation.
-type Op struct {
+// An Op3 is an EPD operation.
+type Op3 struct {
 	Opcode   string
 	Operands string
 }
@@ -26,7 +26,7 @@ var (
 )
 
 // MarshalText implements encoding.TextMarshaler for Op.
-func (op *Op) MarshalText() ([]byte, error) {
+func (op *Op3) MarshalText() ([]byte, error) {
 	if op.Opcode == "" {
 		return nil, ErrNoOpcode
 	}
@@ -44,7 +44,7 @@ func (op *Op) MarshalText() ([]byte, error) {
 }
 
 // UnmarshalText implements encoding.TextUnmarshaler for Op.
-func (op *Op) UnmarshalText(text []byte) error {
+func (op *Op3) UnmarshalText(text []byte) error {
 	b := bytes.TrimSpace(text)
 
 	opcode, operands, _ := bytes.Cut(b, []byte(" "))
