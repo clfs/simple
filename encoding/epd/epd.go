@@ -6,10 +6,63 @@
 // operation terminators.
 package epd
 
+import (
+	"bytes"
+	"errors"
+	"fmt"
+	"strings"
+)
+
 // An Op is an EPD operation.
 type Op struct {
 	Opcode   string
 	Operands string
+}
+
+var (
+	ErrNoOpcode        = errors.New("operation has no opcode")
+	ErrInvalidOpcode   = errors.New("operation has invalid opcode")
+	ErrInvalidOperands = errors.New("operation has invalid operands")
+)
+
+// MarshalText implements encoding.TextMarshaler for Op.
+func (op *Op) MarshalText() ([]byte, error) {
+	if op.Opcode == "" {
+		return nil, ErrNoOpcode
+	}
+	if strings.Contains(op.Opcode, ";") {
+		return nil, ErrInvalidOpcode
+	}
+	if strings.Contains(op.Operands, ";") {
+		return nil, ErrInvalidOperands
+	}
+
+	if op.Operands == "" {
+		return fmt.Appendf(nil, "%s;", op.Opcode), nil
+	}
+	return fmt.Appendf(nil, "%s %s;", op.Opcode, op.Operands), nil
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler for Op.
+func (op *Op) UnmarshalText(text []byte) error {
+	b := bytes.TrimSpace(text)
+
+	opcode, operands, _ := bytes.Cut(b, []byte(" "))
+
+	if len(opcode) == 0 {
+		return ErrNoOpcode
+	}
+	if bytes.ContainsRune(opcode, ';') {
+		return ErrInvalidOpcode
+	}
+	if bytes.ContainsRune(operands, ';') {
+		return ErrInvalidOperands
+	}
+
+	op.Opcode = string(opcode)
+	op.Operands = string(operands)
+
+	return nil
 }
 
 // EPD opcode constants.
