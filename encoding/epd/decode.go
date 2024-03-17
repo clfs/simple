@@ -48,7 +48,7 @@ func parseOps(s string) []Op {
 	var (
 		ops     []Op
 		inQuote bool
-		start   int
+		head    int
 	)
 
 	for i, rn := range s {
@@ -56,8 +56,8 @@ func parseOps(s string) []Op {
 		case rn == '"':
 			inQuote = !inQuote
 		case rn == ';' && !inQuote:
-			ops = append(ops, parseOp(s[start:i]))
-			start = i + 1
+			ops = append(ops, parseOp(s[head:i]))
+			head = i + 1
 		}
 	}
 
