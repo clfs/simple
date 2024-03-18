@@ -56,7 +56,7 @@ func TestDecode(t *testing.T) {
 			wantErr: "invalid c0",
 		},
 		{
-			in:      Starting + ` c0 "foo;`,
+			in:      Starting + ` c0 foo";`,
 			wantErr: "invalid c0",
 		},
 	}
