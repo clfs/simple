@@ -39,14 +39,26 @@ func TestDecode(t *testing.T) {
 			in:      Starting + " hmvc 4",
 			wantErr: "missing semicolon",
 		},
+		{
+			in:      Starting + " hmvc a; fmvn 3;",
+			wantErr: "invalid hmvc",
+		},
+		{
+			in:      Starting + " hmvc 4; fmvn a;",
+			wantErr: "invalid fmvn",
+		},
+		{
+			in:      Starting + " foobar 10;",
+			wantErr: "unknown opcode: foobar",
+		},
 	}
 
 	for i, tc := range cases {
 		t.Run(fmt.Sprint(i), func(t *testing.T) {
 			got, err := Decode(tc.in)
 			if tc.wantErr != "" {
-				if err == nil || err.Error() != tc.wantErr {
-					t.Errorf("#d: wrong error: got %v, want %v", err, tc.wantErr)
+				if err == nil || tc.wantErr != err.Error() {
+					t.Errorf("#d: wrong error: want %q, got %q", tc.wantErr, err)
 				}
 				return // early return if we expected an error
 			}
