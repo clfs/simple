@@ -28,6 +28,13 @@ func TestDecode(t *testing.T) {
 			},
 		},
 		{
+			in: Starting + ` c0 "foo bar";`,
+			want: ExtendedPosition{
+				Position: core.NewPosition(),
+				Comment:  "foo bar",
+			},
+		},
+		{
 			in:      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq",
 			wantErr: "too few fields: 3",
 		},
