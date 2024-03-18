@@ -73,7 +73,7 @@ func Decode(s string) (ExtendedPosition, error) {
 			res.Position.HalfMoveClock = n
 		case "c0":
 			res.Comment = args
-		case "perft":
+		case "Perft":
 			depths := strings.Split(args, " ")
 			for _, d := range depths {
 				n, err := strconv.Atoi(d)
