@@ -27,6 +27,14 @@ func TestDecode(t *testing.T) {
 				Position: fen.MustDecode("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 4 3"),
 			},
 		},
+		{
+			in:      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq",
+			wantErr: true,
+		},
+		{
+			in:      "rnbqkbnr/pppppppp/8/8/8/8/RNBQKBNR w KQkq - ",
+			wantErr: true,
+		},
 	}
 
 	for i, tc := range cases {
