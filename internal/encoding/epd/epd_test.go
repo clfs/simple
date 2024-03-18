@@ -35,18 +35,20 @@ func TestDecode(t *testing.T) {
 			in:      "rnbqkbnr/pppppppp/8/8/8/8/RNBQKBNR w KQkq - ",
 			wantErr: "invalid number of board rows: 7",
 		},
+		{
+			in:      Starting + " hmvc 4",
+			wantErr: "missing semicolon",
+		},
 	}
 
 	for i, tc := range cases {
 		t.Run(fmt.Sprint(i), func(t *testing.T) {
 			got, err := Decode(tc.in)
 			if tc.wantErr != "" {
-				if err == nil {
-					t.Errorf("#d: wrong error: got %v, want %q", err, tc.wantErr)
-				} else if got := err.Error(); got != tc.wantErr {
-					t.Errorf("#d: wrong error: got %q, want %q", got, tc.wantErr)
+				if err == nil || err.Error() != tc.wantErr {
+					t.Errorf("#d: wrong error: got %v, want %v", err, tc.wantErr)
 				}
-				return
+				return // early return if we expected an error
 			}
 			if err != nil {
 				t.Errorf("#d: unexpected error: %v", err)

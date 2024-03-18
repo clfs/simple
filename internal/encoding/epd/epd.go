@@ -61,7 +61,7 @@ func Decode(s string) (ExtendedPosition, error) {
 
 		op, ops, ok = strings.Cut(ops, ";")
 		if !ok {
-			return ExtendedPosition{}, fmt.Errorf("invalid operations")
+			return ExtendedPosition{}, fmt.Errorf("missing semicolon")
 		}
 
 		op = strings.TrimSpace(op)
