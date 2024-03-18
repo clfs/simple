@@ -20,6 +20,16 @@ type ExtendedPosition struct {
 	Perft    []int
 }
 
+// MustDecode is like Decode but panics if the EPD is invalid.
+func MustDecode(s string) ExtendedPosition {
+	res, err := Decode(s)
+	if err != nil {
+		panic(err)
+	}
+	return res
+}
+
+// Decode decodes an EPD string.
 func Decode(s string) (ExtendedPosition, error) {
 	var res ExtendedPosition
 
