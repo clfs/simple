@@ -96,7 +96,7 @@ func Decode(s string) (ExtendedPosition, error) {
 			for _, d := range depths {
 				n, err := strconv.Atoi(d)
 				if err != nil {
-					return ExtendedPosition{}, fmt.Errorf("invalid perft")
+					return ExtendedPosition{}, fmt.Errorf("invalid Perft")
 				}
 				res.Perft = append(res.Perft, n)
 			}

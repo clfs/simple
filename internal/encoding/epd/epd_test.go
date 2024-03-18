@@ -35,6 +35,13 @@ func TestDecode(t *testing.T) {
 			},
 		},
 		{
+			in: Starting + ` Perft 1 20 400;`,
+			want: ExtendedPosition{
+				Position: core.NewPosition(),
+				Perft:    []int{1, 20, 400},
+			},
+		},
+		{
 			in:      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq",
 			wantErr: "too few fields: 3",
 		},
@@ -66,6 +73,10 @@ func TestDecode(t *testing.T) {
 			in:      Starting + ` c0 foo";`,
 			wantErr: "invalid c0",
 		},
+		{
+			in:      Starting + ` Perft 1 a;`,
+			wantErr: "invalid Perft",
+		},
 	}
 
 	for i, tc := range cases {
@@ -73,7 +84,7 @@ func TestDecode(t *testing.T) {
 			got, err := Decode(tc.in)
 			if tc.wantErr != "" {
 				if err == nil || tc.wantErr != err.Error() {
-					t.Errorf("#d: wrong error: want %q, got %q", tc.wantErr, err)
+					t.Errorf("#d: wrong error: want %v, got %v", tc.wantErr, err)
 				}
 				return // early return if we expected an error
 			}
