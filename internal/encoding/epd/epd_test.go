@@ -51,6 +51,14 @@ func TestDecode(t *testing.T) {
 			in:      Starting + " foobar 10;",
 			wantErr: "unknown opcode: foobar",
 		},
+		{
+			in:      Starting + ` c0 "foo;`,
+			wantErr: "invalid c0",
+		},
+		{
+			in:      Starting + ` c0 "foo;`,
+			wantErr: "invalid c0",
+		},
 	}
 
 	for i, tc := range cases {

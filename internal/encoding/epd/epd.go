@@ -82,6 +82,14 @@ func Decode(s string) (ExtendedPosition, error) {
 			}
 			res.Position.HalfMoveClock = n
 		case "c0":
+			args, ok = strings.CutPrefix(args, `"`)
+			if !ok {
+				return ExtendedPosition{}, fmt.Errorf("invalid c0")
+			}
+			args, ok = strings.CutSuffix(args, `"`)
+			if !ok {
+				return ExtendedPosition{}, fmt.Errorf("invalid c0")
+			}
 			res.Comment = args
 		case "Perft":
 			depths := strings.Split(args, " ")
