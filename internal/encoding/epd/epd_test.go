@@ -13,7 +13,7 @@ func TestDecode(t *testing.T) {
 	cases := []struct {
 		in      string
 		want    ExtendedPosition
-		wantErr bool
+		wantErr string
 	}{
 		{
 			in: Starting,
@@ -29,22 +29,30 @@ func TestDecode(t *testing.T) {
 		},
 		{
 			in:      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq",
-			wantErr: true,
+			wantErr: "too few fields: 3",
 		},
 		{
 			in:      "rnbqkbnr/pppppppp/8/8/8/8/RNBQKBNR w KQkq - ",
-			wantErr: true,
+			wantErr: "invalid number of board rows: 7",
 		},
 	}
 
 	for i, tc := range cases {
 		t.Run(fmt.Sprint(i), func(t *testing.T) {
 			got, err := Decode(tc.in)
-			if (err != nil) != tc.wantErr {
-				t.Errorf("Decode(%q) returned error: %v", tc.in, err)
+			if tc.wantErr != "" {
+				if err == nil {
+					t.Errorf("#d: wrong error: got %v, want %q", err, tc.wantErr)
+				} else if got := err.Error(); got != tc.wantErr {
+					t.Errorf("#d: wrong error: got %q, want %q", got, tc.wantErr)
+				}
+				return
+			}
+			if err != nil {
+				t.Errorf("#d: unexpected error: %v", err)
 			}
 			if diff := cmp.Diff(tc.want, got); diff != "" {
-				t.Errorf("Decode(%q) returned unexpected result (-want +got):\n%s", tc.in, diff)
+				t.Errorf("#d: mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
