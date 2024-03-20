@@ -74,14 +74,3 @@ func (b *Bitboard) First() Square {
 func (b *Bitboard) Intersects(other Bitboard) bool {
 	return *b&other != 0
 }
-
-// Squares returns a slice of all set squares.
-func (b *Bitboard) Squares() []Square {
-	var res []Square
-	for s := A1; s <= H8; s++ {
-		if b.Get(s) {
-			res = append(res, s)
-		}
-	}
-	return res
-}
