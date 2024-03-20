@@ -1,4 +1,4 @@
-// Package eval implements positional evaluation.
+// Package eval describes the signature of evaluation functions.
 package eval
 
 import "github.com/clfs/simple/core"
