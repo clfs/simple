@@ -1,9 +1,7 @@
 // Package eval describes the signature of evaluation functions.
 package eval
 
-import (
-	"github.com/clfs/simple/core"
-)
+import "github.com/clfs/simple/core"
 
 var pieceTypeWeights = map[core.PieceType]int{
 	core.Pawn:   100,
