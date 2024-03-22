@@ -1,4 +1,4 @@
-package reference
+package eval
 
 import (
 	"testing"
