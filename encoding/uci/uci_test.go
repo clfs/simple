@@ -10,19 +10,19 @@ import (
 
 var unmarshalTests = []struct {
 	in  string
-	ptr any // new(type)
-	out any
+	typ reflect.Type
+	out Message
 	err error
 }{
-	{in: "uci", ptr: new(UCI), out: UCI{}},
-	{in: "foo", ptr: new(UCI), err: ErrUnmarshalWrongPrefix},
-	{in: "uci foo", ptr: new(UCI), err: ErrUnmarshalInvalidArgs},
-	{in: " ", ptr: new(UCI), err: ErrUnmarshalEmptyMessage},
+	{in: "uci", typ: reflect.TypeOf(UCI{}), out: &UCI{}},
+	{in: "foo", typ: reflect.TypeOf(UCI{}), err: ErrUnmarshalWrongPrefix},
+	{in: "uci foo", typ: reflect.TypeOf(UCI{}), err: ErrUnmarshalInvalidArgs},
+	{in: " ", typ: reflect.TypeOf(UCI{}), err: ErrUnmarshalEmptyMessage},
 
-	{in: "isready", ptr: new(IsReady), out: IsReady{}},
-	{in: "foo", ptr: new(IsReady), err: ErrUnmarshalWrongPrefix},
-	{in: "isready foo", ptr: new(IsReady), err: ErrUnmarshalInvalidArgs},
-	{in: " ", ptr: new(IsReady), err: ErrUnmarshalEmptyMessage},
+	{in: "isready", typ: reflect.TypeOf(IsReady{}), out: &IsReady{}},
+	{in: "foo", typ: reflect.TypeOf(IsReady{}), err: ErrUnmarshalWrongPrefix},
+	{in: "isready foo", typ: reflect.TypeOf(IsReady{}), err: ErrUnmarshalInvalidArgs},
+	{in: " ", typ: reflect.TypeOf(IsReady{}), err: ErrUnmarshalEmptyMessage},
 }
 
 func TestUnmarshalText(t *testing.T) {
@@ -30,11 +30,10 @@ func TestUnmarshalText(t *testing.T) {
 		t.Run(fmt.Sprint(i), func(t *testing.T) {
 			in := []byte(tc.in)
 
-			typ := reflect.TypeOf(tc.ptr).Elem()
+			// Create a Message that contains the specified type.
+			msg := reflect.New(tc.typ).Interface().(Message)
 
-			v := reflect.New(typ)
-
-			err := v.Interface().(Message).UnmarshalText(in)
+			err := msg.UnmarshalText(in)
 			if err != tc.err {
 				t.Errorf("wrong error: want %v, got %v", tc.err, err)
 			}
@@ -43,7 +42,7 @@ func TestUnmarshalText(t *testing.T) {
 				return
 			}
 
-			if diff := cmp.Diff(tc.out, v.Elem().Interface()); diff != "" {
+			if diff := cmp.Diff(tc.out, msg); diff != "" {
 				t.Errorf("mismatch (-want +got):\n%s", diff)
 			}
 		})
