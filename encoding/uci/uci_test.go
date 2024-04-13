@@ -1,38 +1,52 @@
 package uci
 
 import (
+	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestUCI_UnmarshalText(t *testing.T) {
-	cases := []struct {
-		in      string
-		want    UCI
-		wantErr error
-	}{
-		{in: "uci", want: UCI{}},
-		{in: "foo", wantErr: ErrUnmarshalWrongPrefix},
-		{in: "uci foo", wantErr: ErrUnmarshalInvalidArgs},
-		{in: " ", wantErr: ErrUnmarshalEmptyMessage},
-	}
+var unmarshalTests = []struct {
+	in  string
+	ptr any // new(type)
+	out any
+	err error
+}{
+	{in: "uci", ptr: new(UCI), out: UCI{}},
+	{in: "foo", ptr: new(UCI), err: ErrUnmarshalWrongPrefix},
+	{in: "uci foo", ptr: new(UCI), err: ErrUnmarshalInvalidArgs},
+	{in: " ", ptr: new(UCI), err: ErrUnmarshalEmptyMessage},
 
-	for i, tc := range cases {
-		var got UCI
+	{in: "isready", ptr: new(IsReady), out: IsReady{}},
+	{in: "foo", ptr: new(IsReady), err: ErrUnmarshalWrongPrefix},
+	{in: "isready foo", ptr: new(IsReady), err: ErrUnmarshalInvalidArgs},
+	{in: " ", ptr: new(IsReady), err: ErrUnmarshalEmptyMessage},
+}
 
-		err := got.UnmarshalText([]byte(tc.in))
-		if err != tc.wantErr {
-			t.Errorf("#%d: wrong error: want %v, got %v", i, tc.wantErr, err)
-		}
+func TestUnmarshalText(t *testing.T) {
+	for i, tc := range unmarshalTests {
+		t.Run(fmt.Sprint(i), func(t *testing.T) {
+			in := []byte(tc.in)
 
-		if tc.wantErr != nil {
-			continue
-		}
+			typ := reflect.TypeOf(tc.ptr).Elem()
 
-		if diff := cmp.Diff(tc.want, got); diff != "" {
-			t.Errorf("#%d: mismatch (-want +got):\n%s", i, diff)
-		}
+			v := reflect.New(typ)
+
+			err := v.Interface().(Message).UnmarshalText(in)
+			if err != tc.err {
+				t.Errorf("wrong error: want %v, got %v", tc.err, err)
+			}
+
+			if tc.err != nil {
+				return
+			}
+
+			if diff := cmp.Diff(tc.out, v.Elem().Interface()); diff != "" {
+				t.Errorf("mismatch (-want +got):\n%s", diff)
+			}
+		})
 	}
 }
 
@@ -57,36 +71,6 @@ func TestUCI_MarshalText(t *testing.T) {
 
 		if tc.want != string(got) {
 			t.Errorf("#%d: want %q, got %q", i, tc.want, got)
-		}
-	}
-}
-
-func TestIsReady_UnmarshalText(t *testing.T) {
-	cases := []struct {
-		in      string
-		want    IsReady
-		wantErr error
-	}{
-		{in: "isready", want: IsReady{}},
-		{in: "foo", wantErr: ErrUnmarshalWrongPrefix},
-		{in: "isready foo", wantErr: ErrUnmarshalInvalidArgs},
-		{in: " ", wantErr: ErrUnmarshalEmptyMessage},
-	}
-
-	for i, tc := range cases {
-		var got IsReady
-
-		err := got.UnmarshalText([]byte(tc.in))
-		if err != tc.wantErr {
-			t.Errorf("#%d: wrong error: want %v, got %v", i, tc.wantErr, err)
-		}
-
-		if tc.wantErr != nil {
-			continue
-		}
-
-		if diff := cmp.Diff(tc.want, got); diff != "" {
-			t.Errorf("#%d: mismatch (-want +got):\n%s", i, diff)
 		}
 	}
 }

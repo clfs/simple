@@ -4,8 +4,14 @@ package uci
 
 import (
 	"bytes"
+	"encoding"
 	"errors"
 )
+
+type Message interface {
+	encoding.TextMarshaler
+	encoding.TextUnmarshaler
+}
 
 // ErrUnmarshalWrongPrefix is returned when unmarshaling a UCI message that does
 // not start with the expected message prefix.
