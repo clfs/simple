@@ -30,7 +30,7 @@ var ErrUnmarshalEmptyMessage = errors.New("failed to unmarshal message: empty me
 // It tells the engine to use UCI mode.
 type UCI struct{}
 
-func (u *UCI) UnmarshalText(text []byte) error {
+func (msg *UCI) UnmarshalText(text []byte) error {
 	fields := bytes.Fields(text)
 
 	if len(fields) == 0 {
@@ -48,7 +48,7 @@ func (u *UCI) UnmarshalText(text []byte) error {
 	return nil
 }
 
-func (u *UCI) MarshalText() ([]byte, error) {
+func (msg *UCI) MarshalText() ([]byte, error) {
 	return []byte("uci"), nil
 }
 
@@ -57,7 +57,7 @@ func (u *UCI) MarshalText() ([]byte, error) {
 // It asks the engine if it's ready.
 type IsReady struct{}
 
-func (ir *IsReady) UnmarshalText(text []byte) error {
+func (msg *IsReady) UnmarshalText(text []byte) error {
 	fields := bytes.Fields(text)
 
 	if len(fields) == 0 {
@@ -75,6 +75,6 @@ func (ir *IsReady) UnmarshalText(text []byte) error {
 	return nil
 }
 
-func (ir *IsReady) MarshalText() ([]byte, error) {
+func (msg *IsReady) MarshalText() ([]byte, error) {
 	return []byte("isready"), nil
 }
