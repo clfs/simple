@@ -8,6 +8,7 @@ import (
 	"errors"
 )
 
+// A Message contains a UCI message.
 type Message interface {
 	encoding.TextMarshaler
 	encoding.TextUnmarshaler
