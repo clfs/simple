@@ -44,3 +44,30 @@ func (u *UCI) UnmarshalText(text []byte) error {
 func (u *UCI) MarshalText() ([]byte, error) {
 	return []byte("uci"), nil
 }
+
+// IsReady represents the "isready" command.
+//
+// It asks the engine if it's ready.
+type IsReady struct{}
+
+func (ir *IsReady) UnmarshalText(text []byte) error {
+	fields := bytes.Fields(text)
+
+	if len(fields) == 0 {
+		return ErrUnmarshalEmptyMessage
+	}
+
+	if !bytes.Equal(fields[0], []byte("isready")) {
+		return ErrUnmarshalWrongPrefix
+	}
+
+	if len(fields) > 1 {
+		return ErrUnmarshalInvalidArgs
+	}
+
+	return nil
+}
+
+func (ir *IsReady) MarshalText() ([]byte, error) {
+	return []byte("isready"), nil
+}
