@@ -54,77 +54,31 @@ func TestUnmarshalText(t *testing.T) {
 	}
 }
 
-func TestUCI_MarshalText(t *testing.T) {
-	cases := []struct {
-		in      UCI
-		want    string
-		wantErr error
-	}{
-		{in: UCI{}, want: "uci"},
-	}
-
-	for i, tc := range cases {
-		got, err := tc.in.MarshalText()
-		if err != tc.wantErr {
-			t.Errorf("#%d: wrong error: want %v, got %v", i, tc.wantErr, err)
-		}
-
-		if tc.wantErr != nil {
-			continue
-		}
-
-		if tc.want != string(got) {
-			t.Errorf("#%d: want %q, got %q", i, tc.want, got)
-		}
-	}
+var marshalTests = []struct {
+	in  Message
+	out string
+	err error
+}{
+	{in: &UCI{}, out: "uci"},
+	{in: &IsReady{}, out: "isready"},
+	{in: &UCINewGame{}, out: "ucinewgame"},
 }
 
-func TestIsReady_MarshalText(t *testing.T) {
-	cases := []struct {
-		in      IsReady
-		want    string
-		wantErr error
-	}{
-		{in: IsReady{}, want: "isready"},
-	}
+func TestMarshalText(t *testing.T) {
+	for i, tc := range marshalTests {
+		t.Run(fmt.Sprint(i), func(t *testing.T) {
+			got, err := tc.in.MarshalText()
+			if err != tc.err {
+				t.Errorf("wrong error: want %v, got %v", tc.err, err)
+			}
 
-	for i, tc := range cases {
-		got, err := tc.in.MarshalText()
-		if err != tc.wantErr {
-			t.Errorf("#%d: wrong error: want %v, got %v", i, tc.wantErr, err)
-		}
+			if tc.err != nil {
+				return
+			}
 
-		if tc.wantErr != nil {
-			continue
-		}
-
-		if tc.want != string(got) {
-			t.Errorf("#%d: want %q, got %q", i, tc.want, got)
-		}
-	}
-}
-
-func TestUCINewGame_MarshalText(t *testing.T) {
-	cases := []struct {
-		in      UCINewGame
-		want    string
-		wantErr error
-	}{
-		{in: UCINewGame{}, want: "ucinewgame"},
-	}
-
-	for i, tc := range cases {
-		got, err := tc.in.MarshalText()
-		if err != tc.wantErr {
-			t.Errorf("#%d: wrong error: want %v, got %v", i, tc.wantErr, err)
-		}
-
-		if tc.wantErr != nil {
-			continue
-		}
-
-		if tc.want != string(got) {
-			t.Errorf("#%d: want %q, got %q", i, tc.want, got)
-		}
+			if tc.out != string(got) {
+				t.Errorf("want %q, got %q", tc.out, got)
+			}
+		})
 	}
 }
