@@ -15,6 +15,9 @@ var ErrUnmarshalWrongPrefix = errors.New("failed to unmarshal message: wrong mes
 // has invalid arguments.
 var ErrUnmarshalInvalidArgs = errors.New("failed to unmarshal message: invalid arguments")
 
+// ErrUnmarshalEmptyMessage is returned when unmarshaling an empty UCI message.
+var ErrUnmarshalEmptyMessage = errors.New("failed to unmarshal message: empty message")
+
 // UCI represents the "uci" command.
 //
 // It tells the engine to use UCI mode.
@@ -24,7 +27,7 @@ func (u *UCI) UnmarshalText(text []byte) error {
 	fields := bytes.Fields(text)
 
 	if len(fields) == 0 {
-		return ErrUnmarshalWrongPrefix
+		return ErrUnmarshalEmptyMessage
 	}
 
 	if !bytes.Equal(fields[0], []byte("uci")) {
