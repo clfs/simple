@@ -15,6 +15,7 @@ func TestUCI_UnmarshalText(t *testing.T) {
 		{in: "uci", want: UCI{}},
 		{in: "foo", wantErr: ErrUnmarshalWrongPrefix},
 		{in: "uci foo", wantErr: ErrUnmarshalInvalidArgs},
+		{in: " ", wantErr: ErrUnmarshalEmptyMessage},
 	}
 
 	for i, tc := range cases {
