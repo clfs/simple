@@ -35,3 +35,28 @@ func TestUCI_UnmarshalText(t *testing.T) {
 		}
 	}
 }
+
+func TestUCI_MarshalText(t *testing.T) {
+	cases := []struct {
+		in      UCI
+		want    string
+		wantErr error
+	}{
+		{in: UCI{}, want: "uci"},
+	}
+
+	for i, tc := range cases {
+		got, err := tc.in.MarshalText()
+		if err != tc.wantErr {
+			t.Errorf("#%d: wrong error: want %v, got %v", i, tc.wantErr, err)
+		}
+
+		if tc.wantErr != nil {
+			continue
+		}
+
+		if tc.want != string(got) {
+			t.Errorf("#%d: want %q, got %q", i, tc.want, got)
+		}
+	}
+}
