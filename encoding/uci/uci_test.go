@@ -23,6 +23,11 @@ var unmarshalTests = []struct {
 	{in: "foo", typ: reflect.TypeOf(IsReady{}), err: ErrUnmarshalWrongPrefix},
 	{in: "isready foo", typ: reflect.TypeOf(IsReady{}), err: ErrUnmarshalInvalidArgs},
 	{in: " ", typ: reflect.TypeOf(IsReady{}), err: ErrUnmarshalEmptyMessage},
+
+	{in: "ucinewgame", typ: reflect.TypeOf(UCINewGame{}), out: &UCINewGame{}},
+	{in: "foo", typ: reflect.TypeOf(UCINewGame{}), err: ErrUnmarshalWrongPrefix},
+	{in: "ucinewgame foo", typ: reflect.TypeOf(UCINewGame{}), err: ErrUnmarshalInvalidArgs},
+	{in: " ", typ: reflect.TypeOf(UCINewGame{}), err: ErrUnmarshalEmptyMessage},
 }
 
 func TestUnmarshalText(t *testing.T) {
@@ -81,6 +86,31 @@ func TestIsReady_MarshalText(t *testing.T) {
 		wantErr error
 	}{
 		{in: IsReady{}, want: "isready"},
+	}
+
+	for i, tc := range cases {
+		got, err := tc.in.MarshalText()
+		if err != tc.wantErr {
+			t.Errorf("#%d: wrong error: want %v, got %v", i, tc.wantErr, err)
+		}
+
+		if tc.wantErr != nil {
+			continue
+		}
+
+		if tc.want != string(got) {
+			t.Errorf("#%d: want %q, got %q", i, tc.want, got)
+		}
+	}
+}
+
+func TestUCINewGame_MarshalText(t *testing.T) {
+	cases := []struct {
+		in      UCINewGame
+		want    string
+		wantErr error
+	}{
+		{in: UCINewGame{}, want: "ucinewgame"},
 	}
 
 	for i, tc := range cases {

@@ -78,3 +78,30 @@ func (msg *IsReady) UnmarshalText(text []byte) error {
 func (msg *IsReady) MarshalText() ([]byte, error) {
 	return []byte("isready"), nil
 }
+
+// UCINewGame represents the "ucinewgame" command.
+//
+// It tells the engine that a new game is starting.
+type UCINewGame struct{}
+
+func (msg *UCINewGame) UnmarshalText(text []byte) error {
+	fields := bytes.Fields(text)
+
+	if len(fields) == 0 {
+		return ErrUnmarshalEmptyMessage
+	}
+
+	if !bytes.Equal(fields[0], []byte("ucinewgame")) {
+		return ErrUnmarshalWrongPrefix
+	}
+
+	if len(fields) > 1 {
+		return ErrUnmarshalInvalidArgs
+	}
+
+	return nil
+}
+
+func (msg *UCINewGame) MarshalText() ([]byte, error) {
+	return []byte("ucinewgame"), nil
+}
