@@ -30,7 +30,7 @@ var (
 	ErrWrongMessageType = errors.New("wrong message type")
 
 	// ErrInvalidArgs is returned when marshaling or unmarshaling a message with
-	// invalid arguments
+	// invalid arguments.
 	ErrInvalidArgs = errors.New("invalid arguments")
 )
 
@@ -49,6 +49,12 @@ func Parse(b []byte) (Message, error) {
 	switch prefix {
 	case "uci":
 		m = new(UCI)
+	case "isready":
+		m = new(IsReady)
+	case "ucinewgame":
+		m = new(UCINewGame)
+	case "position":
+		m = new(Position)
 	default:
 		return nil, fmt.Errorf("%q: %w", prefix, ErrUnknownMessage)
 	}
@@ -60,17 +66,6 @@ func Parse(b []byte) (Message, error) {
 	return m, nil
 }
 
-// ErrUnmarshalWrongPrefix is returned when unmarshaling a UCI message that does
-// not start with the expected message prefix.
-var ErrUnmarshalWrongPrefix = errors.New("failed to unmarshal message: wrong message prefix")
-
-// ErrUnmarshalInvalidArgs is returned when unmarshaling a UCI message that
-// has invalid arguments.
-var ErrUnmarshalInvalidArgs = errors.New("failed to unmarshal message: invalid arguments")
-
-// ErrUnmarshalEmptyMessage is returned when unmarshaling an empty UCI message.
-var ErrUnmarshalEmptyMessage = errors.New("failed to unmarshal message: empty message")
-
 // UCI represents the "uci" command.
 //
 // It tells the engine to use UCI mode.
@@ -80,15 +75,15 @@ func (msg *UCI) UnmarshalText(text []byte) error {
 	fields := bytes.Fields(text)
 
 	if len(fields) == 0 {
-		return ErrUnmarshalEmptyMessage
+		return ErrEmptyMessage
 	}
 
 	if !bytes.Equal(fields[0], []byte("uci")) {
-		return ErrUnmarshalWrongPrefix
+		return ErrWrongMessageType
 	}
 
 	if len(fields) > 1 {
-		return ErrUnmarshalInvalidArgs
+		return ErrInvalidArgs
 	}
 
 	return nil
@@ -107,15 +102,15 @@ func (msg *IsReady) UnmarshalText(text []byte) error {
 	fields := bytes.Fields(text)
 
 	if len(fields) == 0 {
-		return ErrUnmarshalEmptyMessage
+		return ErrEmptyMessage
 	}
 
 	if !bytes.Equal(fields[0], []byte("isready")) {
-		return ErrUnmarshalWrongPrefix
+		return ErrWrongMessageType
 	}
 
 	if len(fields) > 1 {
-		return ErrUnmarshalInvalidArgs
+		return ErrInvalidArgs
 	}
 
 	return nil
@@ -134,15 +129,15 @@ func (msg *UCINewGame) UnmarshalText(text []byte) error {
 	fields := bytes.Fields(text)
 
 	if len(fields) == 0 {
-		return ErrUnmarshalEmptyMessage
+		return ErrEmptyMessage
 	}
 
 	if !bytes.Equal(fields[0], []byte("ucinewgame")) {
-		return ErrUnmarshalWrongPrefix
+		return ErrWrongMessageType
 	}
 
 	if len(fields) > 1 {
-		return ErrUnmarshalInvalidArgs
+		return ErrInvalidArgs
 	}
 
 	return nil
@@ -164,15 +159,15 @@ func (msg *Position) UnmarshalText(text []byte) error {
 	fields := bytes.Fields(text)
 
 	if len(fields) == 0 {
-		return ErrUnmarshalEmptyMessage
+		return ErrEmptyMessage
 	}
 
 	if !bytes.Equal(fields[0], []byte("position")) {
-		return ErrUnmarshalWrongPrefix
+		return ErrWrongMessageType
 	}
 
 	if len(fields) < 2 {
-		return ErrUnmarshalInvalidArgs
+		return fmt.Errorf("no position provided: %w", ErrInvalidArgs)
 	}
 
 	usesStartpos := bytes.Equal(fields[1], []byte("startpos"))
@@ -181,11 +176,11 @@ func (msg *Position) UnmarshalText(text []byte) error {
 		msg.Start = core.NewPosition()
 	} else {
 		if len(fields) < 7 {
-			return ErrUnmarshalInvalidArgs
+			return fmt.Errorf("too few arguments: %w", ErrInvalidArgs)
 		}
 		p, err := fen.Decode(string(bytes.Join(fields[1:7], []byte(" "))))
 		if err != nil {
-			return ErrUnmarshalInvalidArgs
+			return fmt.Errorf("invalid FEN: %w: %w", err, ErrInvalidArgs)
 		}
 		msg.Start = p
 	}
@@ -205,7 +200,7 @@ func (msg *Position) UnmarshalText(text []byte) error {
 	for _, f := range moveFields {
 		m, err := pcn.Decode(string(f))
 		if err != nil {
-			return ErrUnmarshalInvalidArgs
+			return fmt.Errorf("invalid move: %w: %w", err, ErrInvalidArgs)
 		}
 
 		moves = append(moves, m)
