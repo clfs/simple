@@ -1,6 +1,7 @@
 package uci
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"testing"
@@ -18,6 +19,7 @@ var parseTests = []struct {
 }{
 	{in: "", err: ErrEmptyMessage},
 	{in: " ", err: ErrEmptyMessage},
+	{in: "foo", err: ErrUnknownMessage},
 	{in: "uci", want: &UCI{}},
 }
 
@@ -25,7 +27,7 @@ func TestParse(t *testing.T) {
 	for i, tt := range parseTests {
 		t.Run(fmt.Sprint(i), func(t *testing.T) {
 			got, err := Parse([]byte(tt.in))
-			if err != tt.err {
+			if !errors.Is(err, tt.err) {
 				t.Errorf("wrong error: want %v, got %v", tt.err, err)
 			}
 

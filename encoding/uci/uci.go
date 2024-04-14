@@ -22,6 +22,13 @@ type Message interface {
 // ErrEmptyMessage is returned when an empty message is read.
 var ErrEmptyMessage = errors.New("empty message")
 
+// ErrUnknownMessage is returned when an unknown message is read.
+var ErrUnknownMessage = errors.New("unknown message")
+
+// ErrInvalidArgs is returned when marshalling or unmarshalling a message with
+// invalid arguments.
+var ErrInvalidArgs = errors.New("invalid message args")
+
 // Parse parses a UCI message.
 func Parse(b []byte) (Message, error) {
 	fields := bytes.Fields(b)
@@ -32,11 +39,11 @@ func Parse(b []byte) (Message, error) {
 
 	var m Message
 
-	switch string(fields[0]) {
+	switch prefix := string(fields[0]); prefix {
 	case "uci":
 		m = new(UCI)
 	default:
-		return nil, fmt.Errorf("unknown message")
+		return nil, fmt.Errorf("%w: %q", ErrUnknownMessage, prefix)
 	}
 
 	if err := m.UnmarshalText(b); err != nil {
