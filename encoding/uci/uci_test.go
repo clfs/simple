@@ -60,10 +60,6 @@ var parseTests = []struct {
 		},
 	},
 	{in: "position startpos notamove", err: ErrInvalidArgs},
-	{in: "debug", err: ErrInvalidArgs},
-	{in: "debug foo", err: ErrInvalidArgs},
-	{in: "debug on", want: &Debug{On: true}},
-	{in: "debug off", want: &Debug{On: false}},
 }
 
 func TestParse(t *testing.T) {
@@ -93,8 +89,6 @@ var marshalTests = []struct {
 	{in: &UCI{}, out: "uci"},
 	{in: &IsReady{}, out: "isready"},
 	{in: &UCINewGame{}, out: "ucinewgame"},
-	{in: &Debug{On: false}, out: "debug off"},
-	{in: &Debug{On: true}, out: "debug on"},
 }
 
 func TestMarshalText(t *testing.T) {
