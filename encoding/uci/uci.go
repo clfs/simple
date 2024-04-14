@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"encoding"
 	"errors"
+	"fmt"
 
 	"github.com/clfs/simple/core"
 	"github.com/clfs/simple/encoding/fen"
@@ -16,6 +17,30 @@ import (
 type Message interface {
 	encoding.TextMarshaler
 	encoding.TextUnmarshaler
+}
+
+// Parse parses a UCI message.
+func Parse(b []byte) (Message, error) {
+	fields := bytes.Fields(b)
+
+	if len(fields) == 0 {
+		return nil, fmt.Errorf("empty message")
+	}
+
+	var m Message
+
+	switch string(fields[0]) {
+	case "uci":
+		m = new(UCI)
+	default:
+		return nil, fmt.Errorf("unknown message")
+	}
+
+	if err := m.UnmarshalText(b); err != nil {
+		return nil, err
+	}
+
+	return m, nil
 }
 
 // ErrUnmarshalWrongPrefix is returned when unmarshaling a UCI message that does

@@ -11,6 +11,33 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+var parseTests = []struct {
+	in   string
+	want Message
+	err  error
+}{
+	{in: "uci", want: &UCI{}},
+}
+
+func TestParse(t *testing.T) {
+	for i, tt := range parseTests {
+		t.Run(fmt.Sprint(i), func(t *testing.T) {
+			got, err := Parse([]byte(tt.in))
+			if err != tt.err {
+				t.Errorf("wrong error: want %v, got %v", tt.err, err)
+			}
+
+			if tt.err != nil {
+				return
+			}
+
+			if diff := cmp.Diff(tt.want, got); diff != "" {
+				t.Errorf("mismatch (-want, got)")
+			}
+		})
+	}
+}
+
 var unmarshalTests = []struct {
 	in  string
 	typ reflect.Type
