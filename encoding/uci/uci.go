@@ -19,15 +19,17 @@ type Message interface {
 	encoding.TextUnmarshaler
 }
 
-// ErrEmptyMessage is returned when an empty message is read.
-var ErrEmptyMessage = errors.New("empty message")
+var (
+	// ErrEmptyMessage is returned when an empty message is read.
+	ErrEmptyMessage = errors.New("empty message")
 
-// ErrUnknownMessage is returned when an unknown message is read.
-var ErrUnknownMessage = errors.New("unknown message")
+	// ErrUnknownMessage is returned when an unknown message is read.
+	ErrUnknownMessage = errors.New("unknown message")
 
-// ErrInvalidMessage is returned when marshaling or unmarshaling an invalid
-// message.
-var ErrInvalidMessage = errors.New("invalid message")
+	// ErrInvalidMessage is returned when marshaling or unmarshaling an invalid
+	// message.
+	ErrInvalidMessage = errors.New("invalid message")
+)
 
 // Parse parses a UCI message.
 func Parse(b []byte) (Message, error) {
