@@ -26,7 +26,8 @@ var (
 	// ErrUnknownMessage is returned when unmarshaling an unknown message.
 	ErrUnknownMessage = errors.New("unknown message")
 
-	// ErrWrongMessageType is returned when unmarshaling a message into the wrong type.
+	// ErrWrongMessageType is returned when unmarshaling a message into the
+	// wrong type.
 	ErrWrongMessageType = errors.New("wrong message type")
 
 	// ErrInvalidArgs is returned when marshaling or unmarshaling a message with
