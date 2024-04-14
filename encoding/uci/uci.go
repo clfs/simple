@@ -25,9 +25,9 @@ var ErrEmptyMessage = errors.New("empty message")
 // ErrUnknownMessage is returned when an unknown message is read.
 var ErrUnknownMessage = errors.New("unknown message")
 
-// ErrInvalidArgs is returned when marshalling or unmarshalling a message with
-// invalid arguments.
-var ErrInvalidArgs = errors.New("invalid message args")
+// ErrInvalidMessage is returned when marshaling or unmarshaling an invalid
+// message.
+var ErrInvalidMessage = errors.New("invalid message")
 
 // Parse parses a UCI message.
 func Parse(b []byte) (Message, error) {
