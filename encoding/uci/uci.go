@@ -7,6 +7,8 @@ import (
 	"encoding"
 	"errors"
 	"fmt"
+	"strings"
+	"time"
 
 	"github.com/clfs/simple/core"
 	"github.com/clfs/simple/encoding/fen"
@@ -58,6 +60,8 @@ func Parse(b []byte) (Message, error) {
 		m = new(Position)
 	case "debug":
 		m = new(Debug)
+	case "go":
+		m = new(Go)
 	default:
 		return nil, fmt.Errorf("%q: %w", prefix, ErrUnknownMessage)
 	}
@@ -268,4 +272,38 @@ func (msg *Debug) MarshalText() ([]byte, error) {
 		return []byte("debug on"), nil
 	}
 	return []byte("debug off"), nil
+}
+
+// Go represents the "go" command.
+//
+// It tells the engine to search the current position.
+type Go struct {
+	SearchMoves  []core.Move
+	Ponder       bool
+	WTime, BTime time.Duration
+	WInc, BInc   time.Duration
+	MovesToGo    int
+	Depth        int
+	Nodes        int
+	Mate         int
+	MoveTime     time.Duration
+	Infinite     bool
+}
+
+func (msg *Go) UnmarshalText(text []byte) error {
+	fields := strings.Fields(string(text))
+
+	if len(fields) == 0 {
+		return ErrEmptyMessage
+	}
+
+	if fields[0] != "go" {
+		return ErrWrongMessageType
+	}
+
+	return errors.New("not implemented")
+}
+
+func (msg *Go) MarshalText() ([]byte, error) {
+	return nil, errors.New("not implemented")
 }
