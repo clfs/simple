@@ -5,6 +5,9 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/clfs/simple/core"
+	"github.com/clfs/simple/encoding/fen"
+	"github.com/clfs/simple/encoding/pcn"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -28,6 +31,63 @@ var unmarshalTests = []struct {
 	{in: "foo", typ: reflect.TypeOf(UCINewGame{}), err: ErrUnmarshalWrongPrefix},
 	{in: "ucinewgame foo", typ: reflect.TypeOf(UCINewGame{}), err: ErrUnmarshalInvalidArgs},
 	{in: " ", typ: reflect.TypeOf(UCINewGame{}), err: ErrUnmarshalEmptyMessage},
+
+	{
+		in:  "position startpos",
+		typ: reflect.TypeOf(Position{}),
+		out: &Position{
+			Start: core.NewPosition(),
+		},
+	},
+	{
+		in:  "position foo",
+		typ: reflect.TypeOf(Position{}),
+		err: ErrUnmarshalInvalidArgs,
+	},
+	{
+		in:  " ",
+		typ: reflect.TypeOf(Position{}),
+		err: ErrUnmarshalEmptyMessage,
+	},
+	{
+		in:  "foo",
+		typ: reflect.TypeOf(Position{}),
+		err: ErrUnmarshalWrongPrefix,
+	},
+	{
+		in:  "position",
+		typ: reflect.TypeOf(Position{}),
+		err: ErrUnmarshalInvalidArgs,
+	},
+	{
+		in:  "position 3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1",
+		typ: reflect.TypeOf(Position{}),
+		out: &Position{
+			Start: fen.MustDecode("3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1"),
+		},
+	},
+	{
+		in:  "position 3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1 h5c5 a5b6",
+		typ: reflect.TypeOf(Position{}),
+		out: &Position{
+			Start: fen.MustDecode("3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1"),
+			Moves: []core.Move{
+				pcn.MustDecode("h5c5"),
+				pcn.MustDecode("a5b6"),
+			},
+		},
+	},
+	{
+		in:  "position startpos e2e4 e7e5",
+		typ: reflect.TypeOf(Position{}),
+		out: &Position{
+			Start: core.NewPosition(),
+			Moves: []core.Move{
+				pcn.MustDecode("e2e4"),
+				pcn.MustDecode("e7e5"),
+			},
+		},
+	},
 }
 
 func TestUnmarshalText(t *testing.T) {

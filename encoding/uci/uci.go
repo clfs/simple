@@ -6,6 +6,10 @@ import (
 	"bytes"
 	"encoding"
 	"errors"
+
+	"github.com/clfs/simple/core"
+	"github.com/clfs/simple/encoding/fen"
+	"github.com/clfs/simple/encoding/pcn"
 )
 
 // A Message contains a UCI message.
@@ -104,4 +108,83 @@ func (msg *UCINewGame) UnmarshalText(text []byte) error {
 
 func (msg *UCINewGame) MarshalText() ([]byte, error) {
 	return []byte("ucinewgame"), nil
+}
+
+// Position represents the "position" command.
+//
+// It tells the engine to set up a position.
+type Position struct {
+	Start core.Position
+	Moves []core.Move
+}
+
+func (msg *Position) UnmarshalText(text []byte) error {
+	fields := bytes.Fields(text)
+
+	if len(fields) == 0 {
+		return ErrUnmarshalEmptyMessage
+	}
+
+	if !bytes.Equal(fields[0], []byte("position")) {
+		return ErrUnmarshalWrongPrefix
+	}
+
+	if len(fields) < 2 {
+		return ErrUnmarshalInvalidArgs
+	}
+
+	usesStartpos := bytes.Equal(fields[1], []byte("startpos"))
+
+	if usesStartpos {
+		msg.Start = core.NewPosition()
+	} else {
+		if len(fields) < 7 {
+			return ErrUnmarshalInvalidArgs
+		}
+		p, err := fen.Decode(string(bytes.Join(fields[1:7], []byte(" "))))
+		if err != nil {
+			return ErrUnmarshalInvalidArgs
+		}
+		msg.Start = p
+	}
+
+	if len(fields) == 2 {
+		return nil
+	}
+
+	var moveFields [][]byte
+	if usesStartpos {
+		moveFields = fields[2:]
+	} else {
+		moveFields = fields[7:]
+	}
+
+	var moves []core.Move
+	for _, f := range moveFields {
+		m, err := pcn.Decode(string(f))
+		if err != nil {
+			return ErrUnmarshalInvalidArgs
+		}
+
+		moves = append(moves, m)
+	}
+
+	msg.Moves = moves
+
+	return nil
+}
+
+func (msg *Position) MarshalText() ([]byte, error) {
+	var b bytes.Buffer
+
+	b.WriteString("position ")
+
+	b.WriteString(fen.Encode(msg.Start))
+
+	for _, m := range msg.Moves {
+		b.WriteByte(' ')
+		b.WriteString(pcn.Encode(m))
+	}
+
+	return b.Bytes(), nil
 }
