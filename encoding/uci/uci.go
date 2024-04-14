@@ -1,5 +1,5 @@
 // Package uci implements encoding and decoding of Universal Chess Interface
-// messages.
+// messages. Not all messages and message fields are implemented.
 package uci
 
 import (
