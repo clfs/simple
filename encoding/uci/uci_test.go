@@ -16,6 +16,8 @@ var parseTests = []struct {
 	want Message
 	err  error
 }{
+	{in: "", err: ErrEmptyMessage},
+	{in: " ", err: ErrEmptyMessage},
 	{in: "uci", want: &UCI{}},
 }
 

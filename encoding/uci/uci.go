@@ -19,12 +19,15 @@ type Message interface {
 	encoding.TextUnmarshaler
 }
 
+// ErrEmptyMessage is returned when an empty message is read.
+var ErrEmptyMessage = errors.New("empty message")
+
 // Parse parses a UCI message.
 func Parse(b []byte) (Message, error) {
 	fields := bytes.Fields(b)
 
 	if len(fields) == 0 {
-		return nil, fmt.Errorf("empty message")
+		return nil, ErrEmptyMessage
 	}
 
 	var m Message
