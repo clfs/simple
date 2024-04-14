@@ -62,6 +62,8 @@ func Parse(b []byte) (Message, error) {
 		m = new(Go)
 	case "stop":
 		m = new(Stop)
+	case "id":
+		m = new(ID)
 	default:
 		return nil, fmt.Errorf("%q: %w", prefix, ErrUnknownMessage)
 	}
@@ -292,4 +294,37 @@ func (msg *Stop) UnmarshalText(text []byte) error {
 
 func (msg *Stop) MarshalText() ([]byte, error) {
 	return []byte("stop"), nil
+}
+
+// ID represents the "id" message.
+//
+// It identifies the engine.
+type ID struct {
+	Key   string
+	Value string
+}
+
+func (msg *ID) UnmarshalText(text []byte) error {
+	fields := strings.Fields(string(text))
+
+	if len(fields) == 0 {
+		return ErrEmptyMessage
+	}
+
+	if fields[0] != "id" {
+		return ErrWrongMessageType
+	}
+
+	if len(fields) < 3 {
+		return ErrInvalidArgs
+	}
+
+	msg.Key = fields[1]
+	msg.Value = strings.Join(fields[2:], " ")
+
+	return nil
+}
+
+func (msg *ID) MarshalText() ([]byte, error) {
+	return fmt.Appendf(nil, "id %s %s", msg.Key, msg.Value), nil
 }
