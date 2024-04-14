@@ -64,6 +64,8 @@ func Parse(b []byte) (Message, error) {
 		m = new(Stop)
 	case "id":
 		m = new(ID)
+	case "uciok":
+		m = new(UCIOK)
 	default:
 		return nil, fmt.Errorf("%q: %w", prefix, ErrUnknownMessage)
 	}
@@ -327,4 +329,28 @@ func (msg *ID) UnmarshalText(text []byte) error {
 
 func (msg *ID) MarshalText() ([]byte, error) {
 	return fmt.Appendf(nil, "id %s %s", msg.Key, msg.Value), nil
+}
+
+// UCIOK represents the "uciok" message.
+//
+// It acknowledges a "uci" message.
+type UCIOK struct{}
+
+func (msg *UCIOK) UnmarshalText(text []byte) error {
+	fields := strings.Fields(string(text))
+
+	switch {
+	case len(fields) == 0:
+		return ErrEmptyMessage
+	case fields[0] != "uciok":
+		return ErrWrongMessageType
+	case len(fields) > 1:
+		return ErrInvalidArgs
+	default:
+		return nil
+	}
+}
+
+func (msg *UCIOK) MarshalText() ([]byte, error) {
+	return []byte("uciok"), nil
 }
