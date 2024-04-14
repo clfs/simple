@@ -20,15 +20,18 @@ type Message interface {
 }
 
 var (
-	// ErrEmptyMessage is returned when an empty message is read.
+	// ErrEmptyMessage is returned when unmarshaling an empty message.
 	ErrEmptyMessage = errors.New("empty message")
 
-	// ErrUnknownMessage is returned when an unknown message is read.
+	// ErrUnknownMessage is returned when unmarshaling an unknown message.
 	ErrUnknownMessage = errors.New("unknown message")
 
-	// ErrInvalidMessage is returned when marshaling or unmarshaling an invalid
-	// message.
-	ErrInvalidMessage = errors.New("invalid message")
+	// ErrWrongMessageType is returned when unmarshaling a message into the wrong type.
+	ErrWrongMessageType = errors.New("wrong message type")
+
+	// ErrInvalidArgs is returned when marshaling or unmarshaling a message with
+	// invalid arguments
+	ErrInvalidArgs = errors.New("invalid arguments")
 )
 
 // Parse parses a UCI message.
