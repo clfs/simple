@@ -56,6 +56,8 @@ func Parse(b []byte) (Message, error) {
 		m = new(UCINewGame)
 	case "position":
 		m = new(Position)
+	case "debug":
+		m = new(Debug)
 	default:
 		return nil, fmt.Errorf("%q: %w", prefix, ErrUnknownMessage)
 	}
@@ -225,4 +227,45 @@ func (msg *Position) MarshalText() ([]byte, error) {
 	}
 
 	return b.Bytes(), nil
+}
+
+// Debug represents the "debug" command.
+//
+// It tells the engine to switch debug mode on or off.
+type Debug struct {
+	On bool
+}
+
+func (msg *Debug) UnmarshalText(text []byte) error {
+	fields := bytes.Fields(text)
+
+	if len(fields) == 0 {
+		return ErrEmptyMessage
+	}
+
+	if !bytes.Equal(fields[0], []byte("debug")) {
+		return ErrWrongMessageType
+	}
+
+	if len(fields) != 2 {
+		return ErrInvalidArgs
+	}
+
+	switch string(fields[1]) {
+	case "on":
+		msg.On = true
+	case "off":
+		msg.On = false
+	default:
+		return ErrInvalidArgs
+	}
+
+	return nil
+}
+
+func (msg *Debug) MarshalText() ([]byte, error) {
+	if msg.On {
+		return []byte("debug on"), nil
+	}
+	return []byte("debug off"), nil
 }
