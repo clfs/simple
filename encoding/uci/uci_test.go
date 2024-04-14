@@ -60,6 +60,8 @@ var parseTests = []struct {
 		},
 	},
 	{in: "position startpos notamove", err: ErrInvalidArgs},
+	{in: "stop", want: &Stop{}},
+	{in: "stop foo", err: ErrInvalidArgs},
 }
 
 func TestParse(t *testing.T) {

@@ -60,6 +60,8 @@ func Parse(b []byte) (Message, error) {
 		m = new(Position)
 	case "go":
 		m = new(Go)
+	case "stop":
+		m = new(Stop)
 	default:
 		return nil, fmt.Errorf("%q: %w", prefix, ErrUnknownMessage)
 	}
@@ -263,4 +265,31 @@ func (msg *Go) UnmarshalText(text []byte) error {
 
 func (msg *Go) MarshalText() ([]byte, error) {
 	return nil, errors.New("not implemented")
+}
+
+// Stop represents the "stop" message.
+//
+// It tells the engine to stop searching.
+type Stop struct{}
+
+func (msg *Stop) UnmarshalText(text []byte) error {
+	fields := strings.Fields(string(text))
+
+	if len(fields) == 0 {
+		return ErrEmptyMessage
+	}
+
+	if fields[0] != "stop" {
+		return ErrWrongMessageType
+	}
+
+	if len(fields) > 1 {
+		return ErrInvalidArgs
+	}
+
+	return nil
+}
+
+func (msg *Stop) MarshalText() ([]byte, error) {
+	return []byte("stop"), nil
 }
