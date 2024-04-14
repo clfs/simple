@@ -39,15 +39,17 @@ func Parse(b []byte) (Message, error) {
 
 	var m Message
 
-	switch prefix := string(fields[0]); prefix {
+	prefix := string(fields[0])
+
+	switch prefix {
 	case "uci":
 		m = new(UCI)
 	default:
-		return nil, fmt.Errorf("%w: %q", ErrUnknownMessage, prefix)
+		return nil, fmt.Errorf("%q: %w", prefix, ErrUnknownMessage)
 	}
 
 	if err := m.UnmarshalText(b); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%q: %w", prefix, err)
 	}
 
 	return m, nil
