@@ -68,6 +68,8 @@ func Parse(b []byte) (Message, error) {
 		m = new(UCIOK)
 	case "readyok":
 		m = new(ReadyOK)
+	case "bestmove":
+		m = new(BestMove)
 	default:
 		return nil, fmt.Errorf("%q: %w", prefix, ErrUnknownMessage)
 	}
@@ -379,4 +381,38 @@ func (msg *ReadyOK) UnmarshalText(text []byte) error {
 
 func (msg *ReadyOK) MarshalText() ([]byte, error) {
 	return []byte("readyok"), nil
+}
+
+// BestMove represents the "bestmove" message.
+//
+// It indicates the best move after a search ends.
+type BestMove struct {
+	Move core.Move
+}
+
+func (msg *BestMove) UnmarshalText(text []byte) error {
+	fields := strings.Fields(string(text))
+
+	switch {
+	case len(fields) == 0:
+		return ErrEmptyMessage
+	case fields[0] != "bestmove":
+		return ErrWrongMessageType
+	case len(fields) != 2:
+		return ErrInvalidArgs
+	}
+
+	move, err := pcn.Decode(fields[1])
+	if err != nil {
+		return fmt.Errorf("invalid move: %w: %w", err, ErrInvalidArgs)
+	}
+
+	msg.Move = move
+
+	return nil
+}
+
+func (msg *BestMove) MarshalText() ([]byte, error) {
+	move := pcn.Encode(msg.Move)
+	return fmt.Appendf(nil, "bestmove %s", move), nil
 }

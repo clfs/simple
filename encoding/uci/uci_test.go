@@ -69,6 +69,10 @@ var parseTests = []struct {
 	{in: "uciok foo", err: ErrInvalidArgs},
 	{in: "readyok", want: &ReadyOK{}},
 	{in: "readyok foo", err: ErrInvalidArgs},
+	{in: "bestmove", err: ErrInvalidArgs},
+	{in: "bestmove notamove", err: ErrInvalidArgs},
+	{in: "bestmove e2e3 e2e4", err: ErrInvalidArgs},
+	{in: "bestmove e2e3", want: &BestMove{Move: pcn.MustDecode("e2e3")}},
 }
 
 func TestParse(t *testing.T) {
