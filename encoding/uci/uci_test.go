@@ -67,6 +67,8 @@ var parseTests = []struct {
 	{in: "id name foo bar", want: &ID{Key: "name", Value: "foo bar"}},
 	{in: "uciok", want: &UCIOK{}},
 	{in: "uciok foo", err: ErrInvalidArgs},
+	{in: "readyok", want: &ReadyOK{}},
+	{in: "readyok foo", err: ErrInvalidArgs},
 }
 
 func TestParse(t *testing.T) {

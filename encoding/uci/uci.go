@@ -66,6 +66,8 @@ func Parse(b []byte) (Message, error) {
 		m = new(ID)
 	case "uciok":
 		m = new(UCIOK)
+	case "readyok":
+		m = new(ReadyOK)
 	default:
 		return nil, fmt.Errorf("%q: %w", prefix, ErrUnknownMessage)
 	}
@@ -353,4 +355,28 @@ func (msg *UCIOK) UnmarshalText(text []byte) error {
 
 func (msg *UCIOK) MarshalText() ([]byte, error) {
 	return []byte("uciok"), nil
+}
+
+// ReadyOk represents the "readyok" message.
+//
+// It acknowledges an "isready" message.
+type ReadyOK struct{}
+
+func (msg *ReadyOK) UnmarshalText(text []byte) error {
+	fields := strings.Fields(string(text))
+
+	switch {
+	case len(fields) == 0:
+		return ErrEmptyMessage
+	case fields[0] != "readyok":
+		return ErrWrongMessageType
+	case len(fields) > 1:
+		return ErrInvalidArgs
+	default:
+		return nil
+	}
+}
+
+func (msg *ReadyOK) MarshalText() ([]byte, error) {
+	return []byte("readyok"), nil
 }
